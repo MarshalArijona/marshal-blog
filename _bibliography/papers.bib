@@ -3,27 +3,6 @@
 
 @string{aps = {American Physical Society,}}
 
-@book{einstein1956investigations,
-  bibtex_show={true},
-  title={Investigations on the Theory of the Brownian Movement},
-  author={Einstein, Albert},
-  year={1956},
-  publisher={Courier Corporation,}
-}
-
-@article{einstein1950meaning,
-  abbr={AJP},
-  bibtex_show={true},
-  title={The meaning of relativity},
-  author={Einstein, Albert and Taub, AH},
-  journal={American Journal of Physics,},
-  volume={18},
-  number={6},
-  pages={403--404},
-  year={1950},
-  publisher={American Association of Physics Teachers,}
-}
-
 @article{PhysRev.47.777,
   abbr={PhysRev},
   title={Can Quantum-Mechanical Description of Physical Reality Be Considered Complete?},
@@ -40,33 +19,146 @@
   doi={10.1103/PhysRev.47.777},
   url={http://link.aps.org/doi/10.1103/PhysRev.47.777},
   html={https://journals.aps.org/pr/abstract/10.1103/PhysRev.47.777},
-  pdf={example_pdf.pdf},
+  pdf={example_pdf.pdf}
+}
+
+@article{sinaga2021thesis,
+author = {Sinaga, Marshal Arijona},
+title = {Master's Thesis: Transformation-Equivariant Representation Learning with Barber-Agakov and Noise Contrastive Mutual Information Estimation (in Bahasa Indonesia)},
+address = {Depok},
+year = {2021},
+abstract={Convolution neural network (CNN) has shown promising results on various
+image classification tasks. One of the reasons due to the ability of CNN
+to extract representation that is equivariant to transformations. However, the
+notion only holds for the translation transformation. This research introduces
+variational transformation equivariant (VTE), a more general unsupervised
+transformation-equivariant representation model. During the implementation,
+VTE utilizes the Predictive-transformation, a self-supervised learning model that
+acts as inductive bias. The optimization of VTE involves two lower bound
+mutual information methods: Barber-Agakov and information noise contrastive
+(InfoNCE). The VTE models are evaluated based on the average error rate
+on image classification tasks on CIFAR-10 and STL-10 datasets. We utilize
+multi-layer perceptron, K-nearest neighbor, and multinomial logistic regression as
+the classifiers. Results show VTE with Barber-Agakov and VTE with InfoNCE
+outperform the baseline model for each classifier on both datasets. Specifically,
+VTEBA consistently achieves the lowest average error rate for both datasets.
+},
+pdf={master_thesis.pdf}
+}
+
+@article{sinaga2021club,
+  bibtex_show={true},
+  title={Variational Contrastive Log Ratio Upper Bound of Mutual Information for Training Generative Models},
+  author={Sinaga, Marshal Arijona and Alhamidi, Machmud Roby and Rachmadi, Muhammad Febrian and Jatmiko, Wisnu},
+  abstract={Theoretically, a Generative adversarial network minimizes the Jensen-Shannon divergence between real data distribution and generated data distribution. This divergence is another form of mutual information between a mixture distribution and a binary distribution. It implies that we can build a similar generative model by optimizing the mutual information. This research proposes variational contrastive log-ratio upper bound vCLUB mutual information estimation on mixture distribution and the optimization algorithm to train two generative models. We call the models CLUB-sampling generative network (vCLUBsampling GN) and vCLUB-non sampling generative network (vCLUB-non sampling GN). The results show that vCLUBsampling outperforms GAN and vCLUB-non sampling GN on the MNIST dataset and has competitive results with GAN on the CIFAR-10 dataset. However, GAN outperforms vCLUB-non sampling GN on both datasets.},
+  journal={2021 6th International Workshop on Big Data and Information Security (IWBIS)},
+  pages={9--16},
+  year={2021},
+  publisher={IEEE,},
+  html={https://www.researchgate.net/publication/349881819_Variational_Contrastive_Log_Ratio_Upper_Bound_of_Mutual_Information_for_Training_Generative_Model},
   selected={true}
 }
 
-@article{einstein1905molekularkinetischen,
-  title={{\"U}ber die von der molekularkinetischen Theorie der W{\"a}rme geforderte Bewegung von in ruhenden Fl{\"u}ssigkeiten suspendierten Teilchen},
-  author={Einstein, A.},
-  journal={Annalen der physik,},
-  volume={322},
-  number={8},
-  pages={549--560},
-  year={1905},
-  publisher={Wiley Online Library}
+@article{sinaga2021tile2vec,
+  bibtex_show={true},
+  title={Tile2Vec with Predicting Noise for Land Cover Classification},
+  author={Sinaga, Marshal Arijona and Ali, Fadel Muhammad and Arymurthy, Aniati Murni},
+  journal={International Conference on Neural Information Processing},
+  pages={87--99},
+  year={2021},
+  publisher={Springer,},
+  html={https://www.researchgate.net/publication/356458961_Tile2Vec_with_Predicting_Noise_for_Land_Cover_Classification},
+  abstract={Tile2vec has proven to be a good representation learning model in the remote sensing field. The success of the model depends on l2-norm regularization. However, l2-norm regularization has the main drawback that affects the regularization. We propose to replace the l2-norm with regularization with predicting noise framework. We then develop an algorithm to integrate the framework. We evaluate the model by using it as a feature extractor on the land cover classification task. The result shows that our proposed model outperforms all the baseline models.},
+  selected={true}
 }
 
-@article{einstein1905movement,
-  abbr={Ann. Phys.},
-  title={Un the movement of small particles suspended in statiunary liquids required by the molecular-kinetic theory 0f heat},
-  author={Einstein, A.},
-  journal={Ann. Phys.,},
-  volume={17},
-  pages={549--560},
-  year={1905}
+@article{sinaga2020least,
+  bibtex_show={true},
+  title={Least Square Adversarial Autoencoder},
+  author={Sinaga, Marshal Arijona and Stefanus, Lim Yohanes},
+  year={2020},
+  journal={2020 International Conference on Advanced Computer Science and Information Systems (ICACSIS)},
+  pages={33--40},
+  publisher={IEEE,},
+  html={https://www.researchgate.net/publication/344516945_Least_Square_Adversarial_Autoencoder},
+  abstract={This research introduces least square adversarial autoencoder (LSAA)-an autoencoder that is able to reconstruct data and also generate data that has characteristics similar to data distribution from the prior distribution. LSAA uses least square generative adversarial network loss function on its discriminator. LSAA minimizes Pearson χ 2 divergence between the latent variable distribution and the prior distribution. In this research, a Python program is developed to model LSAA by utilizing MNIST data set and FashionMNIST data set. The program is implemented using PyTorch. All of the programming activities are carried out in the cloud environment provided by the Tokopedia-Universitas Indonesia AI Center, using DGX-1 (GPU Tesla V100) as its computing resource. The experimental results show that the mean squared error of LSAA for MNIST data set and FashionMNIST data set are 0.0080 and 0.0099, respectively. Furthermore, the Fréchet Inception Distance score of LSAA for MNIST data set and FashionMNIST data set are 11.1280 and 27.5737, respectively. These results indicate that the least square adversarial autoencoder is able to reconstruct the image properly and also able to generate images similar to the training samples.}
 }
 
-@article{einstein1905electrodynamics,
-  title={On the electrodynamics of moving bodies},
-  author={Einstein, A.},
-  year={1905}
+@article{sinaga2021variational,
+  title={On study of Variational Inference},
+  author={Sinaga, Marshal Arijona},
+  year={2021},
+  pdf={approximate_inference.pdf},
+  abstract={The main problem of Bayesian inference is computing the posterior which is often intractable. In
+this paper, we review variational inference (VI)
+methods that aim to find a variational distribution to approximate the true posterior. The review
+starts with the original form of variational inference. Then we also discuss the extension of VI:
+mean-field, stochastic and black-box variational,
+and amortized inference. Finally, we review the
+recent improvement of variational inference.}
+}
+
+@article{sinaga2021MI,
+  title={On Study of Mutual Information and Its Estimation
+Methods},
+  author={Sinaga, Marshal Arijona},
+  year={2021},
+  pdf={mutual_information.pdf},
+  abstract={The presence of mutual information in the research
+of deep learning has grown significantly. It has been proven
+that mutual information can be a good objective function to
+build a robust deep learning model. Most of the researches
+utilize estimation methods to approximate the true mutual
+information. This technical report delivers an extensive study
+about definitions as well as properties of mutual information.
+This article then delivers some reviews and current drawbacks
+of mutual information estimation methods afterward.}
+}
+
+
+@article{sinaga2020thesis,
+  title={Bachelor's thesis: Least Square Adversarial Autoencoder and Its Application for
+Image Reconstruction and Image Generation (in Bahasa Indonesia)},
+  year={2020},
+  pdf={mutual_information.pdf},
+  abstract={This Final Project (Tugas Akhir) investigates the least square adversarial autoencoder that
+uses least square generative adversarial network as its discriminator. The discriminator
+minimizes the Pearson χ2 divergence between the latent variable distribution and the
+prior distribution. The presence of discriminator allows the autoencoder to generate
+data that has characteristics that resemble the original data. Python programs were
+developed to model the least square adversarial autoencoder. This programs try to model
+two types of autoencoder namely unsupervised least square adversarial autoencoder
+and supervised least square adversarial autoencoder by utilizing MNIST dataset and
+FashionMNIST dataset. The unsupervised least square adversarial autoencoder uses
+latent variables of dimension 20 while the supervised least square adversarial autoencoder
+uses latent variables with dimensions of 2, 3, 4, and 5, respectively. This programs
+were implemented using PyTorch and executed using Jupyter Notebook. All of the
+programming activities are carried out in the cloud environment provided by Floydhub
+and Tokopedia-UI AI Center, respectively using NVIDIA Tesla K80 GPU and NVIDIA
+Tesla V100 GPU as their computing resource. Training time in unsupervised least
+square adversarial autoencoder lasts for two hours while in supervised least square
+adversarial autoencoder lasts for six hours. The Results of experiments show that the
+mean squared error of unsupervised least square adversarial autoencoder for MNIST
+dataset and FashionMNIST dataset are 0.0063 and 0.0094, respectively. Meanwhile,
+the mean squared error of supervised least square adversarial autoencoder for MNIST
+dataset is 0.0033. Furthermore, the Fr ́echet Inception Distance scores of unsupervised
+least square adversarial autoencoder for MNIST dataset and FashionMNIST dataset are
+15.7182 and 38.6967, respectively. Meanwhile, the value of Fr ́echet Inception Distance
+score of supervised least square adversarial autoencoder in MNIST dataset is 62.512.
+These results indicate that the least square adversarial autoencoder is able to reconstruct
+the image properly, but is less able to generate images with the same quality as the
+learning sample.},
+pdf={bachelor_thesis.pdf}
+}
+
+@article{sinaga2022vet,
+  bibtex_show={true},
+  title={Transformation Equivariant Representation Learning with Barber Agakov and Info-NCE Mutual Information Estimation},
+  author={Sinaga, Marshal Arijona and Basarrudin, T. and Krisnadhi, Adila Alfa},
+  journal={International Conference on Pattern Recognition Applications and Methods (ICPRAM)},
+  year={2022},
+  publisher={Scitepress,},
+  html={https://www.researchgate.net/publication/356459026_Transformation_Equivariant_Representation_Learning_with_Barber_Agakov_and_Info-NCE_Mutual_Information_Estimation},
+  abstract={The success of deep learning on computer vision tasks is due to the convolution layer that equivaries to the translation transformation. Several works attempt to extend the notion of equivariance into more general transformations. Autoencoding variational transformation (AVT) achieves state of art by approaching the problem from the information theory perspective. The model involves the computation of mutual information, which leads to a more general transformation equivariant representation model. In this research, we investigate the alternatives of AVT called variational transformation equivariant (VTE). We utilize the Barber-Agakov and Info-NCE mutual information estimation to optimize VTE. Furthermore, we also propose a sequential mechanism to train our VTE. Results of experiments demonstrate that VTE outperforms AVT on image classification tasks.},
+  selected={true}
 }
