@@ -19,3 +19,5 @@ social: true  # includes social icons at the bottom of the page
 ---
 
 I finished my Master's degree in Transformation-Equivariant Representation Learning using Mutual Information Estimation at the Faculty of Computer Science, University of Indonesia. Before my Master's, I obtained my Bachelor's in Computer Science from the same institution. My research interests including Bayesian inference methods, representation learning, and information theory.
+
+[Curiculum Vitae](https://www.dropbox.com/home?preview=CV+latex.pdf)
