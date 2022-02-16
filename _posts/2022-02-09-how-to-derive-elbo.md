@@ -156,4 +156,4 @@ In conclusion, variational inference is introduced to overcome the intractabilit
 - Blei, D. M., Kucukelbir, A., & McAuliffe, J. D. (2017). Variational inference: A review for statisticians. Journal of the American statistical Association, 112(518), 859-877.
 - Adams, R. (2020) The ELBO without Jensen, Kullback, or Leibler. Laboratory for Intelligent Probabilistic Systems, Princeton University, Department of Computer Science, https://lips.cs.princeton.edu/the-elbo-without-jensen-or-kl/.
 
-<!-- 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 -->
+<!-- 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 -->
