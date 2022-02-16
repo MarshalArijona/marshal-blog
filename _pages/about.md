@@ -18,6 +18,6 @@ selected_papers: true # includes a list of papers marked as "selected={true}"
 social: true  # includes social icons at the bottom of the page
 ---
 
-I finished my Master's degree in Transformation-Equivariant Representation Learning using Mutual Information Estimation at the Faculty of Computer Science, University of Indonesia. Before my Master's, I obtained my Bachelor's in Computer Science from the same institution. My research interests including Bayesian inference methods, representation learning, and information theory.
+Hi, I am Marshal Sinaga. I finished my Master's degree from the Faculty of Computer Science, University of Indonesia. Before my Master's, I obtained my Bachelor's in Computer Science from the same institution. My research interests include Bayesian inference methods (with the applications in uncertainty quantification and representation learning) and information theory.
 
-[Curiculum Vitae](https://www.dropbox.com/home?preview=CV+latex.pdf)
+<!--[Curiculum Vitae](https://www.dropbox.com/home?preview=CV+latex.pdf)-->
