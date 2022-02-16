@@ -8,7 +8,7 @@ categories: machine-learning-posts
 bibliography: deriving_elbo.bib
 ---
 
-Bayesian inference approximation commonly relies on variational inference. This technique requires us to maximize evidence lower bound (ELBO). This article discusses three ways to derive ELBO. We arrange this article as follows. First, we briefly present the motivation of variational inference. Subsequently, we provide three ways to derive ELBO. Finally, we end this article by a conclusion.    
+Bayesian inference approximation commonly relies on variational inference. This technique requires us to maximize evidence lower bound (ELBO). This article discusses three ways to derive ELBO. The outline is arranged as follows. First, we briefly highlight the motivation of variational inference. Subsequently, we provide three ways to derive ELBO. Finally, we end this article by a conclusion.    
 
 ## Background
 Performing Bayesian inference requires us to compute posterior distribution. Inference can be thought as a process to quantify unknown variables given the observed variables. Let $$\mathcal{D} = \{x_i\}_{i=1}^{N}$$ be a dataset contains $$N$$ data points. We can view $$\mathcal{D}$$ as the observed variables. Subsequently, we assume there is unobserved parameters $$\theta \in \Theta$$ that provide explanations for $$\forall x \in \mathcal{X}$$ in general. Inference aims to estimate $$\theta$$ given the observations $$\mathcal{D}$$. Performing inference under Bayesian theorem provides us a tool to quantify the uncertainty about $$\theta$$. Therefore, Bayesian inference is treated as a probabilistic model. The core of Bayesian inference is to evaluate the posterior distribution $$p(\theta \vert \mathcal{D})$$. This evaluation requires the likelihood $$p(\mathcal{D} \vert \theta)$$, prior distribution $$p(\theta)$$, and marginal distribution $$p(\mathcal{D})$$. The likelihood tells the probability of $$\mathcal{D}$$ given a certain $$\theta$$. Meanwhile, prior $$p(\theta)$$ provides our belief about $$\theta$$ before we perform the inference. The third one is marginal distribution $$p(\mathcal{D})$$ which represents the probability $$\mathcal{D}$$ without the conditioning constraint. By applying Bayes's theorem, we can write $$p(\theta \vert \mathcal{D})$$ as:
@@ -155,3 +155,5 @@ In conclusion, variational inference is introduced to overcome the intractabilit
 - Bishop, C. M., & Nasrabadi, N. M. (2006). Pattern recognition and machine learning (Vol. 4, No. 4, p. 738). New York: springer.
 - Blei, D. M., Kucukelbir, A., & McAuliffe, J. D. (2017). Variational inference: A review for statisticians. Journal of the American statistical Association, 112(518), 859-877.
 - Adams, R. (2020) The ELBO without Jensen, Kullback, or Leibler. Laboratory for Intelligent Probabilistic Systems, Princeton University, Department of Computer Science, https://lips.cs.princeton.edu/the-elbo-without-jensen-or-kl/.
+
+<!-- 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 -->
