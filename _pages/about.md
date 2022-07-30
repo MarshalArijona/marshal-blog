@@ -18,6 +18,12 @@ selected_papers: true # includes a list of papers marked as "selected={true}"
 social: true  # includes social icons at the bottom of the page
 ---
 
-Hi, I am Marshal Sinaga. I finished my Master's degree from the Faculty of Computer Science, University of Indonesia. Before my Master's, I obtained my Bachelor's in Computer Science from the same institution. My research interests include Bayesian inference methods (with the applications in uncertainty quantification and representation learning) and information theory.
+Hi, I am Marshal Sinaga. I finished my Master's degree from the Faculty of Computer Science, University of Indonesia. Before my Master's, I obtained my Bachelor's in Computer Science from the same institution. My research interest is to build reliable probabilistic machine learning systems which can generalize to unseen data. My approaches include:
+
+- Build a machine learning model that is able to quantify uncertainty, e.g. Bayesian neural network.
+- Fast and accurate Bayesian inference for machine learning system
+- Build a robust and adaptive machine learning model, e.g. Bayesian continual learning
+
+Aside from that, I have interests in Gaussian process. In the past, my works gravitated to deep representation learning and deep generative models for images
 
 <!--[Curiculum Vitae](https://www.dropbox.com/home?preview=CV+latex.pdf)-->
