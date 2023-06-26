@@ -1,7 +1,7 @@
 ---
 layout: post
-date: 2022-02-27 15:59:00-0400
+date: 2023-02-01 15:59:00-0400
 inline: true
 ---
 
-I am accepted to attend LMS Invited Lectures on the Mathematics of Deep Learning on February 28 - March 4 (virtual). 
+I will work as a research assistant in the department of system engineering and engineering management, Chinese university of Hong Kong. I will be supervised by Viet Anh Nguyen.
