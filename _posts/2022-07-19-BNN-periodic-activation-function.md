@@ -7,7 +7,7 @@ tags: periodic-activation-function Bayesian-neural-network uncertainty-quantific
 categories: machine-learning-posts
 ---
 
-During this summer, I work as a research assistant in Arno Solin's lab (Dep. of CS Aalto University). My duty is to investigate the paper titled "Periodic Activation Function induce stationarity". The main idea of this paper is to show that a BNN equipped with a periodic activation function will behave like a stationary kernel of Gaussian process, e.g. Matern Kernel, RBF kernel, etc. The stationarity term here means that our NN is translation-invariant, pushing the BNN to put the uncertainty only based on the distance of data. Please check the [paper](https://arxiv.org/pdf/2110.13572.pdf) for further details.
+The main idea of this paper is to show that a BNN equipped with a periodic activation function will behave like a stationary kernel of Gaussian process, e.g. Matern Kernel, RBF kernel, etc. The stationarity term here means that our NN is translation-invariant, pushing the BNN to put the uncertainty only based on the distance of data. Please check the [paper](https://arxiv.org/pdf/2110.13572.pdf) for further details.
 
 
 #### Sin Activation Function
