@@ -1,7 +1,7 @@
 ---
 layout: post
-date: 2022-06-01 15:59:00-0400
+date: 2023-06-15 15:59:00-0400
 inline: true
 ---
 
-During the summer, I am working as a research intern at Arno Solin's group. I work closely with Martin Trapp and Andrea Pilzer to investigate Bayesian neural network with periodic activation functions.
+Starting from June, I am a doctoral researcher in probabilistic machine learning group, Aalto Univeristy. I will be supervised by Prof. Samuel Kaski. My research will revolve around Bayesian experimental design, Bayesian optimization, and Bayesian neural network.
