@@ -2,7 +2,7 @@
 layout: about
 title: about
 permalink: /
-subtitle: <a href='https://cs.ui.ac.id/'>Faculty of Computer Science, University of Indonesia</a>
+subtitle: <a href='https://research.cs.aalto.fi/pml/'>Aalto Probabilistic Machine Learning group</a>
 
 profile:
   align: right
@@ -18,7 +18,7 @@ selected_papers: true # includes a list of papers marked as "selected={true}"
 social: true  # includes social icons at the bottom of the page
 ---
 
-Hi, I am Marshal Sinaga. Currently, I am a doctoral researcher at the faculty of computer science, Aalto university. I obtained both my bachelor and master degree from the faculty of computer science, university of Indonesia. My research interest is to build reliable probabilistic machine learning systems which can generalize to unseen data. My research interests include:
+Hi, I am Marshal Sinaga. Currently, I am a doctoral researcher at the probabilistic machine learning group, Aalto university. I am very honoured to be supervised by Prof. Samuel Kaski. Prior, I obtained both my bachelor and master degree from the faculty of computer science, university of Indonesia. My research interests include:
 
 - Bayesian experimental design
 - Bayesian optimization
