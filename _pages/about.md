@@ -8,7 +8,7 @@ profile:
   align: right
   image: profile_photo.jpg
   address: >
-    <p>Tietotekniikantalo, A342</p>
+    <p>Tietotekniikantalo (T313), A342</p>
     <!--<p>123 your address street</p>
     <p>Your City, State 12345</p>-->
     <p> Espoo, Finland, 02150 <p>
