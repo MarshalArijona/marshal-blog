@@ -23,6 +23,6 @@ Hi, I am Marshal Sinaga. I am a doctoral researcher at the probabilistic machine
 - Bayesian optimization/experimental design
 - Bayesian neural network
 
-with the human-in-the-loop aspects. Aside from that, I have an interest in the Gaussian process. In the past, my works gravitated to deep representation learning and deep generative models for images.
+with human-in-the-loop aspects. Aside from that, I have an interest in the Gaussian process. In the past, my works gravitated to deep representation learning and deep generative models for images.
 
 <!--[Curiculum Vitae](https://www.dropbox.com/home?preview=CV+latex.pdf)-->
