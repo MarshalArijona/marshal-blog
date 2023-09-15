@@ -18,7 +18,7 @@ selected_papers: true # includes a list of papers marked as "selected={true}"
 social: true  # includes social icons at the bottom of the page
 ---
 
-Hi, I am Marshal Sinaga. I am a doctoral researcher at the probabilistic machine learning Aalto University. I am honored to be supervised by <a href='https://people.aalto.fi/samuel.kaski'> Prof. Samuel Kaski </a>. Before this, I obtained my bachelor's and master's degrees from the faculty of computer science at the University of Indonesia. My research interests include:
+Hi, I am Marshal Sinaga. I am a doctoral researcher at the probabilistic machine learning Aalto University. I am honored to be supervised by <a href='https://people.aalto.fi/samuel.kaski'> Samuel Kaski </a> and <a href='https://www.aalto.fi/en/people/vikas-kumar-garg'> Vikas Garg </a>. Before this, I obtained my bachelor's and master's degrees from the faculty of computer science at the University of Indonesia. My research interests include:
 
 - Bayesian optimization/experimental design
 - Bayesian neural network
