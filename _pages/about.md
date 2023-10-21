@@ -6,7 +6,7 @@ subtitle: <a href='https://research.cs.aalto.fi/pml/'>Aalto Probabilistic Machin
 
 profile:
   align: right
-  image: profile.jpeg
+  image: profile.png
   address: >
     <p>Tietotekniikantalo, A342</p>
     <!--<p>123 your address street</p>
