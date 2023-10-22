@@ -27,4 +27,3 @@ Hi, I am Marshal Sinaga, a doctoral researcher at the probabilistic machine lear
 with human-in-the-loop aspects. In the past, my works gravitated to deep representation learning and deep generative models for images.
 
 *For to me, to live is Christ and to die is gain*
-<!--[Curiculum Vitae](https://www.dropbox.com/home?preview=CV+latex.pdf)-->
