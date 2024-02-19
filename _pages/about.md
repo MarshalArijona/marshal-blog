@@ -1,6 +1,6 @@
 ---
 layout: about
-title: about
+title: About
 permalink: /
 subtitle: <a href='https://research.cs.aalto.fi/pml/'>Aalto Probabilistic Machine Learning group</a>
 
@@ -8,7 +8,7 @@ profile:
   align: right
   image: profile.png
   address: >
-    <p>Tietotekniikantalo, Room A342</p>
+    <p>Tietotekniikantalo, Room A342,</p>
     <!--<p>123 your address street</p>
     <p>Your City, State 12345</p>-->
     <p> Konemiehentie 2, Espoo 02150, Finland <p>
