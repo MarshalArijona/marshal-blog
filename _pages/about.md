@@ -18,7 +18,7 @@ selected_papers: true # includes a list of papers marked as "selected={true}"
 social: true  # includes social icons at the bottom of the page
 ---
 
-I am Marshal Sinaga, a doctoral researcher at the probabilistic machine learning Aalto University. It's my honor to be supervised by <a href='https://people.aalto.fi/samuel.kaski'> Samuel Kaski </a> and <a href='https://research.aalto.fi/en/persons/vikas-garg'> Vikas Garg </a>. During my doctoral program, I am fully funded by <a href='https://fcai.fi/'> Finnish Center for Artificial Intelligence (FCAI) </a>. Before this, I obtained my bachelor's and master's degrees from the computer science faculty at the University of Indonesia. My research centers around Bayesian optimization, emphasizing multi-source, noisy information and human-in-the-loop aspects.
+I am Marshal Sinaga, a doctoral researcher at the probabilistic machine learning Aalto University. It's my honor to be supervised by <a href='https://people.aalto.fi/samuel.kaski'> Samuel Kaski </a> and <a href='https://research.aalto.fi/en/persons/vikas-garg'> Vikas Garg </a>. During my doctoral program, I am fully funded by <a href='https://fcai.fi/'> Finnish Center for Artificial Intelligence (FCAI) </a>. Before this, I obtained my bachelor's and master's degrees from the faculty of computer science, University of Indonesia. My research centers around Bayesian optimization, emphasizing noisy information and human-in-the-loop aspects.
 
 
 *For to me, to live is Christ and to die is gain*
