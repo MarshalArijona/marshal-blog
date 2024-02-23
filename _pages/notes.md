@@ -2,14 +2,10 @@
 layout: page
 permalink: /notes/
 title: notes
-description: .
+description:
+years: [2024]
 nav: true
 ---
 
-<div class="notes">
-</div>
+- <a href="/assets/pdf/Advanced_Probabilistic_Methods.pdf">Advanced Probabilistic Methods</a>
 
-<!--
-For now, this page is assumed to be a static description of your courses. You can convert it to a collection similar to `_projects/` so that you can have a dedicated page for each course.
-
-Organize your courses by years, topics, or universities, however you like! -->
