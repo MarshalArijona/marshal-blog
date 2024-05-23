@@ -165,8 +165,37 @@ for aleatoric uncertainty. The noise models assign noise based on the distance o
 input to a predefined set of reliable inputs known as anchors. We empirically evaluate the
 proposed approach on a range of synthetic black-box functions, demonstrating a consistent
 improvement over homoscedastic PBO.},
+}
+
+@article{sinaga2024heteroPBO,
+  title={Preferential Heteroscedastic Bayesian Optimization with
+Informative Noise Distribution},
+  author={Marshal Sinaga and Julien Martinelli and Vikas Garg and Samuel Kaski},
+  year={2024},
+  pdf={Heteroscedastic_Preferential_Bayesian_Optimization_with_Informative_Noise_Priors.pdf},
+  abstract={Preferential Bayesian optimization (PBO) is a sample-efficient framework for
+learning human preferences between candidate designs. PBO classically relies on
+homoscedastic noise models to represent human aleatoric uncertainty. Yet, such
+noise fails to accurately capture the varying levels of human aleatoric uncertainty,
+particularly when the user possesses partial knowledge among different pairs
+of candidates. For instance, a chemist with solid expertise in glucose-related
+molecules may easily compare two compounds from that family while struggling
+to compare alcohol-related molecules. Currently, PBO overlooks this uncertainty
+during the search for a new candidate through the maximization of the acquisition
+function, consequently underestimating the risk associated with human uncertainty.
+To address this issue, we propose a heteroscedastic noise model to capture human
+aleatoric uncertainty. This model adaptively assigns noise levels based on the
+distance of a specific input to a predefined set of reliable inputs known as anchors
+provided by the human. Anchors encapsulate partial knowledge and offer insight
+into the comparative difficulty of evaluating different candidate pairs. Such a model
+can be seamlessly integrated into the acquisition function, thus leading to candidate
+design pairs that elegantly trade informativeness and ease of comparison for the
+human expert. We perform an extensive empirical evaluation of the proposed
+approach, demonstrating a consistent improvement over homoscedastic PBO.},
 selected={true}
 }
+
+
 
 -------------------------------------------------------------------------------------------------------------------------------
 
