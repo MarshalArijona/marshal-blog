@@ -9,4 +9,4 @@ inline: true
 <!--New post titled <a href="https://marshalarijona.github.io/blog/2023/expected-improvement/"> Probability Improvement and Expected Improvement Acquisition Function </a>. -->
 
 
-New blog series: <a href="https://marshalarijona.github.io/blog/2024/GP-UCB/"> A Deep Dive into the Regret Bound of GP-UCB Optimization </a>.
+New post: <a href="https://marshalarijona.github.io/blog/2024/GP-UCB/"> A Deep Dive into the Regret Bound of GP-UCB Optimization </a>.
