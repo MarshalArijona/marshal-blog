@@ -216,7 +216,7 @@ blockquote {
 .social {
   text-align: center;
   .contact-icons {
-    font-size: 4rem;
+    font-size: 2rem;
     a {
       i::before {
         color: var(--global-text-color);
@@ -566,4 +566,17 @@ html.transition *:after {
   color: var(--global-text-color-light);
   font-size: 0.875rem;
   padding-top: 0.25rem;
+}
+
+// majors and institutions
+
+.major{
+  font-size: 0.9rem;
+  display: block;
+  margin: 0px;
+}
+
+.institution{
+  font-size: 0.8rem;
+  display: block;
 }

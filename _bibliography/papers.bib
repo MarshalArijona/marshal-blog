@@ -1,8 +1,6 @@
 ---
 ---
 
-@string{aps = {American Physical Society,}}
-
 @article{sinaga2021thesis,
 author = {Marshal Sinaga},
 title = {Master's Thesis: Transformation-Equivariant Representation Learning with Barber-Agakov and Noise Contrastive Mutual Information Estimation (in Bahasa Indonesia)},
@@ -36,8 +34,9 @@ pdf={master_thesis.pdf}
   pages={9--16},
   year={2021},
   publisher={IEEE,},
-  html={https://www.researchgate.net/publication/349881819_Variational_Contrastive_Log_Ratio_Upper_Bound_of_Mutual_Information_for_Training_Generative_Model},
-  selected={true}
+  code={https://github.com/MarshalArijona/CLUB-Generative-Network},
+  paper={https://www.researchgate.net/publication/349881819_Variational_Contrastive_Log_Ratio_Upper_Bound_of_Mutual_Information_for_Training_Generative_Model},
+  abbr={IWBIS 2021}
 }
 
 @article{sinaga2021tile2vec,
@@ -48,9 +47,10 @@ pdf={master_thesis.pdf}
   pages={87--99},
   year={2021},
   publisher={Springer,},
-  html={https://www.researchgate.net/publication/356458961_Tile2Vec_with_Predicting_Noise_for_Land_Cover_Classification},
+  paper={https://www.researchgate.net/publication/356458961_Tile2Vec_with_Predicting_Noise_for_Land_Cover_Classification},
   abstract={Tile2vec has proven to be a good representation learning model in the remote sensing field. The success of the model depends on l2-norm regularization. However, l2-norm regularization has the main drawback that affects the regularization. We propose to replace the l2-norm with regularization with predicting noise framework. We then develop an algorithm to integrate the framework. We evaluate the model by using it as a feature extractor on the land cover classification task. The result shows that our proposed model outperforms all the baseline models.},
-  selected={true}
+  abbr={ICONIP 2021},
+  code={https://github.com/MarshalArijona/tile2vec-with-predicting-noise/tree/master}
 }
 
 @article{sinaga2020least,
@@ -61,8 +61,10 @@ pdf={master_thesis.pdf}
   journal={2020 International Conference on Advanced Computer Science and Information Systems (ICACSIS)},
   pages={33--40},
   publisher={IEEE,},
-  html={https://www.researchgate.net/publication/344516945_Least_Square_Adversarial_Autoencoder},
-  abstract={This research introduces least square adversarial autoencoder (LSAA)-an autoencoder that is able to reconstruct data and also generate data that has characteristics similar to data distribution from the prior distribution. LSAA uses least square generative adversarial network loss function on its discriminator. LSAA minimizes Pearson χ 2 divergence between the latent variable distribution and the prior distribution. In this research, a Python program is developed to model LSAA by utilizing MNIST data set and FashionMNIST data set. The program is implemented using PyTorch. All of the programming activities are carried out in the cloud environment provided by the Tokopedia-Universitas Indonesia AI Center, using DGX-1 (GPU Tesla V100) as its computing resource. The experimental results show that the mean squared error of LSAA for MNIST data set and FashionMNIST data set are 0.0080 and 0.0099, respectively. Furthermore, the Fréchet Inception Distance score of LSAA for MNIST data set and FashionMNIST data set are 11.1280 and 27.5737, respectively. These results indicate that the least square adversarial autoencoder is able to reconstruct the image properly and also able to generate images similar to the training samples.}
+  paper={https://www.researchgate.net/publication/344516945_Least_Square_Adversarial_Autoencoder},
+  abstract={This research introduces least square adversarial autoencoder (LSAA)-an autoencoder that is able to reconstruct data and also generate data that has characteristics similar to data distribution from the prior distribution. LSAA uses least square generative adversarial network loss function on its discriminator. LSAA minimizes Pearson χ 2 divergence between the latent variable distribution and the prior distribution. In this research, a Python program is developed to model LSAA by utilizing MNIST data set and FashionMNIST data set. The program is implemented using PyTorch. All of the programming activities are carried out in the cloud environment provided by the Tokopedia-Universitas Indonesia AI Center, using DGX-1 (GPU Tesla V100) as its computing resource. The experimental results show that the mean squared error of LSAA for MNIST data set and FashionMNIST data set are 0.0080 and 0.0099, respectively. Furthermore, the Fréchet Inception Distance score of LSAA for MNIST data set and FashionMNIST data set are 11.1280 and 27.5737, respectively. These results indicate that the least square adversarial autoencoder is able to reconstruct the image properly and also able to generate images similar to the training samples.},
+  abbr={ICACSIS 2020},
+  code={https://github.com/MarshalArijona/least-square-adversarial-autoencoder}
 }
 
 @article{sinaga2021variational,
@@ -93,7 +95,7 @@ utilize estimation methods to approximate the true mutual
 information. This technical report delivers an extensive study
 about definitions as well as properties of mutual information.
 This article then delivers some reviews and current drawbacks
-of mutual information estimation methods afterward.}
+of mutual information estimation methods afterward.},
 }
 
 @article{sinaga2020thesis,
@@ -139,9 +141,10 @@ pdf={bachelor_thesis.pdf}
   journal={International Conference on Pattern Recognition Applications and Methods (ICPRAM)},
   year={2022},
   publisher={Scitepress,},
-  html={https://www.researchgate.net/publication/356459026_Transformation_Equivariant_Representation_Learning_with_Barber_Agakov_and_Info-NCE_Mutual_Information_Estimation},
+  paper={https://www.researchgate.net/publication/356459026_Transformation_Equivariant_Representation_Learning_with_Barber_Agakov_and_Info-NCE_Mutual_Information_Estimation},
   abstract={The success of deep learning on computer vision tasks is due to the convolution layer that equivaries to the translation transformation. Several works attempt to extend the notion of equivariance into more general transformations. Autoencoding variational transformation (AVT) achieves state of art by approaching the problem from the information theory perspective. The model involves the computation of mutual information, which leads to a more general transformation equivariant representation model. In this research, we investigate the alternatives of AVT called variational transformation equivariant (VTE). We utilize the Barber-Agakov and Info-NCE mutual information estimation to optimize VTE. Furthermore, we also propose a sequential mechanism to train our VTE. Results of experiments demonstrate that VTE outperforms AVT on image classification tasks.},
-  selected={true}
+  abbr={ICPRAM 2022},
+  code={https://github.com/MarshalArijona/VTE/tree/master}
 }
 
 @article{sinaga2023heteroPBO,
@@ -165,6 +168,7 @@ for aleatoric uncertainty. The noise models assign noise based on the distance o
 input to a predefined set of reliable inputs known as anchors. We empirically evaluate the
 proposed approach on a range of synthetic black-box functions, demonstrating a consistent
 improvement over homoscedastic PBO.},
+abbr={RealML 2023}
 }
 
 @article{sinaga2024heteroPBO,
@@ -172,7 +176,7 @@ improvement over homoscedastic PBO.},
 Informative Noise Distribution},
   author={Marshal Sinaga and Julien Martinelli and Vikas Garg and Samuel Kaski},
   year={2024},
-  pdf={Heteroscedastic_Preferential_Bayesian_Optimization_with_Informative_Noise_Priors.pdf},
+  paper={https://arxiv.org/abs/2405.14657},
   abstract={Preferential Bayesian optimization (PBO) is a sample-efficient framework for
 learning human preferences between candidate designs. PBO classically relies on
 homoscedastic noise models to represent human aleatoric uncertainty. Yet, such
@@ -192,7 +196,8 @@ can be seamlessly integrated into the acquisition function, thus leading to cand
 design pairs that elegantly trade informativeness and ease of comparison for the
 human expert. We perform an extensive empirical evaluation of the proposed
 approach, demonstrating a consistent improvement over homoscedastic PBO.},
-selected={true}
+selected={true},
+abbr={preprint}
 }
 
 
