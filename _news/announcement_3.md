@@ -8,4 +8,4 @@ inline: true
 
 Attending <a href='https://probnumschool.org/pages/home.html'> Probabilistic Numeric Spring School </a> from 8 to 10 April 2024 at the University of Southampton.-->
 
-*Computation-Aware Robust Gaussian Processes* to be appeared at <a href='https://gp-seminar-series.github.io/neurips-2024/'> NeurIPS workshop onBayesian Decision-making and Uncertainty. </a>
+*Computation-Aware Robust Gaussian Processes* to be appeared at <a href='https://gp-seminar-series.github.io/neurips-2024/'> NeurIPS workshop on Bayesian Decision-making and Uncertainty. </a>
