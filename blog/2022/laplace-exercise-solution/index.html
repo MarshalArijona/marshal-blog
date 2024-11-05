@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <!-- Head -->
+  <head>        
+    <!-- Metadata, OpenGraph and Schema.org -->
+    
+
+    <!-- Standard metadata -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Marshal Sinaga | Laplace's Method Exercise Solution (Mackay, 2003)</title>
+    <meta name="author" content="Marshal Arijona Sinaga" />
+    <meta name="description" content="A simple, whitespace theme for academics. Based on [*folio](https://github.com/bogoli/-folio) design.
+" />
+    <meta name="keywords" content="jekyll, jekyll-theme, academic-website, portfolio-website" />
+
+
+    <!-- Bootstrap & MDB -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha256-DF7Zhf293AJxJNTmh5zhoYYIMs2oXitRfBjY+9L//AY=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/mdbootstrap@4.20.0/css/mdb.min.css" integrity="sha256-jpjYvU3G3N6nrrBwXJoVEYI/0zw8htfFnhT9ljN3JJw=" crossorigin="anonymous" />
+
+    <!-- Fonts & Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/all.min.css" integrity="sha256-mUZM63G8m73Mcidfrv5E+Y61y7a12O5mW4ezU3bxqW4=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/academicons@1.9.1/css/academicons.min.css" integrity="sha256-i1+4qU2G2860dGGIOJscdC30s9beBXjFfzjWLjBRsBg=" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:100,300,400,500,700|Material+Icons">
+
+    <!-- Code Syntax Highlighting -->
+    <link rel="stylesheet" href="https://gitcdn.xyz/repo/jwarby/jekyll-pygments-themes/master/github.css" />
+
+    <!-- Styles -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22></text></svg>">
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <link rel="canonical" href="https://marshalarijona.github.io/blog/2022/laplace-exercise-solution/">
+
+    <!-- Dark Mode -->
+    <script src="/assets/js/theme.js"></script>
+    <script src="/assets/js/dark_mode.js"></script>
+  </head>
+
+  <!-- Body -->
+  <body class="fixed-top-nav">
+
+    <!-- Header -->
+    <header>
+
+      <!-- Nav Bar -->
+      <nav id="navbar" class="navbar navbar-light navbar-expand-sm fixed-top">
+        <div class="container">
+          <a class="navbar-brand title font-weight-lighter" href="https://marshalarijona.github.io/">Marshal Sinaga</a>
+          <!-- Navbar Toggle -->
+          <button class="navbar-toggler collapsed ml-auto" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar top-bar"></span>
+            <span class="icon-bar middle-bar"></span>
+            <span class="icon-bar bottom-bar"></span>
+          </button>
+
+          <div class="collapse navbar-collapse text-right" id="navbarNav">
+            <ul class="navbar-nav ml-auto flex-nowrap">
+
+              <!-- About -->
+              <li class="nav-item ">
+                <a class="nav-link" href="/">About</a>
+              </li>
+              
+              <!-- Blog -->
+              <li class="nav-item active">
+                <a class="nav-link" href="/blog/">Blog</a>
+              </li>
+
+              <!-- Other pages-->
+              <li class="nav-item ">
+                <a class="nav-link" href="/notes/">Notes</a>
+              </li>
+              <li class="nav-item ">
+                <a class="nav-link" href="/publications/">Publications</a>
+              </li>
+              <!--
+              <li class="nav-item dropdown ">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">submenus</a>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                  <a class="dropdown-item" href="/publications/">publications</a>
+                  <div class="dropdown-divider"></div>
+                  <a class="dropdown-item" href="/projects/">projects</a>
+                </div>
+              </li>
+            -->
+
+              <!-- Toogle theme mode -->
+              <div class="toggle-container">
+                <a id="light-toggle">
+                  <i class="fas fa-moon"></i>
+                  <i class="fas fa-sun"></i>
+                </a>
+              </div>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <!-- Content -->
+    <div class="container mt-5">
+      <!-- _layouts/post.html -->
+
+<div class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Laplace's Method Exercise Solution (Mackay, 2003)</h1>
+    <p class="post-meta">March 4, 2022</p>
+    <p class="post-tags">
+      <a href="/blog/2022"> <i class="fas fa-calendar fa-sm"></i> 2022 </a>
+        ·  
+        <a href="/blog/category/machine-learning-posts">
+          <i class="fas fa-tag fa-sm"></i> machine-learning-posts</a>  
+          
+
+    </p>
+  </header>
+
+  <article class="post-content">
+    <p>In this blog, I share my solutions on Mackay 2003 exercises chapter 27 page 342. <strong>Disclaimer: I don’t guarantee the validity of each answer. All of the answers are based on my own.</strong> However, I am also open for corrections. If you spot any flaws, feel free to contact me via email: <strong>arijonamarshal@gmail.com</strong> or <strong>marshal.arijona01@ui.ac.id</strong>. All of the notations follow the text book. For further details, please refer to <strong><a href="https://www.inference.org.uk/itprnn/book.pdf" target="_blank" rel="noopener noreferrer">https://www.inference.org.uk/itprnn/book.pdf</a></strong>.</p>
+
+<h1 id="problem-1">Problem 1</h1>
+<p>A photon counter is pointed
+at a remote star for one minute, in order to infer the rate of photons arriving at the counter per minute, \(\lambda\). Assuming the number of photons collected r has a Poisson distribution with mean \(\lambda\)</p>
+
+<p>\begin{equation}
+p(r \vert \lambda) = \exp(\lambda)\frac{\lambda^r}{r!} \nonumber
+\end{equation}</p>
+
+<p>and assuming the improper prior P(λ) = 1/λ, make Laplace approximations to the posterior distribution</p>
+
+<p>(a) over \(\lambda\)</p>
+
+<p>(b) over \(\log \lambda\). [Note the improper prior transforms to \(p(\log \lambda)\) is
+constant.</p>
+
+<h2 id="problem-1a">Problem 1a</h2>
+
+<p>First, let us compute the unnormalized posterior distribution \(p^*(\lambda \vert r)\) and its log respectively:</p>
+
+\[\begin{eqnarray}
+p^*(\lambda \vert r) &amp;=&amp; p(r \vert \lambda) p(\lambda) \nonumber \\
+ &amp;=&amp;  \exp(- \lambda) \frac{\lambda^{r - 1}}{r!} \nonumber
+\end{eqnarray}\]
+
+<p>\begin{equation}
+- \log p^*(\lambda \vert r) = \lambda - (r -1) \log \lambda + \log r! \nonumber
+\end{equation}</p>
+
+<p>Recall that we need the mode of distribution in order to perform Laplace approximation. We can compute the mode of \(p^*(\lambda \vert r)\) via maximum a posteriori (MAP). MAP requires us to find \(\lambda^{\text{MAP}}\) such that:</p>
+
+<p>\begin{equation}
+\lambda^{\text{MAP}} = \underset{\lambda}{\text{min}} - \log p(\lambda \vert r) \nonumber
+\end{equation}</p>
+
+<p>we can find MAP by deriving \(- \log p^*(\lambda \vert r)\), setting it to zero, and finally solving the equation for \(\lambda\):</p>
+
+\[\begin{eqnarray}		
+\frac{d - \log p^*(\lambda \vert r)}{d\lambda} &amp;=&amp;  1 - \frac{r - 1}{\lambda}= 0 \nonumber \\
+\lambda^{\text{MAP}} &amp;=&amp; r - 1 \nonumber 
+\end{eqnarray}\]
+
+<p>Now we can obtain the second order derivative \(c\) on \(\lambda = \lambda^{\text{MAP}}\):</p>
+
+\[\begin{eqnarray}
+c &amp;=&amp; \left \vert - \frac{d^2\log p^*(\lambda \vert r)}{d\lambda^2} \right \vert_{\lambda=\lambda^{\text{MAP}}} \nonumber \\ 
+&amp;=&amp; -1 \left (\frac{-(r - 1)}{\lambda^2} \right) \nonumber \\
+&amp;=&amp; \frac{1}{r - 1} \nonumber
+\end{eqnarray}\]
+
+<p>We are ready to construct our approximate distribution. First, let’s construct the unnnormalized approximation \(q^*(\lambda)\):</p>
+
+\[\begin{eqnarray}
+q^*(\lambda) &amp;\equiv&amp; p^*(\lambda = \lambda^{\text{MAP}} \vert r) \exp \left(- \frac{c}{2} (\lambda - \lambda^{\text{MAP}})^2 \right) \nonumber \\
+&amp;=&amp; p^*(\lambda = \lambda^{\text{MAP}} \vert r) \exp \left(- \frac{1}{2(r - 1)} (\lambda - (r - 1))^2 \right) \nonumber
+\end{eqnarray}\]
+
+<p>Our normalization factor \(Z_q\) can be written as:</p>
+
+\[\begin{eqnarray}
+Z_q &amp;=&amp; p^*(\lambda = \lambda^{\text{MAP}} \vert r) \sqrt{\frac{2\pi}{c}} \nonumber \\
+&amp;=&amp; p^*(\lambda = \lambda^{\text{MAP}} \vert r) \sqrt{2\pi (r - 1)} \nonumber
+\end{eqnarray}\]
+
+<p>Therefore, we obtain \(q(\lambda) = \frac{1}{\sqrt{2\pi (r - 1)}} \exp \left(- \frac{1}{2(r - 1)} (\lambda - (r - 1))^2 \right) = \mathcal{N}(r - 1, r - 1)\).</p>
+
+<h2 id="problem-1b">Problem 1b</h2>
+
+<p>From the description, \(\lambda\) is transformed through the function \(u(\lambda) = \log \lambda\). Subsequently, the density of \(\lambda\) is transformed to \(p(u) = p(x) \left \vert \frac{d\lambda}{du}  \right \vert = p(x) \lambda\). Using this rule, we obtain our unnormalized posterior \(p^*(u(\lambda) \vert r)\) as follows:</p>
+
+\[\begin{eqnarray}
+p^*(u(\lambda) \vert r) &amp;=&amp; p(u(\lambda)) p(r \vert u(\lambda)) \nonumber \\
+&amp;=&amp; \exp(-\lambda)\frac{\lambda^{r}}{r!} \lambda = \exp(-\lambda)\frac{\lambda^{r + 1}}{r!}
+\end{eqnarray}\]
+
+<p>Observe that our unnormalized transformed posterior is just the transforming likelihood since our transformed prior is just a constant. Now, taking the log of \(p^*(u(\lambda) \vert r)\) gives us:</p>
+
+<p>\begin{equation}
+- \log p^*(u(\lambda) \vert r) = \lambda - (r+1) \log \lambda + \log r!
+\end{equation}</p>
+
+<p>Now, let’s derive \(u(\lambda)^{\text{MAP}}\):</p>
+
+\[\begin{eqnarray}		
+\frac{d - \log p^*(u(\lambda) \vert r)}{du(\lambda)} &amp;=&amp;  \exp(\log \lambda) - (r + 1) = 0 \nonumber \\
+u(\lambda)^{\text{MAP}} &amp;=&amp; \log (r + 1) \nonumber 
+\end{eqnarray}\]
+
+<p>We then derive our second derivative \(c\) on \(u(\lambda) = u(\lambda)^{\text{MAP}}\):</p>
+
+\[\begin{eqnarray}
+c &amp;=&amp; \left \vert - \frac{d^2\log p^*(u(\lambda) \vert r)}{du(\lambda)^2} \right \vert_{u(\lambda)=u(\lambda)^{\text{MAP}}} \nonumber \\ 
+&amp;=&amp; \exp(\log (r+1))\nonumber \\
+\end{eqnarray}\]
+
+<p>We are ready to construct our approximate distribution. First, let’s construct the unnnormalized approximation \(q^*(u(\lambda))\):</p>
+
+\[\begin{eqnarray}
+q^*(u(\lambda))  &amp;\equiv&amp; p^*\left(u(\lambda) = u(\lambda)^{\text{MAP}} \vert r \right) \exp \left(- \frac{c}{2} (u(\lambda) - u(\lambda)^{\text{MAP}})^2 \right) \nonumber \\
+&amp;=&amp; p^*\left (u(\lambda) = u(\lambda)^{\text{MAP}} \vert r \right) \exp \left(- \frac{(r + 1)}{2} (u(\lambda) - \log (r + 1))^2 \right) \nonumber
+\end{eqnarray}\]
+
+<p>Our normalization factor \(Z_q\) can be written as:</p>
+
+\[\begin{eqnarray}
+Z_q &amp;=&amp; p^*\left(u(\lambda) = u(\lambda)^{\text{MAP}} \vert r \right) \sqrt{\frac{2\pi}{c}} \nonumber \\
+&amp;=&amp; p^*\left(u(\lambda) = u(\lambda)^{\text{MAP}} \vert r \right) \sqrt{\frac{2\pi} {r + 1}} \nonumber
+\end{eqnarray}\]
+
+<p>Therefore, we obtain \(q(u(\lambda)) = \frac{1}{\sqrt{\frac{2\pi} {(r + 1)}}} \exp \left(- \frac{(r + 1)}{2} (u(\lambda) - \log (r + 1))^2 \right) = \mathcal{N}(\log (r + 1), \frac{1}{r + 1})\).</p>
+
+<h1 id="problem-2">Problem 2</h1>
+<p>Use Laplace’s method to approximate the integral</p>
+
+<p>\begin{equation}
+Z(u_1, u_2) = \int_{- \infty}^{\infty} f(a)^{u_1} (1 - f(a))^{u_2} da \nonumber
+\end{equation}</p>
+
+<p>where \(f(a) = 1/(1 + e−a)\) and \(u1\), \(u2\) are positive. Check the accuracy of the approximation against the exact answer (23.29, p.316) for \((u1, u2) = (1/2, 1/2)\) and \((u1, u2) = (1, 1)\). Measure the error \((log Z_p − log Z_q)\) in bits</p>
+
+<p><strong>Answer:</strong></p>
+
+<p>Let us define \(p^*(a) = f(a)^{u_1} (1 - f(a))^{u_2}\). Therefore, we have \(\log p^*(a) = u_1 \log f(a) + u_2 \log (1 - f(a))\). Next task is to determine the mode \(a^0\) of \(p^*(a)\). Setting the derivative of \(- \log p^*(a)\) to 0 and solving for \(a\), we obtain:</p>
+
+\[\begin{eqnarray}
+\frac{d-\log p^*(a)}{da} &amp;=&amp; - \left(\frac{u_1}{f(a)} f'(a) - \frac{u_2}{1 - f(a)} f'(a) = 0 \right) \nonumber \\
+&amp;=&amp; - (u_1(1 - f(a)) - u_2 f(a)) \nonumber \\
+a^0 &amp;=&amp; - \log \frac{u_2}{u_1} \nonumber
+\end{eqnarray}\]
+
+<p>\(f'(a)\) refers to \(\frac{df(a)}{da}\). The second row comes from the fact that \(f'(a) = f(a)(1 - f(a))\). Next, let us determine the second derivation.</p>
+
+\[\begin{eqnarray}
+\frac{d^2 - \log p^*(a)}{da^2} &amp;=&amp; (u_1 + u_2) f'(a) \nonumber \\
+&amp;=&amp; (u_1 + u_2) f(a) (1 - f(a)) \nonumber
+\end{eqnarray}\]
+
+<p>Now, we aim to evaluate \(\frac{d^2 - \log p^*(a)}{da^2}\) at \(a = a^0\). Note that we have \(f(a^0) = \frac{u_1}{u_1 + u_2}\) and \(1 - f(a) = \frac{u_2}{u_1 + u_2}\). Therefore</p>
+
+\[\begin{eqnarray}
+c = \left \vert \frac{d^2 - \log p^*(a)}{da^2} \right \vert_{a=a^0} = (u_1 + u_2) \frac{u_1}{u_1 + u_2} \frac{u_2}{u_1 + u_2} = \frac{u_1 u_2}{u_1 + u_2} \nonumber \\  
+\end{eqnarray}\]
+
+<p>The normalizing constant can be approximated by:</p>
+
+\[\begin{eqnarray}
+Z_p \simeq Z_q &amp;=&amp; p^*(a^0) \sqrt{\frac{2\pi}{c}} \nonumber \\
+&amp;=&amp; \left ( \frac{u_1}{u_1 + u_2} \right )^{u_1} \left(\frac{u_2}{u_1 + u_2} \right )^{u_2}  \sqrt{\frac{2\pi (u_1 + u_2)}{u_1 u_2}} \nonumber \\
+\end{eqnarray}\]
+
+<p>It’s time for evaluation !! for \((u_1, u_2) = (1, 1)\), we have:</p>
+
+<p>\begin{equation}
+Z_q(u_1 = 1, u_2 = 1) = \frac{1}{2} \times \frac{1}{2} \times 2 \sqrt{\pi} = \frac{\sqrt{\pi}}{2} \nonumber 
+\end{equation}</p>
+
+<p>\begin{equation}
+Z_p(u_1 = 1, u_2 = 1)= \frac{\Gamma(1) \Gamma(1)}{\Gamma(1 + 1)} = 1 \nonumber
+\end{equation}</p>
+
+<p>with the error:</p>
+
+<p>\begin{equation}
+\log \frac{Z_p}{Z_q} = \log \frac{2}{\sqrt{\pi}} = 0.15 \; \text{bit} \nonumber
+\end{equation}</p>
+
+<p><strong>For the error measurement, we use base 2 logarithm. In other cases we use natural number.</strong></p>
+
+<p>while for \((u_1, u_2) = (\frac{1}{2}, \frac{1}{2})\), we have:</p>
+
+<p>\begin{equation}
+Z_q(u_1 = 1/2, u_2 = 1/2) = \frac{1}{2}^{1/2} \times \frac{1}{2}^{1/2} \times \sqrt{8\pi} = \sqrt{2\pi} \nonumber 
+\end{equation}</p>
+
+<p>\begin{equation}
+Z_p(u_1 = 1/2, u_2 = 1/2)= \frac{\Gamma(1/2) \Gamma(1/2)}{\Gamma(1)} = 1.77^2 = 3.313 \nonumber
+\end{equation}</p>
+
+<p>with the error:
+\begin{equation}
+\log \frac{Z_p}{Z_q} = \log \frac{3.313}{2.5} = 0.12 \; \text{bit} \nonumber
+\end{equation}</p>
+
+<!--We also need the second derivative of $$\log p^*(a)$$ on $$a = a^0$$. We can use the chain rule to obtain it. The fact that $$f'(a) = f(a)(1 - f(a))$$ and $$f''(a) = f(a)(1 - f(a))(1 - 2f(a))$$ will make our job easier.
+
+$$
+\begin{eqnarray}
+\frac{d^2 \log p^*(a)}{da^2} &=& u_1 \left [ \frac{f''(a)}{f(a)} - \frac{f'(a)^2}{f(a)^2} \right] - u_2 \left[ \frac{f''(a)}{1 - f(a)} + \frac{f'(a)^2}{(1 - f(a))^2}\right] \nonumber \\
+&=& u_1 \left [ \frac{f(a)f''(a) - f'(a)^2}{f(a)^2} \right] - u_2 \left[ \frac{f''(a) (1 - f(a)) - f'(a)^2}{(1 - f(a))^2} \right] \nonumber \\
+&=& -u_1 \left[ (1 - f(a)) f(a)\right] -u_2 \left[ (f(a)(1 - 2f(a))) -  f(a)^2 \right ] \nonumber \\
+\end{eqnarray} 
+$$
+
+Since we have $$a^0 = - \log \frac{u_2}{u_1}$$, we obtain $$f(a^0) = \frac{u_1}{u_1 + u_2}$$. Now let's substitute $$f(a^0)$$ to the second derivative above:
+
+$$
+\begin{eqnarray}
+c = \left \vert \frac{d^2 \log p^*(a)}{da^2} \right \vert_{a = a^0} = -u_1 \left[ \frac{u_1 \, u_2}{(u_1 + u_2)^2} \right] -u_2 \left[ \frac{u_1 (u_2 - 2u_1)}{(u_1 + u_2)^2} \right] \nonumber \\
+\end{eqnarray}
+$$  
+
+Then, the normalizing constant can be approximated by:
+
+$$
+\begin{eqnarray}
+Z_p \simeq Z_q &=& p^*(a^0) \sqrt{\frac{2\pi}{c}} \nonumber \\
+&=& \left ( \frac{u_1}{u_1 + u_2} \right )^{u_1} \left(\frac{u_2}{u_1 + u_2} \right )^{u_2}  \sqrt{\frac{2\pi}{c}} \nonumber \\
+\end{eqnarray}
+$$
+
+It's time for evaluation !! for $$(u_1, u_2) = (1, 1)$$, we have:
+
+\begin{equation}
+Z_q(u_1 = 1, u_2 = 1) = \frac{1}{2} \frac{1}{2} 
+\end{equation}
+
+while for $$(u_1, u_2) = (\frac{1}{2}, \frac{1}{2})$$ -->
+
+<h1 id="problem-3">Problem 3</h1>
+
+<p>Linear regression. \(N\) datapoints \(\{x^n,t^n\}_{n=1}^{N}\) are generated by the experimenter choosing each \(x^n\), then the world delivering a noisy version of the linear function</p>
+
+\[\begin{eqnarray}
+y(x) &amp;=&amp; w0 + w1x \nonumber \\
+t^n &amp;\sim&amp; \mathcal{N}(y(x^n), \sigma_\nu^2) \nonumber \\
+\end{eqnarray}\]
+
+<p>Assuming Gaussian priors on \(w_0\) and \(w_1\), make the Laplace approximation to the posterior distribution of \(w_0\) and \(w_1\) (which is exact, in fact) and obtain the predictive distribution for the next datapoint \(t^{N+1}\), given \(x^{N+1}\)</p>
+
+<p><strong>Answer :</strong></p>
+
+<p>Suppose that \(w = (w_0, w_1)\), then our prior will be as follows:</p>
+
+\[\begin{eqnarray}
+p(w) &amp;=&amp; \mathcal{N}(w; 0, \mathbf{I}) \nonumber \\
+&amp;\propto&amp; \exp\left(- \frac{1}{2} w^{T}w\right) \nonumber \\
+\log p(w) &amp;\propto&amp; - \frac{1}{2} w^{T} w \nonumber \\
+\end{eqnarray}\]
+
+<!--Let's just assume both $$p(w_0)$$ and $$p(w_1)$$ are following the standard normal distribution that is $$\mathcal{N}(0, 1)$$ to keep the proble simple.
+
+$$
+\begin{eqnarray}
+p(w_0) &\propto& \exp\left( \frac{1}{2} w_0^2 \right) \nonumber \\
+\log p(w_0) &\propto& \frac{1}{2} w_0^2 \nonumber
+\end{eqnarray}
+$$
+
+$$
+\begin{eqnarray}
+p(w_1) &\propto& \exp\left( \frac{1}{2} w_1^2 \right) \nonumber \\
+\log p(w_1) &\propto& \frac{1}{2} w_1^2 \nonumber
+\end{eqnarray}
+$$ -->
+
+<p>Suppose that we have \((x, t) = \{x^{n}, t^{n}\}_{n=1}^{N}\) training-data. Since our likelihood is a Gaussian which depends on \(x, w_0,\) and \(w_1\), we obtain the likelihood as follows:</p>
+
+\[\begin{eqnarray}
+p(t \vert x, w_0, w_1) &amp;\propto&amp; \prod_{n=1}^{N} \exp \left(-\frac{1}{2\sigma_{\nu}^2} (t^{n} - y(x^{n}))^2 \right) \nonumber \\
+&amp;=&amp; \exp\left( -\frac{1}{2\sigma_{\nu}^2} \sum_{n=1}^{N} (t^{n} - y(x^{n}))^2 \right) \nonumber \\
+\log p(t \vert x, w_0, w_1) &amp;\propto&amp; - \frac{1}{2\sigma_\nu^2} \sum_{n=1}^{N} (t^{n} - y(x^{n}))^2 \nonumber \\
+\end{eqnarray}\]
+
+<p>Having prior and likelihood. We are ready to compute the log of unnormalized posterior. We only need to apply the Bayes theorem to do so.</p>
+
+\[\begin{eqnarray}
+\log p(w \vert x, t) &amp;\propto&amp; \log p(t \vert x, w) + \log p(w) \nonumber \\
+&amp;=&amp;  - \frac{1}{2\sigma_\nu^2} \sum_{n=1}^{N} (t^{n} - y(x^{n}))^2 - \frac{1}{2} w^{T} w \nonumber \\
+\end{eqnarray}\]
+
+<p>Let’s define the unnormalized posterior as \(p^*(w \vert x, t)\). The rest of the solution is solving the Laplace approximation. The first step is to obtain \(w^{\text{MAP}}\) via first derivation of \(- \log p^*(w \vert x, t)\)</p>
+
+\[\begin{eqnarray}
+\frac{d-\log p^*(w \vert x, t)}{dw} &amp;=&amp; 
+\begin{bmatrix} 
+\frac{d-\log p^*(w \vert x, t)}{dw_0} \\
+\frac{d-\log p^*(w \vert x, t)}{dw_1} \\
+\end{bmatrix}
+\nonumber \\
+&amp;=&amp;
+\begin{bmatrix}
+\frac{-1}{\sigma_\nu^2} \sum_{n=1}^{N} \left[ t^n - (w_0 + w_1 x^n) \right] + w_0\\
+\frac{-1}{\sigma_\nu^2} \sum_{n=1}^{N} \left [ t^n - (w_0 + w_1 x^n) \right]x^n + w_1\\
+\end{bmatrix}
+\nonumber \\
+\end{eqnarray}\]
+
+\[\begin{eqnarray}
+w^{\text{MAP}} &amp;=&amp; 
+\begin{bmatrix}
+w_0^{\text{MAP}}\\
+w_1^{\text{MAP}}\\
+\end{bmatrix} 
+\nonumber \\
+&amp;=&amp; \frac{1}{(n + \sigma_\nu^2)(\sum_{n=1}^N x^n + \sigma_\nu^2) - (\sum_{n=1}^N x^n)^2}
+\begin{bmatrix}
+(\sum_{n=1}^N (x^n)^2 + \sigma_\nu^2) \sum_{n=1}^N t^n - \sum_{n=1}^N x^n \sum_{n=1}^N x^n t^n \\
+\sum_{n=1}^N x^n \sum_{n=1}^N t^n + (n + \sigma_\nu^2) \sum_{n=1}^N x^n t^n\\
+\end{bmatrix}
+\nonumber \\
+\end{eqnarray}\]
+
+<p>Next step is to obtain the Hessian matrix \(H\) of \(- \log p^*(w \vert x, t)\):</p>
+
+\[\begin{eqnarray}
+H &amp;=&amp; 
+\begin{bmatrix}
+\frac{d^2 - \log p^*(w \vert x, t)}{dw_0^2} &amp; \frac{d^2 - \log p^*(w \vert x, t)}{dw_0 dw_1} \\
+\frac{d^2 - \log p^*(w \vert x, t)}{dw_1 dw_0} &amp; \frac{d^2 - \log p^*(w \vert x, t)}{dw_1^2}
+\end{bmatrix}
+\nonumber \\
+&amp;=&amp;
+\begin{bmatrix}
+\frac{n}{\sigma_\nu^2} + 1 &amp; \frac{\sum_{n=1}^{N} x^n}{\sigma_\nu^2}\\
+\frac{\sum_{n=1}^{N}x^n}{\sigma_\nu^2} &amp; \frac{\sum_{n=1}^{N} (x^n)^2}{\sigma_\nu^2} + 1 \\
+\end{bmatrix}
+\nonumber \\
+\end{eqnarray}\]
+
+<p>Now, we can approximate \(p^*(w \vert x, t)\) with a distribution \(q^*(w)\):
+\(\begin{eqnarray}
+q^*(w) = p^*(w^{\text{MAP}}) \exp \left[\frac{-1}{2} (w - w^{\text{MAP}})^T H (w - w^{\text{MAP}}) \right] \nonumber \\
+\end{eqnarray}\)</p>
+
+<p>Subsequently, we obtain the normalization factor \(Z_q\)</p>
+
+\[\begin{eqnarray}
+Z_q = p^*(w^{\text{MAP}}) \sqrt{\frac{(2\pi)^K}{\text{det} H}} \nonumber \\
+\end{eqnarray}\]
+
+<p>with \(K\) denotes the dimensionality of \(w\). Finally our approximate distribution follows a normal distribution</p>
+
+\[\begin{eqnarray}
+q(w) &amp;=&amp; \frac{q^*(w)}{Z_q} \nonumber \\
+&amp;=&amp; \frac{1}{\sqrt{\frac{(2\pi)^2}{\text{det H}}}} \exp \left[\frac{-1}{2} (w - w^{\text{MAP}})^T H (w - w^{\text{MAP}}) \right] \nonumber \\
+ &amp;=&amp; \mathcal{N}(w; w^{\text{MAP}}, H) \nonumber \\
+\end{eqnarray}\]
+
+<p>Given a new data point \((x^{N+1})\), we compute the approximate predictive distribution:</p>
+
+\[\begin{eqnarray}
+p(t^{N+1} \vert x^{N+1}) =  \int p(t^{N+1} \vert x^{N + 1}, w) q(w) dw \nonumber \\
+\end{eqnarray}\]
+
+<p>However, compute this integral is often intractable. We can utilize Monte Carlo estimation to simplify the computation.</p>
+
+\[\begin{eqnarray}
+p(t^{N+1} \vert x^{N+1}) \approx \sum_{i=1}^{M} p(t^{N+1} \vert x^{N + 1}, w^{i}), \qquad w^{i} \sim q(w) \nonumber \\  
+\end{eqnarray}\]
+
+<p>with M is the number of samples \(w\). The more samples we use the more accurate is the prediction.</p>
+
+  </article>
+
+</div>
+
+    </div>
+
+    <!-- Footer -->    
+    <footer class="fixed-bottom">
+      <div class="container mt-0">
+        © Copyright 2024 Marshal Arijona Sinaga. Powered by <a href="http://jekyllrb.com/" target="_blank" rel="noopener noreferrer">Jekyll</a> with <a href="https://github.com/alshedivat/al-folio" target="_blank" rel="noopener noreferrer">al-folio</a> theme. Hosted by <a href="https://pages.github.com/" target="_blank" rel="noopener noreferrer">GitHub Pages</a>. Photos from <a href="https://unsplash.com" target="_blank" rel="noopener noreferrer">Unsplash</a>.
+
+      </div>
+    </footer>
+
+    <!-- JavaScripts -->
+    <!-- jQuery -->
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
+    <!-- Bootsrap & MDB scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.2/dist/umd/popper.min.js" integrity="sha256-l/1pMF/+J4TThfgARS6KwWrk/egwuVvhRzfLAMQ6Ds4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.min.js" integrity="sha256-SyTu6CwrfOhaznYZPoolVw2rxoY7lKYKQvqbtqN93HI=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mdbootstrap@4.20.0/js/mdb.min.js" integrity="sha256-NdbiivsvWt7VYCt6hYNT3h/th9vSTL4EDWeGs5SN3DA=" crossorigin="anonymous"></script>
+
+    <!-- Mansory & imagesLoaded -->
+  <script defer src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js" integrity="sha256-Nn1q/fx0H7SNLZMQ5Hw5JLaTRZp0yILA/FRexe19VdI=" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/imagesloaded@4/imagesloaded.pkgd.min.js"></script>
+  <script defer src="/assets/js/mansory.js" type="text/javascript"></script>
+    
+  <!-- Medium Zoom JS -->
+  <script src="https://cdn.jsdelivr.net/npm/medium-zoom@1.0.6/dist/medium-zoom.min.js" integrity="sha256-EdPgYcPk/IIrw7FYeuJQexva49pVRZNmt3LculEr7zM=" crossorigin="anonymous"></script>
+  <script src="/assets/js/zoom.js"></script><!-- Load Common JS -->
+  <script src="/assets/js/common.js"></script>
+
+    <!-- MathJax -->
+  <script type="text/javascript">
+    window.MathJax = {
+      tex: {
+        tags: 'ams'
+      }
+    };
+  </script>
+  <script defer type="text/javascript" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js"></script>
+  <script defer src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+
+    
+  </body>
+</html>
+

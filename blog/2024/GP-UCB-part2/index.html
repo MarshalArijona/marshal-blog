@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <!-- Head -->
+  <head>        
+    <!-- Metadata, OpenGraph and Schema.org -->
+    
+
+    <!-- Standard metadata -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Marshal Sinaga | A Deep Dive into the Regret Bound of GP-UCB Optimization (Part II)</title>
+    <meta name="author" content="Marshal Arijona Sinaga" />
+    <meta name="description" content="A simple, whitespace theme for academics. Based on [*folio](https://github.com/bogoli/-folio) design.
+" />
+    <meta name="keywords" content="jekyll, jekyll-theme, academic-website, portfolio-website" />
+
+
+    <!-- Bootstrap & MDB -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha256-DF7Zhf293AJxJNTmh5zhoYYIMs2oXitRfBjY+9L//AY=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/mdbootstrap@4.20.0/css/mdb.min.css" integrity="sha256-jpjYvU3G3N6nrrBwXJoVEYI/0zw8htfFnhT9ljN3JJw=" crossorigin="anonymous" />
+
+    <!-- Fonts & Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/all.min.css" integrity="sha256-mUZM63G8m73Mcidfrv5E+Y61y7a12O5mW4ezU3bxqW4=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/academicons@1.9.1/css/academicons.min.css" integrity="sha256-i1+4qU2G2860dGGIOJscdC30s9beBXjFfzjWLjBRsBg=" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:100,300,400,500,700|Material+Icons">
+
+    <!-- Code Syntax Highlighting -->
+    <link rel="stylesheet" href="https://gitcdn.xyz/repo/jwarby/jekyll-pygments-themes/master/github.css" />
+
+    <!-- Styles -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22></text></svg>">
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <link rel="canonical" href="https://marshalarijona.github.io/blog/2024/GP-UCB-part2/">
+
+    <!-- Dark Mode -->
+    <script src="/assets/js/theme.js"></script>
+    <script src="/assets/js/dark_mode.js"></script>
+  </head>
+
+  <!-- Body -->
+  <body class="fixed-top-nav">
+
+    <!-- Header -->
+    <header>
+
+      <!-- Nav Bar -->
+      <nav id="navbar" class="navbar navbar-light navbar-expand-sm fixed-top">
+        <div class="container">
+          <a class="navbar-brand title font-weight-lighter" href="https://marshalarijona.github.io/">Marshal Sinaga</a>
+          <!-- Navbar Toggle -->
+          <button class="navbar-toggler collapsed ml-auto" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar top-bar"></span>
+            <span class="icon-bar middle-bar"></span>
+            <span class="icon-bar bottom-bar"></span>
+          </button>
+
+          <div class="collapse navbar-collapse text-right" id="navbarNav">
+            <ul class="navbar-nav ml-auto flex-nowrap">
+
+              <!-- About -->
+              <li class="nav-item ">
+                <a class="nav-link" href="/">About</a>
+              </li>
+              
+              <!-- Blog -->
+              <li class="nav-item active">
+                <a class="nav-link" href="/blog/">Blog</a>
+              </li>
+
+              <!-- Other pages-->
+              <li class="nav-item ">
+                <a class="nav-link" href="/notes/">Notes</a>
+              </li>
+              <li class="nav-item ">
+                <a class="nav-link" href="/publications/">Publications</a>
+              </li>
+              <!--
+              <li class="nav-item dropdown ">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">submenus</a>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                  <a class="dropdown-item" href="/publications/">publications</a>
+                  <div class="dropdown-divider"></div>
+                  <a class="dropdown-item" href="/projects/">projects</a>
+                </div>
+              </li>
+            -->
+
+              <!-- Toogle theme mode -->
+              <div class="toggle-container">
+                <a id="light-toggle">
+                  <i class="fas fa-moon"></i>
+                  <i class="fas fa-sun"></i>
+                </a>
+              </div>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <!-- Content -->
+    <div class="container mt-5">
+      <!-- _layouts/post.html -->
+
+<div class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">A Deep Dive into the Regret Bound of GP-UCB Optimization (Part II)</h1>
+    <p class="post-meta">May 31, 2024</p>
+    <p class="post-tags">
+      <a href="/blog/2024"> <i class="fas fa-calendar fa-sm"></i> 2024 </a>
+        ·  
+        <a href="/blog/tag/Bayesian-optimization">
+          <i class="fas fa-hashtag fa-sm"></i> Bayesian-optimization</a>  
+          
+        ·  
+        <a href="/blog/category/machine-learning-posts">
+          <i class="fas fa-tag fa-sm"></i> machine-learning-posts</a>  
+          
+
+    </p>
+  </header>
+
+  <article class="post-content">
+    <p>In the second part of this blog series (see <a href="https://marshalarijona.github.io/blog/2024/GP-UCB/">Part I</a> and <a href="https://marshalarijona.github.io/blog/2024/GP-UCB-part3/">Part III</a>), we aim to derive the regret bound of GP-UCB optimization in an agnostic setting. We consider an arbitrary function  \(f\) belongs to a reproducing kernel Hilbert space (RKHS), associated with the kernel \(k(x, x^\prime), \; \forall x \in D\).</p>
+
+<h1 id="introduction">Introduction</h1>
+
+<p><strong>Reproducing kernel Hilbert space (RKHS).</strong> Let \(\mathcal{X}\) be a non empty set and \(k\) be a positive definite kernel on \(\mathcal{X}\). A Hilbert space \(\mathcal{H}_k\) of function on \(\mathcal{X}\) equipped with an inner product \(\langle ., . \rangle_{\mathcal{H}_k}\) is called a reproducing kernel Hilbert space (RKHS) with reproducing kernel \(k\), if the following are satisfied:</p>
+
+<ol>
+  <li>For all \(x \in \mathcal{X}\), we have \(k(., x) \in \mathcal{H}_k\).</li>
+  <li>For all \(x \in \mathcal{X}\), and for all \(f \in \mathcal{H}_k\)</li>
+</ol>
+
+\[\begin{equation}
+f(x) = \langle f, k(., x) \rangle_{\mathcal{H}_K} \quad \text{(reproducing property)} \nonumber
+\end{equation}\]
+
+<hr>
+
+<div class="row mt-3">
+    <div class="col-sm mt-3 mt-md-0">
+        <figure>
+
+  <picture>
+    <source media="(max-width: 480px)" srcset="/assets/img/kernel-function-hilbert-space-480.webp"></source>
+    <source media="(max-width: 800px)" srcset="/assets/img/kernel-function-hilbert-space-800.webp"></source>
+    <source media="(max-width: 1400px)" srcset="/assets/img/kernel-function-hilbert-space-1400.webp"></source>
+    <!-- Fallback to the original file -->
+    <img class="img-fluid rounded z-depth-1" src="/assets/img/kernel-function-hilbert-space.png" data-zoomable="">
+
+  </picture>
+
+</figure>
+
+    </div>
+</div>
+<div class="caption">
+    Illustration of the equivalence between a GP kernel function and an inner product in a Hilbert space. Credit: Arno Solin.
+</div>
+
+<hr>
+
+<p><strong>Martingale.</strong> Martingale is a stochastic process \(X_1, \dots, X_N\) that satisfies for any time \(n\),</p>
+
+\[\begin{eqnarray}
+&amp;&amp; \mathbb{E}[\vert X_n \vert] &lt; \infty  \nonumber \\
+&amp;&amp; \mathbb{E}[X_{n + 1} \vert X_1, \dots, X_n] = X_n \nonumber
+\end{eqnarray}\]
+
+<p>that is, the condition expected value of the next observation, given all the history is determined only by the current observation.</p>
+
+<p>This agnostic setting introduces key differences compared to the previous one:</p>
+<ol>
+  <li>
+<strong>Function space:</strong> \(f\) is no longer restricted to sample drawn from a GP. Instead, it can be an arbitrary function from \(\mathcal{H}_k(D)\).</li>
+  <li>
+<strong>Noise model relaxation:</strong> While UCB assumes that the noise \(\epsilon_t = y_t - f(x_t)\) is drawn independently from \(N(0, \sigma^2)\), we relax the assumption such that the sequence of noise variables can be a uniformly bounded martingale difference sequence: \(\epsilon_t \leq \sigma\) for all \(t \in \mathbb{N}\).</li>
+</ol>
+
+<h1 id="regret-bound-for-the-function-in-rkhs">Regret Bound for the Function in RKHS</h1>
+
+<p><strong>Theorem 3</strong> <em>Let \(\delta \in (0, 1)\). Assume that the true underflying \(f\) lies in RKHS \(\mathcal{H}_k(D)\) corresponding to the kernel \(k(x, x^\prime)\) and the noise \(\epsilon_t\) has zero mean conditioned on the history and is bounded by \(\sigma\) almost surely. In particular, assume \(\Vert f \Vert_k^2 \leq B\) and let \(\beta_t = 2B + 300 \gamma_t \log^3 (t / \delta)\). Running GP-UCB with \(\beta_t\), prior \(GP(0, k(x, x^\prime))\) and noise model \(N(0, \sigma^2)\), we obtain a regret bound of \(\mathcal{O}(\sqrt{T}(B \sqrt{\gamma_T} + \gamma_T))\) with high probability. Precisely,</em></p>
+
+\[\begin{equation}
+\mathbb{P}(R_T \leq \sqrt{C_1 T \beta_T \gamma_T} \quad \forall T \geq 1) \geq 1 - \delta \nonumber
+\end{equation}\]
+
+<p><em>where \(C_1 = 8 / \log(1 + \sigma^{-2})\).</em></p>
+
+<hr>
+
+<p><strong>Proof:</strong></p>
+
+<p>Given the posterior covariance \(k_T(., .)\), we have</p>
+
+\[\begin{equation}
+\Vert f \Vert^2_{k_T} = \Vert f \Vert_k^2 + \sigma^{-2} \sum_{t = 1}^T f(x_t)^2 \nonumber
+\end{equation}\]
+
+<p>It implies that \(\mathcal{H}_k(D) = \mathcal{H}_{k_T}(D)\), while \(\Vert f \Vert_{k_T} \leq \Vert f \Vert_{k}\). By the reproducing property and Cauchy-Schwarz inequality, we have</p>
+
+\[\begin{eqnarray}
+\vert \mu_t(x) - f(x) \vert &amp;\leq&amp; k_T(x, x)^{1 / 2} \Vert \mu_t - f \Vert_{k_T} \nonumber \\
+&amp;=&amp; \sigma_T(x) \Vert \mu_t - f \Vert_{k_T} \label{eq:rkhs-inequality}
+\end{eqnarray}\]
+
+<p>We need to lift up <strong>Theorem 1</strong> to the agnostic setting in order to prove <strong>Theorem 3</strong>. For that purpose, it requires the following theorem to have an equivalence of <strong>Lemma 5.1</strong> (see <a href="https://marshalarijona.github.io/blog/2024/GP-UCB/">Part I</a>).</p>
+
+<p><strong>Theorem 6</strong> <em>Let \(\delta \in (0, 1)\). Assume the noise variance \(\epsilon_t\) are uniformly bounded by \(\sigma\). Define</em></p>
+
+\[\begin{equation}
+\beta_t = 2 \Vert f \Vert_k^2 + 300 \gamma_t \ln^3(t / \delta), \nonumber
+\end{equation}\]
+
+<p><em>Then</em></p>
+
+\[\begin{equation}
+\mathbb{P}(\forall T, \forall x \in D, \vert \mu_T(x) - f(x) \vert \leq \beta_{T + 1}^{1 / 2} \sigma_T(x)) \geq 1 - \delta \nonumber 
+\end{equation}\]
+
+<p><strong>Proof:</strong></p>
+
+<p>The strategy is to show that</p>
+
+\[\begin{equation}
+   \mathbb{P}\left( \forall T, \Vert \mu_T - f \Vert_{k_T} \leq \beta_{T + 1} \right) \geq 1 - \delta \nonumber
+\end{equation}\]
+
+<p><strong>Theorem 6</strong> will follow from \eqref{eq:rkhs-inequality}. The proof analyzes the quantity \(Z_T\) and then bounds the martiangle difference.</p>
+
+<h4 id="bound-of-z_t">Bound of \(Z_t\)</h4>
+
+<p>We first analyze the quantity \(Z_T = \Vert \mu_T - f \Vert_{k_T}^2\), that is the error of \(\mu_T\) as the approximation of \(f\) under the RKHS norm \(\mathcal{H}_{k_T}(D)\). The analysis requires a lemma which is responsible to bound the growth of \(Z_T\). Establishing this lemma requires normalized quantities: \(\tilde{\epsilon}_t = \epsilon_t / \sigma, \tilde{f} = f / \sigma, \tilde{\mu}_t = \mu_t / \sigma, \tilde{\sigma}_t = \sigma_t / \sigma\). For convenience, \(\mu_{t - 1}\) and \(\sigma_{t - 1}\) are the shorthand for \(\mu_{t - 1}(x_t)\) and \(\sigma_{t - 1}(x_t)\), respectively.</p>
+
+<p><strong>Lemma 7.2</strong> <em>For all \(T \in \mathbb{N}\),</em></p>
+
+\[\begin{equation}
+Z_T \leq \Vert f \Vert^2_k + 2 \sum_{t = 1}^T \tilde{\varepsilon}_t \frac{\tilde{\mu}_{t - 1} - \tilde{f}(x_t)}{1 + \tilde{\sigma}_{t - 1}^2} + \sum_{t = 1}^T \tilde{\varepsilon}^2_t \frac{\tilde{\sigma}_{t - 1}}{1 + \tilde{\sigma}_{t - 1}^2} \nonumber
+\end{equation}\]
+
+<p><strong>Proof:</strong></p>
+
+<p>If \(\boldsymbol{\alpha}_t = (\mathbf{K}_t + \sigma^2 \mathbf{I})^{-1} \mathbf{y}_t\), then \(\mu_t(x) = \boldsymbol{\alpha}_t^\top \mathbf{k}_t(x)\). Moreover, we have \(\langle \mu_T, f \rangle_k = \mathbf{f}^\top_T \boldsymbol{\alpha}_T, \Vert \mu_T \Vert^2_k = \mathbf{y}_T^\top \boldsymbol{\alpha}_T - \sigma^2 \Vert \boldsymbol{\alpha}_T \Vert^2, \mu_T(x_t) = \boldsymbol{\delta}_t^\top \mathbf{K}_T (\mathbf{K}_T + \sigma^2 \mathbf{I})^{-1} \mathbf{y}_T = y_t - \sigma^2 \alpha_t\). Since \(Z_T = \Vert \mu_T - f \Vert_k + \sigma^{-2} \sum_{t \leq T} (\mu_T(x_t) - f(x_t))^2\), we have</p>
+
+\[\begin{eqnarray}
+Z_T &amp;&amp;= \Vert f \Vert_k^2 - 2 \mathbf{f}_T^\top \boldsymbol{\alpha}_T + \mathbf{y}_T^\top \boldsymbol{\alpha}_T - \sigma^2 \Vert \alpha_T \Vert^2 + \sigma^{-2} \sum_{t = 1}^T (\epsilon_t - \sigma^2 \alpha_t)^2  \nonumber \\
+&amp;&amp; = \Vert f \Vert_k^2 - \mathbf{y}_T^\top (\mathbf{K}_T + \sigma^2 \mathbf{I})^{-1} \mathbf{y}_T + \sigma^{-2} \Vert \boldsymbol{\epsilon}_T \Vert^2 \nonumber
+\end{eqnarray}\]
+
+<p>Note that \(2 \log p(\mathbf{y}_t) \propto - \mathbf{y}_T^\top (\mathbf{K}_T + \sigma^2 \mathbf{I})^{-1} \mathbf{y}_T\). Since \(\log p(\mathbf{y}_T) = \sum_{t = 1} \log p(y_t \vert \mathbf{y}_{&lt; t}) = \sum_t \log N(y_t \vert \mu_{t - 1}(x_t), \sigma^2_{t - 1}(x_t) + \sigma^2)\), we have</p>
+
+\[\begin{eqnarray}
+&amp;&amp;- \mathbf{y}_T^\top (\mathbf{K}_T + \sigma^2 \mathbf{I})^{-1} \mathbf{y}_T = - \sum_t \frac{(y_t - \mu_{t - 1})^2}{\sigma^2 + \sigma_{t - 1}^2} \nonumber \\
+&amp;&amp; = 2 \sum_t \epsilon_t \frac{\mu_{t - 1} - f(x_t)}{\sigma^2 + \sigma^2_{t - 1}} - \sum_t \frac{\epsilon_t^2 \tilde{\sigma}^2_{t - 1}}{\sigma^2 + \sigma^2_{t - 1}} - R  \nonumber
+\end{eqnarray}\]
+
+<p>with \(R = \sum_t (\mu_{t - 1} - f(x_t))^2 / (\sigma^2 + \sigma^2_{t - 1}) \geq 0\). Dropping \(-R\) and changing to normalized quantities concludes the proof.</p>
+
+<h4 id="concentration-of-martingale">Concentration of Martingale</h4>
+
+<p>We need the following lemma to construct the proof of <strong>Lemma 7.3</strong>.</p>
+
+<p><strong>Lemma 7.1</strong> <em>We have that</em></p>
+
+\[\begin{equation}
+\sum_{t = 1}^T \min(\sigma^{-2} \sigma^2_{t - 1}(x_t), \alpha) \leq \frac{2 \alpha}{\log (1 + \alpha) \gamma_T}, \quad \alpha &gt; 0 \nonumber
+\end{equation}\]
+
+<p><strong>Proof:</strong></p>
+
+<p>We have that \(\min(r, \alpha) \leq (\alpha / \log(1 + \alpha)) \log (1 + r)\). The statement follows from <strong>Lemma 5.3</strong>. (see <a href="https://marshalarijona.github.io/blog/2024/GP-UCB/">Part I</a>)</p>
+
+<p>We also need the concentration inequality for martingale differences:</p>
+
+<p><strong>Theorem 7 (Freedman)</strong> <em>Suppose \(X_1, \dots, X_T\) is a martingale difference sequence, and \(b\) is an uniform upper bound on the steps \(X_i\). Let \(V\) denote the sum of conditional variances,</em></p>
+
+\[\begin{equation}
+V = \sum_{i = 1}^n \mathbb{V}[X_i \vert X_1, \dots, X_{i - 1}] \nonumber
+\end{equation}\]
+
+<p><em>Then, for every \(a, v &gt; 0\),</em></p>
+
+\[\begin{equation}
+\mathbb{P}\left(\sum X_i \leq a \, \text{and} \, V \leq v \right) \leq \exp\left( \frac{- a^2}{2v + 2ab / 3} \right) \nonumber
+\end{equation}\]
+
+<p>We now define a martingale difference sequence. First, we define the “escape-event” \(E_T\) as</p>
+
+\[\begin{equation}
+E_T = I\{ Z_t \leq \beta_{t + 1} \; \text{for all} \; t \leq T \} \nonumber
+\end{equation}\]
+
+<p>Subsequently, we define the random variables \(M_t\) by</p>
+
+\[\begin{equation}
+M_t = 2 \tilde{\epsilon_t} E_{t - 1} \frac{\tilde{\mu}_{t -1 } - \tilde{f}(x_t)}{1 + \tilde{\sigma}^2_{t - 1}} \nonumber
+\end{equation}\]
+
+<p>Remark: Since \(\tilde{\epsilon}_t\) is a martingale difference sequence w.r.t. the histories and \(M_t / \tilde{\epsilon}_t\) is deterministic given the history, \(M_t\) is martingale difference sequence as well.</p>
+
+<p>The following lemma tells with a high probability, the associated martingale \(\sum_{t = 1}^T M_t\) does not grow too large.</p>
+
+<p><strong>Lemma 7.3</strong> <em>Given \(\delta \in (0, 1)\) and \(\beta_t\) as defined in <strong>Theorem 6</strong>, we have that</em></p>
+
+\[\begin{equation}
+\mathbb{P} \left(\forall T, \sum_{t = 1}^T M_t \leq  \beta_{T + 1} / 2 \right) \geq 1 - \delta \nonumber
+\end{equation}\]
+
+<p><strong>Proof:</strong></p>
+
+<p>We first obtain upper bound on the step sizes of the martingale.</p>
+
+\[\begin{eqnarray}
+\vert M_t \vert &amp;&amp;= 2 \vert \tilde{\epsilon}_t \vert E_{t - 1} \frac{\vert \tilde{\mu}_{t - 1} - \tilde{f}(x_t) \vert}{1 + \tilde{\sigma}^2_{t - 1}} \nonumber \\
+&amp;&amp;\leq 2 \vert \tilde{\epsilon}_t \vert E_{t - 1} \frac{\beta_t^{1 / 2} \tilde{\sigma}_{t - 1}}{1 + \tilde{\sigma}^2_{t - 1}} \nonumber \\
+&amp;&amp;\leq 2 \vert \tilde{\epsilon}_t \vert E_{t - 1} \beta_{t}^{1 / 2} \min\{  \tilde{\sigma}_{t - 1}, 1 / 2 \} \nonumber
+\end{eqnarray}\]
+
+<p>The first inequality follows from \eqref{eq:rkhs-inequality} and the definition of \(E_t\). The second inequality follows from the fact that \(r / (1 + r^2) \leq \min\{r, 1/2 \}\) for \(r \geq 0\). Thus, \(\vert M_t\vert \leq \beta_{T}^{1 / 2}\) since \(\vert \tilde{\epsilon} \vert \leq 1\) and \(\beta_t\) is non-decreasing. Next, we bound the sum of the conditional variances of the martingale:</p>
+
+\[\begin{eqnarray}
+V_T &amp;&amp;= \sum_{t = 1}^T \mathbb{V}[M_t \vert M_1, \dots, M_{t - 1}] \nonumber \\
+&amp;&amp;\leq \sum_{t = 1}^T 4 \vert \epsilon_t \vert^2 E_{t - 1} \beta_t \min\{ \tilde{\sigma}^2_{t - 1}, 1/4 \} \nonumber \\
+&amp;&amp;\leq 4 \beta_T \sum_{t = 1}^T E_{t - 1} \min\{\tilde{\sigma}^2_{t - 1}, 1/4 \} &amp; \vert \tilde{\epsilon_t} \vert \leq 1  \nonumber \\
+&amp;&amp;\leq 9 \beta_T \gamma_T \nonumber
+\end{eqnarray}\]
+
+<p>The last inequality follows from <strong>Lemma 7.1</strong>, with \(\alpha=1/4\). We then apply <strong>Theorem 7</strong> with parameters \(a = \beta_{T + 1} / 2, b = \beta_{T + 1}^{1 / 2}\), and \(v = 9 \beta_T \gamma_T\) to obtain</p>
+
+\[\begin{eqnarray}
+&amp;&amp;\mathbb{P}\left( \sum_{t = 1}^T M_t \geq \beta_{T + 1} / 2 \right) \nonumber \\
+&amp;&amp; = \mathbb{P}\left( \sum_{t = 1}^T M_t \geq \beta_{T + 1} / 2 \; \text{and} \; V_T \leq 9 \beta_T \gamma_T \right) \nonumber \\
+&amp;&amp; \leq \exp\left( \frac{- (\beta_{T + 1} / 2)^2 }{2 (9 \beta_T \gamma_T) + 2/3 (\beta_{T + 1} / 2) \beta_{T + 1}^{1 / 2} } \right) \nonumber \\
+&amp;&amp;= \exp\left( \frac{- \beta_{T + 1}}{72 \gamma_T + 4/3 \beta_{T + 1}^{1 / 2}} \right) \nonumber \\
+&amp;&amp; \leq \max\left \{ \exp\left( \frac{- \beta_{T + 1}}{144 \gamma_T} \right), \exp\left( \frac{-3 \beta_{T + 1}^{1 / 2}}{8} \right) \right \} \nonumber
+\end{eqnarray}\]
+
+<p>Note that \(\beta_{T + 1}\) satisfies</p>
+
+\[\begin{equation}
+\max\{ 144 \gamma_T \log (T^2 / \delta), ((8 / 3) \log (T^2 / \delta))^2 \} \leq \beta_{T + 1} \nonumber \\
+\end{equation}\]
+
+<p>Therefore, the previous probability is bounded by \(\delta / T^2\). By applying the union bound we obtain</p>
+
+\[\begin{eqnarray}
+&amp;&amp;\mathbb{P}\left( \sum_{t = 1}^T  M_t \geq \beta_{T + 1} / 2 \quad \text{for some} \, T \right) \nonumber \\
+&amp;&amp;\leq \sum_{T \geq 1} \mathbb{P}(\sum_{t = 1}^T M_t \geq \beta_{T + 1} / 2) \nonumber \\
+&amp;&amp;\leq \sum_{T \geq 2} \delta / T^2 \leq \delta(\pi^2 / 6 - 1) \leq \delta \nonumber
+\end{eqnarray}\]
+
+<p>completing the proof of <strong>Lemma 7.3</strong>.</p>
+
+<p>[Proof of Theorem 6] By <strong>Lemma 7.2</strong> and the definition of \(\beta_1\), we have \(Z_0 \leq \Vert f \Vert_k \leq \beta_1\). Hence, we always have \(E_0 = 1\). Suppose with a high-probability <strong>Lemma 7.3</strong> holds, i.e., \(\sum_t M_t \leq \beta_{T + 1} / 2\). For the inductive hypothesis, assume \(E_T = 1\). By applying <strong>Lemma 7.2</strong> we obtain</p>
+
+\[\begin{eqnarray}
+Z_T &amp;&amp;\leq \Vert f \Vert_k^2 + 2 \sum_{t = 1}^T \frac{\tilde{\epsilon}_t ( \tilde{\mu}_{t - 1} - \tilde{f}(x_t) )}{1 + \tilde{\sigma}^2_{t - 1}} + \sum_{t = 1}^T \frac{\tilde{\epsilon}_t^2 \tilde{\sigma}^2_{t - 1}}{1 + \tilde{\sigma}^2_{t - 1}} \nonumber \\
+&amp;&amp;= \Vert f \Vert_k^2 + \sum_{t = 1}^T M_t + \sum_{t = 1}^T \tilde{\epsilon}_t \frac{\tilde{\sigma}^2_{t - 1}}{1 + \tilde{\sigma}^2_{t - 1}} \nonumber \\
+&amp;&amp; \leq \Vert f \Vert_k^2 + \beta_{T + 1} / 2   + \sum_{t = 1}^T \min\{\tilde{\sigma}^2_{t - 1}, 1 \} \nonumber \\
+&amp;&amp; \leq \Vert f \Vert_k^2 + \beta_{T + 1} / 2 + (2 / \log 2) \gamma_T \leq \beta_{T + 1} \nonumber
+\end{eqnarray}\]
+
+<p>The equality in the second step uses the inductive hypothesis. Thus we have shown \(E_T = 1\), completing the induction.</p>
+
+<p>Following the proof of <strong>Theorem 1</strong> and replacing <strong>Lemma 5.1</strong> with <strong>Theorem 6</strong> leads to the results in <strong>Theorem 3</strong>. Note that <strong>Theorem 3</strong> holds uniformly over all functions \(f\), with \(\Vert f \Vert &lt; \infty\).</p>
+
+<p>In the last part of this blog series, we aim to obtain the bound the quantity \(\gamma_T\) for practical classes of kernels.</p>
+
+<h4 id="reference">Reference</h4>
+
+<ul>
+  <li>Srinivas, N., Krause, A., Kakade, S. M., &amp; Seeger, M. (2009). Gaussian process optimization in the bandit setting: No regret and experimental design. arXiv preprint arXiv:0912.3995.</li>
+</ul>
+
+  </article>
+
+</div>
+
+    </div>
+
+    <!-- Footer -->    
+    <footer class="fixed-bottom">
+      <div class="container mt-0">
+        © Copyright 2024 Marshal Arijona Sinaga. Powered by <a href="http://jekyllrb.com/" target="_blank" rel="noopener noreferrer">Jekyll</a> with <a href="https://github.com/alshedivat/al-folio" target="_blank" rel="noopener noreferrer">al-folio</a> theme. Hosted by <a href="https://pages.github.com/" target="_blank" rel="noopener noreferrer">GitHub Pages</a>. Photos from <a href="https://unsplash.com" target="_blank" rel="noopener noreferrer">Unsplash</a>.
+
+      </div>
+    </footer>
+
+    <!-- JavaScripts -->
+    <!-- jQuery -->
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
+    <!-- Bootsrap & MDB scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.2/dist/umd/popper.min.js" integrity="sha256-l/1pMF/+J4TThfgARS6KwWrk/egwuVvhRzfLAMQ6Ds4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.min.js" integrity="sha256-SyTu6CwrfOhaznYZPoolVw2rxoY7lKYKQvqbtqN93HI=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mdbootstrap@4.20.0/js/mdb.min.js" integrity="sha256-NdbiivsvWt7VYCt6hYNT3h/th9vSTL4EDWeGs5SN3DA=" crossorigin="anonymous"></script>
+
+    <!-- Mansory & imagesLoaded -->
+  <script defer src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js" integrity="sha256-Nn1q/fx0H7SNLZMQ5Hw5JLaTRZp0yILA/FRexe19VdI=" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/imagesloaded@4/imagesloaded.pkgd.min.js"></script>
+  <script defer src="/assets/js/mansory.js" type="text/javascript"></script>
+    
+  <!-- Medium Zoom JS -->
+  <script src="https://cdn.jsdelivr.net/npm/medium-zoom@1.0.6/dist/medium-zoom.min.js" integrity="sha256-EdPgYcPk/IIrw7FYeuJQexva49pVRZNmt3LculEr7zM=" crossorigin="anonymous"></script>
+  <script src="/assets/js/zoom.js"></script><!-- Load Common JS -->
+  <script src="/assets/js/common.js"></script>
+
+    <!-- MathJax -->
+  <script type="text/javascript">
+    window.MathJax = {
+      tex: {
+        tags: 'ams'
+      }
+    };
+  </script>
+  <script defer type="text/javascript" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js"></script>
+  <script defer src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+
+    
+  </body>
+</html>
+

@@ -1,0 +1,1578 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.3.4">Jekyll</generator><link href="https://marshalarijona.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://marshalarijona.github.io/" rel="alternate" type="text/html" hreflang="en" /><updated>2024-11-05T14:32:15+00:00</updated><id>https://marshalarijona.github.io/feed.xml</id><title type="html">Marshal Sinaga</title><subtitle>A simple, whitespace theme for academics. Based on [*folio](https://github.com/bogoli/-folio) design.
+</subtitle><entry><title type="html">A Deep Dive into the Regret Bound of GP-UCB Optimization (Part III)</title><link href="https://marshalarijona.github.io/blog/2024/GP-UCB-part3/" rel="alternate" type="text/html" title="A Deep Dive into the Regret Bound of GP-UCB Optimization (Part III)" /><published>2024-06-18T04:00:00+00:00</published><updated>2024-06-18T04:00:00+00:00</updated><id>https://marshalarijona.github.io/blog/2024/GP-UCB-part3</id><content type="html" xml:base="https://marshalarijona.github.io/blog/2024/GP-UCB-part3/"><![CDATA[<p>Tervetuloa! In this final part of the blog series (see <a href="https://marshalarijona.github.io/blog/2024/GP-UCB/">Part I</a> and <a href="https://marshalarijona.github.io/blog/2024/GP-UCB-part2/">Part II</a>), we are going to derive the bound of the quantity \(\gamma_T\) for practical classes of kernels.</p>
+
+<h2 id="submodularity-and-greedy-maximization">Submodularity and Greedy maximization</h2>
+
+<p><strong>Theorem 4</strong> <em>For any \(T \in \mathbb{N}\) and any \(T_\ast = 1, \dots, T:\)</em></p>
+
+<p>\begin{equation}
+\gamma_T \leq \mathcal{O}(\sigma^{-2} [B(T_\ast) T + T_\ast (\log n_T T)]) \nonumber
+\end{equation}</p>
+
+<p><em>where \(n_T = \sum_{t = 1}^{\vert D \vert} \hat{\lambda}_t\) and \(B(T_\ast) = \sum_{t = T_\ast + 1}^{\vert D \vert} \hat{\lambda}_t\)</em></p>
+
+<hr />
+
+<p><strong>Proof:</strong></p>
+
+<p>The sketch of the proof is as follows:</p>
+<ul>
+  <li>First, note that the information gain \(I(\mathbf{y}_A; \mathbf{f}_A)\) is a submodular function. Therefore, \(\gamma_T\) can be bounded via greedy maximization.</li>
+  <li>Subsequently, we utilize the discretization \(D_t \subset D\) with \(n_T = \vert D_T \vert = T^\tau\) with nearest neighbor distance \(o(1)\). We consider the kernel matrix \(\mathbf{K}_{D_T} \in \mathbb{R}^{n_T \times n_T}\) and bound \(\gamma_T\) by an expression involving the eigenvalues \(\{ \hat{\lambda}_t \}\) of this matrix.</li>
+  <li>Finally, we obtain the bound of this empirical expression in terms of the kernel operator eigenvalues of \(k\).</li>
+</ul>
+
+<h4 id="greedy-maximization-and-discretization">Greedy Maximization and Discretization</h4>
+
+<p><strong>Assumptions.</strong> Fix \(T \in \mathbb{N}\) and assume there exists a discretization \(D_T \subset D, n_T = \vert D_T \vert\) on the order of \(T^\tau\) s.t.</p>
+
+\[\begin{eqnarray}
+\forall x \in D \exists [x]_T \in D_T : \Vert x - [x]_T \Vert = \mathcal{O}(T^{- \tau / d}) \label{eq:discretization}
+\end{eqnarray}\]
+
+<p>We restrict the information gain to subsets \(A \subset D_T\):</p>
+
+\[\begin{eqnarray}
+\tilde{\gamma}_T = \max_{A \subset D_T, \vert A \vert = T} I(\mathbf{y}_A; \mathbf{f}_A) \nonumber
+\end{eqnarray}\]
+
+<hr />
+
+<p><strong>Lemma 7.4</strong> <em>Under the assumptions of <strong>Theorem 2</strong>, the information gain \(F_T(\{ x_t \}) = 1 / 2 \log \vert \mathbf{I} + \sigma^{-2}  \vert\) is uniformly Lipschitz-continuous in each component \(x_t \in D\).</em></p>
+
+<p><strong>Proof:</strong></p>
+
+<p><strong>Theorem 2</strong> implies that the kernel \(k\) is continuously differentiable. The result follows from the fact that \(F_T(\{ x_t \})\) is continuously differentiable in the kernel matrix \(\mathbf{K}_{\{x_t\}}\).</p>
+
+<hr />
+
+<p><strong>Lemma 7.5</strong> <em>Let \(D_T\) be a discretization of \(D\) such that \eqref{eq:discretization} holds. Under the assumption of <strong>Theorem 2</strong>, we have that</em></p>
+
+<p>\begin{equation}
+0 \leq \gamma_T - \tilde{\gamma}_T = \mathcal{O}(T^{1 - \tau / d}) \nonumber
+\end{equation}</p>
+
+<p><strong>Proof:</strong></p>
+
+<p>Fix \(T \in \mathbb{N}\). Let \(A = \{x_1, \dots, x_T\}\) be an optimum maximizer for \(\gamma_T\). Let \([A]_T = {[x_t]_T}_{t = 1}^T\). Then,</p>
+
+\[\begin{eqnarray}
+0 \leq \gamma_T - \tilde{\gamma}_T \leq \gamma_T - I(\mathbf{y}_{[A]_T}; \mathbf{f}_{[A]_T}) = F_T(A) - F_T([A]_T) \nonumber
+\end{eqnarray}\]
+
+<p>By <strong>Lemma 7.4</strong>, \(F_T\) is uniformly Lipschitz-continuous in each component, s.t. \(\vert \gamma_T  - I(\mathbf{y}_{[A]_T}; \mathbf{f}_{[A]_T}) \vert = \mathcal{O}(T \max_{t} \Vert x_t - [x_t]_T \Vert) = \mathcal{O}(T^{1 - \tau / d})\) by \eqref{eq:discretization} and the mean value theorem.</p>
+
+<hr />
+
+<p>With the following lemma, we obtain the upper-bound of \(\tilde{\gamma}_T\).</p>
+
+<p><strong>Lemma 7.6</strong> <em>For any \(T \geq 1\), we have that</em></p>
+
+\[\begin{eqnarray}
+\hat{\gamma}_T \leq \frac{1 / 2}{1 - e^{-1}} \max_{m_1, \dots, m_T} \sum_{t = 1}^T \log(1 + \sigma^{-2} m_t \hat{\lambda}_t) \nonumber
+\end{eqnarray}\]
+
+<hr />
+
+<h4 id="empirical-to-process-eigenvalues">Empirical to Process Eigenvalues</h4>
+
+<ul>
+  <li>Let \(\mu(x) = \mathcal{V}(D)^{-1} I_{x \in D}\) be the uniform distribution on \(D\), \(\mathcal{V}(D) = \int_{x \in D} dx\) and assume that \(k\) is continuous.</li>
+  <li>Assuming \(k(x, x) = 1\), we have \(\int k(x, x) \mu(x) dx = 1\), so that \(k\) is Hilbert-Scmidt on \(L_2(\mu)\).</li>
+  <li>Mercer’s theorem: corresponding kernel operator has a discrete eigenspectrum \(\{(\lambda_s, \phi_s(.))\}\) and</li>
+</ul>
+
+\[\begin{eqnarray}
+k(x, x^\prime) = \sum_{s \geq 1} \lambda_s \phi_s(x) \phi_s(x^\prime) \nonumber
+\end{eqnarray}\]
+
+<p>where \(\lambda_1 \geq \lambda_2 \geq \dots \geq 0, \mathbb{E}_\mu[\phi_s(x) \phi_t(x)] = \delta_{s, t}\).</p>
+
+<hr />
+<p>The following lemma determines the sizes \(n_T\) for which the discretizations above exist.</p>
+
+<p><strong>Lemma 7.7</strong> <em>Fix \(T \in \mathbb{N}, \delta &gt; 0\) and \(\epsilon &gt; 0\). There exists a discretization \(D_T \subset D\) of size</em></p>
+
+<p>\begin{equation}
+n_T = \mathcal{V}(D) (\epsilon / \sqrt{d})^{- d}[\log (1 / \delta) + d \log(\sqrt{d} / \epsilon) + \log \mathcal{V}(D)] \nonumber
+\end{equation}</p>
+
+<p><em>which fulfils the following requirements:</em></p>
+
+<ul>
+  <li>
+    <p><em>\(\epsilon\)-denseness: For any \(x \in D\), there exists \([x]_T \in D_T\) such that \(\Vert x - [x]_T \Vert \leq \epsilon\).</em></p>
+  </li>
+  <li>
+    <p><em>If \(\mathrm{spec}(\mathbf{K}_{D_T}) = \{\hat{\lambda}_1 \geq \hat{\lambda}_2  \geq \dots \}\), then for any \(T_\ast = 1, \dots, n_T\):</em></p>
+  </li>
+</ul>
+
+\[\begin{eqnarray}
+n_T^{-1} \sum_{t = 1}^{T_\ast} \hat{\lambda}_t \geq \sum_{t = 1}^{T_{\ast}} \lambda_t - \delta \nonumber
+\end{eqnarray}\]
+
+<hr />
+
+<p>The following lemma is equivalent to <strong>Theorem 4</strong> in the context where this lemma is a direct consequence of <strong>Lemma 7.6</strong>.</p>
+
+<p><strong>Lemma 7.8</strong> <em>Let \(D_T\) be some discretization of \(D, n_T = \vert D_T \vert\). For any \(T_\ast = 1, \dots, \min\{T, n_T\}\) :</em></p>
+
+\[\begin{eqnarray}
+\tilde{\gamma}_T \leq \frac{1 / 2}{1 - e^{-1}} \max_{r = 1, \dots, T} \left( T_\ast \log (r n_T / \sigma^2) + (T - r) \sigma^{-2} \sum_{t = T_\ast + 1}^{n_T} \hat{\lambda}_t \right) \nonumber
+\end{eqnarray}\]
+
+<p><strong>Proof:</strong></p>
+
+<p>Split the right hand side in <strong>Lemma 7.6</strong> at \(t = T_\ast\). Let \(r = \sum_{t \leq T_\ast} m_t\).</p>
+
+<ul>
+  <li>For \(t \leq T_\ast\): \(\log (1 + m_t \hat{\lambda}_t / \sigma^2) \leq \log (r n_T / \sigma^2)\), since \(\hat{\lambda}_t \leq n_T\).</li>
+  <li>For \(t &gt; T_\ast\): \(\log (1 + m_t \hat{\lambda}_t / \sigma^2) \leq (T - r) \hat{\lambda}_t / \sigma^2\).</li>
+</ul>
+
+<hr />
+
+<p>The following theorem is responsible for obtaining bounds on \(\gamma_T\) for a particular kernel \(k\), given that tail bounds on \(B_k(T_\ast) = \sum_{s &gt; T_\ast} \lambda_s\) are known.</p>
+
+<p><strong>Theorem 8</strong> <em>Suppose that \(D \subset \mathbb{R}^d\) is compact, and \(k(x, x^\prime)\) is a covariance function for which the additional assumption of <strong>Theorem 2</strong> holds. Moreover, let \(B_k(T_\ast) = \sum_{s &gt; T_\ast} \lambda_s\), where \(\{\lambda_s\}\) is the operator spectrum of \(k\)  with respect to the uniform distribution over \(D\). Pick \(\tau &gt; 0\), and let \(n_T = C_4 T^\tau (\log T)\) with \(C_4 = 2 \mathcal{V}(D)(2 \tau + 1)\). Then, the following bound holds:</em></p>
+
+\[\begin{eqnarray}
+\gamma_T \leq \frac{1 / 2}{1 - e^{-1}} \max_{r = 1, \dots, T} \left(T_\ast \log (r n_T / \sigma^2) + C_4 \sigma^{-2} (1 - r / T) (\log T) (T^{\tau + 1} B_k(T_\ast) + 1) \right) + \mathcal{O}(T^{1 - \tau / d}) \nonumber
+\end{eqnarray}\]
+
+<p><em>for any \(T_\ast \in \{1, \dots, n_T \}\).</em></p>
+
+<p><strong>Proof:</strong></p>
+
+<p>Let \(\epsilon = d^{1 / 2} T^{- \tau / d}\) and \(\delta = T^{- (\tau + 1)}\). <strong>Lemma 7.7</strong> provides the existence of a discretization \(D_T\) of size \(n_T\) which is \(\epsilon-\)dense and for which \(n_T^{-1} \sum_{t = 1}^{T_\ast} \hat{\lambda}_t \geq \sum_{t = 1}^{T_{\ast}} \lambda_t - \delta\). Since \(n_T^{-1} \sum_{t = 1}^{n_T} \hat{\lambda}_t = 1 = \sum_{t \geq 1} \hat{\lambda} \lambda_t\), then \(\). The statement follows by using <strong>Lemma 7.8</strong> with these bounds, and finally employing <strong>Lemma 7.5</strong>.</p>
+
+<h2 id="bounds-for-kernels">Bounds for Kernels</h2>
+
+<p>Next, we bound \(\gamma_T\) based on <strong>Theorem 8</strong> for a range of commonly used kernel functions: linear kernel, squared exponential kernel, and Matérn kernels. The results imply sublinear regret bound for GP-UCB in all cases.</p>
+
+<p><strong>Linear Kernel.</strong> GP with this kernel corresponds to random linear function \(f(x) = w^\top x, \quad w \sim \mathcal{N}(\mathbf{0}, \mathbf{I})\)</p>
+
+\[\begin{eqnarray}
+k(x, x^\prime) = x^\top x^\prime \nonumber
+\end{eqnarray}\]
+
+<p><strong>Squared exponential kernel.</strong> Sample functions are differentiable to any order almost surely.</p>
+
+\[\begin{eqnarray}
+k(x, x^\prime) = \exp(- \Vert x - x^\prime \Vert^2 / 2 \ell^2 ) \nonumber
+\end{eqnarray}\]
+
+<p>where \(\ell\) is the lengthscale parameter.</p>
+
+<p><strong>Matérn kernel.</strong></p>
+
+\[\begin{eqnarray}
+k(x, x^\prime) = (2^{1 - \nu} / \Gamma(\nu)) r^\nu B_\nu(r), \quad r = (\sqrt{2 \nu} / \ell) \Vert x - x^\prime \Vert \nonumber
+\end{eqnarray}\]
+
+<p>where \(B_\nu\) is the modified Bessel function. \(\nu\) controls the smoothness of sample paths</p>
+
+<hr />
+
+<p><strong>Theorem 5</strong> <em>Let \(D \in \mathbb{R}^d\) be compact and convex, \(d \in \mathbb{N}\). Assume the kernel \(k(x, x^\prime) \leq 1\).</em></p>
+
+<ol>
+  <li><em>Finite spectrum. For the \(d\)-dimensional Bayesian linear regression case: \(\gamma_T = \mathcal{O}(d \log T)\).</em></li>
+  <li><em>Exponential spectral decay. For the squared exponential kernel: \(\mathcal{O}((\log T)^{d + 1})\).</em></li>
+  <li><em>Power law spectral decay. For the Matérn kernels with \(\nu &gt; 1\): \(\mathcal{O}(T^{d(d + 1) / (2 \nu + d (d + 1))})\).</em></li>
+</ol>
+
+<p>Sketch of proof:</p>
+
+<p>\(\gamma_T\) is bounded by <strong>Theorem 4</strong> (See <a href="https://marshalarijona.github.io/blog/2024/GP-UCB-part2/">Part II</a>) in terms the eigendecay of the kernel matrix \(\mathbf{K}_D\). If \(D\) is infinite or very large, we can use the operator spectrum of \(k(x, x_0)\), which likewise decays rapidly. For the kernels of interest here, there exist asymptotic expressions for the operator eigenvalues. The key of the proof is to show the existence of discretization \(D_T \subset D\), dense in the limit, for which the tail sum \(B(T_\ast) / n_T\) in <strong>Theorem 4</strong> are close to corresponding operator.</p>
+
+<h4 id="reference">Reference</h4>
+
+<ul>
+  <li>Srinivas, N., Krause, A., Kakade, S. M., &amp; Seeger, M. (2009). Gaussian process optimization in the bandit setting: No regret and experimental design. arXiv preprint arXiv:0912.3995.</li>
+</ul>]]></content><author><name></name></author><category term="machine-learning-posts" /><category term="Bayesian-optimization" /><summary type="html"><![CDATA[Tervetuloa! In this final part of the blog series (see Part I and Part II), we are going to derive the bound of the quantity \(\gamma_T\) for practical classes of kernels.]]></summary></entry><entry><title type="html">A Deep Dive into the Regret Bound of GP-UCB Optimization (Part II)</title><link href="https://marshalarijona.github.io/blog/2024/GP-UCB-part2/" rel="alternate" type="text/html" title="A Deep Dive into the Regret Bound of GP-UCB Optimization (Part II)" /><published>2024-05-31T04:00:00+00:00</published><updated>2024-05-31T04:00:00+00:00</updated><id>https://marshalarijona.github.io/blog/2024/GP-UCB-part2</id><content type="html" xml:base="https://marshalarijona.github.io/blog/2024/GP-UCB-part2/"><![CDATA[<p>In the second part of this blog series (see <a href="https://marshalarijona.github.io/blog/2024/GP-UCB/">Part I</a> and <a href="https://marshalarijona.github.io/blog/2024/GP-UCB-part3/">Part III</a>), we aim to derive the regret bound of GP-UCB optimization in an agnostic setting. We consider an arbitrary function  \(f\) belongs to a reproducing kernel Hilbert space (RKHS), associated with the kernel \(k(x, x^\prime), \; \forall x \in D\).</p>
+
+<h1 id="introduction">Introduction</h1>
+
+<p><strong>Reproducing kernel Hilbert space (RKHS).</strong> Let \(\mathcal{X}\) be a non empty set and \(k\) be a positive definite kernel on \(\mathcal{X}\). A Hilbert space \(\mathcal{H}_k\) of function on \(\mathcal{X}\) equipped with an inner product \(\langle ., . \rangle_{\mathcal{H}_k}\) is called a reproducing kernel Hilbert space (RKHS) with reproducing kernel \(k\), if the following are satisfied:</p>
+
+<ol>
+  <li>For all \(x \in \mathcal{X}\), we have \(k(., x) \in \mathcal{H}_k\).</li>
+  <li>For all \(x \in \mathcal{X}\), and for all \(f \in \mathcal{H}_k\)</li>
+</ol>
+
+\[\begin{equation}
+f(x) = \langle f, k(., x) \rangle_{\mathcal{H}_K} \quad \text{(reproducing property)} \nonumber
+\end{equation}\]
+
+<hr />
+
+<div class="row mt-3">
+    <div class="col-sm mt-3 mt-md-0">
+        <figure>
+
+  <picture>
+    <source media="(max-width: 480px)" srcset="/assets/img/kernel-function-hilbert-space-480.webp" />
+    <source media="(max-width: 800px)" srcset="/assets/img/kernel-function-hilbert-space-800.webp" />
+    <source media="(max-width: 1400px)" srcset="/assets/img/kernel-function-hilbert-space-1400.webp" />
+    <!-- Fallback to the original file -->
+    <img class="img-fluid rounded z-depth-1" src="/assets/img/kernel-function-hilbert-space.png" data-zoomable="" />
+
+  </picture>
+
+</figure>
+
+    </div>
+</div>
+<div class="caption">
+    Illustration of the equivalence between a GP kernel function and an inner product in a Hilbert space. Credit: Arno Solin.
+</div>
+
+<hr />
+
+<p><strong>Martingale.</strong> Martingale is a stochastic process \(X_1, \dots, X_N\) that satisfies for any time \(n\),</p>
+
+\[\begin{eqnarray}
+&amp;&amp; \mathbb{E}[\vert X_n \vert] &lt; \infty  \nonumber \\
+&amp;&amp; \mathbb{E}[X_{n + 1} \vert X_1, \dots, X_n] = X_n \nonumber
+\end{eqnarray}\]
+
+<p>that is, the condition expected value of the next observation, given all the history is determined only by the current observation.</p>
+
+<p>This agnostic setting introduces key differences compared to the previous one:</p>
+<ol>
+  <li><strong>Function space:</strong> \(f\) is no longer restricted to sample drawn from a GP. Instead, it can be an arbitrary function from \(\mathcal{H}_k(D)\).</li>
+  <li><strong>Noise model relaxation:</strong> While UCB assumes that the noise \(\epsilon_t = y_t - f(x_t)\) is drawn independently from \(N(0, \sigma^2)\), we relax the assumption such that the sequence of noise variables can be a uniformly bounded martingale difference sequence: \(\epsilon_t \leq \sigma\) for all \(t \in \mathbb{N}\).</li>
+</ol>
+
+<h1 id="regret-bound-for-the-function-in-rkhs">Regret Bound for the Function in RKHS</h1>
+
+<p><strong>Theorem 3</strong> <em>Let \(\delta \in (0, 1)\). Assume that the true underflying \(f\) lies in RKHS \(\mathcal{H}_k(D)\) corresponding to the kernel \(k(x, x^\prime)\) and the noise \(\epsilon_t\) has zero mean conditioned on the history and is bounded by \(\sigma\) almost surely. In particular, assume \(\Vert f \Vert_k^2 \leq B\) and let \(\beta_t = 2B + 300 \gamma_t \log^3 (t / \delta)\). Running GP-UCB with \(\beta_t\), prior \(GP(0, k(x, x^\prime))\) and noise model \(N(0, \sigma^2)\), we obtain a regret bound of \(\mathcal{O}(\sqrt{T}(B \sqrt{\gamma_T} + \gamma_T))\) with high probability. Precisely,</em></p>
+
+\[\begin{equation}
+\mathbb{P}(R_T \leq \sqrt{C_1 T \beta_T \gamma_T} \quad \forall T \geq 1) \geq 1 - \delta \nonumber
+\end{equation}\]
+
+<p><em>where \(C_1 = 8 / \log(1 + \sigma^{-2})\).</em></p>
+
+<hr />
+
+<p><strong>Proof:</strong></p>
+
+<p>Given the posterior covariance \(k_T(., .)\), we have</p>
+
+\[\begin{equation}
+\Vert f \Vert^2_{k_T} = \Vert f \Vert_k^2 + \sigma^{-2} \sum_{t = 1}^T f(x_t)^2 \nonumber
+\end{equation}\]
+
+<p>It implies that \(\mathcal{H}_k(D) = \mathcal{H}_{k_T}(D)\), while \(\Vert f \Vert_{k_T} \leq \Vert f \Vert_{k}\). By the reproducing property and Cauchy-Schwarz inequality, we have</p>
+
+\[\begin{eqnarray}
+\vert \mu_t(x) - f(x) \vert &amp;\leq&amp; k_T(x, x)^{1 / 2} \Vert \mu_t - f \Vert_{k_T} \nonumber \\
+&amp;=&amp; \sigma_T(x) \Vert \mu_t - f \Vert_{k_T} \label{eq:rkhs-inequality}
+\end{eqnarray}\]
+
+<p>We need to lift up <strong>Theorem 1</strong> to the agnostic setting in order to prove <strong>Theorem 3</strong>. For that purpose, it requires the following theorem to have an equivalence of <strong>Lemma 5.1</strong> (see <a href="https://marshalarijona.github.io/blog/2024/GP-UCB/">Part I</a>).</p>
+
+<p><strong>Theorem 6</strong> <em>Let \(\delta \in (0, 1)\). Assume the noise variance \(\epsilon_t\) are uniformly bounded by \(\sigma\). Define</em></p>
+
+\[\begin{equation}
+\beta_t = 2 \Vert f \Vert_k^2 + 300 \gamma_t \ln^3(t / \delta), \nonumber
+\end{equation}\]
+
+<p><em>Then</em></p>
+
+\[\begin{equation}
+\mathbb{P}(\forall T, \forall x \in D, \vert \mu_T(x) - f(x) \vert \leq \beta_{T + 1}^{1 / 2} \sigma_T(x)) \geq 1 - \delta \nonumber 
+\end{equation}\]
+
+<p><strong>Proof:</strong></p>
+
+<p>The strategy is to show that</p>
+
+\[\begin{equation}
+   \mathbb{P}\left( \forall T, \Vert \mu_T - f \Vert_{k_T} \leq \beta_{T + 1} \right) \geq 1 - \delta \nonumber
+\end{equation}\]
+
+<p><strong>Theorem 6</strong> will follow from \eqref{eq:rkhs-inequality}. The proof analyzes the quantity \(Z_T\) and then bounds the martiangle difference.</p>
+
+<h4 id="bound-of-z_t">Bound of \(Z_t\)</h4>
+
+<p>We first analyze the quantity \(Z_T = \Vert \mu_T - f \Vert_{k_T}^2\), that is the error of \(\mu_T\) as the approximation of \(f\) under the RKHS norm \(\mathcal{H}_{k_T}(D)\). The analysis requires a lemma which is responsible to bound the growth of \(Z_T\). Establishing this lemma requires normalized quantities: \(\tilde{\epsilon}_t = \epsilon_t / \sigma, \tilde{f} = f / \sigma, \tilde{\mu}_t = \mu_t / \sigma, \tilde{\sigma}_t = \sigma_t / \sigma\). For convenience, \(\mu_{t - 1}\) and \(\sigma_{t - 1}\) are the shorthand for \(\mu_{t - 1}(x_t)\) and \(\sigma_{t - 1}(x_t)\), respectively.</p>
+
+<p><strong>Lemma 7.2</strong> <em>For all \(T \in \mathbb{N}\),</em></p>
+
+\[\begin{equation}
+Z_T \leq \Vert f \Vert^2_k + 2 \sum_{t = 1}^T \tilde{\varepsilon}_t \frac{\tilde{\mu}_{t - 1} - \tilde{f}(x_t)}{1 + \tilde{\sigma}_{t - 1}^2} + \sum_{t = 1}^T \tilde{\varepsilon}^2_t \frac{\tilde{\sigma}_{t - 1}}{1 + \tilde{\sigma}_{t - 1}^2} \nonumber
+\end{equation}\]
+
+<p><strong>Proof:</strong></p>
+
+<p>If \(\boldsymbol{\alpha}_t = (\mathbf{K}_t + \sigma^2 \mathbf{I})^{-1} \mathbf{y}_t\), then \(\mu_t(x) = \boldsymbol{\alpha}_t^\top \mathbf{k}_t(x)\). Moreover, we have \(\langle \mu_T, f \rangle_k = \mathbf{f}^\top_T \boldsymbol{\alpha}_T, \Vert \mu_T \Vert^2_k = \mathbf{y}_T^\top \boldsymbol{\alpha}_T - \sigma^2 \Vert \boldsymbol{\alpha}_T \Vert^2, \mu_T(x_t) = \boldsymbol{\delta}_t^\top \mathbf{K}_T (\mathbf{K}_T + \sigma^2 \mathbf{I})^{-1} \mathbf{y}_T = y_t - \sigma^2 \alpha_t\). Since \(Z_T = \Vert \mu_T - f \Vert_k + \sigma^{-2} \sum_{t \leq T} (\mu_T(x_t) - f(x_t))^2\), we have</p>
+
+\[\begin{eqnarray}
+Z_T &amp;&amp;= \Vert f \Vert_k^2 - 2 \mathbf{f}_T^\top \boldsymbol{\alpha}_T + \mathbf{y}_T^\top \boldsymbol{\alpha}_T - \sigma^2 \Vert \alpha_T \Vert^2 + \sigma^{-2} \sum_{t = 1}^T (\epsilon_t - \sigma^2 \alpha_t)^2  \nonumber \\
+&amp;&amp; = \Vert f \Vert_k^2 - \mathbf{y}_T^\top (\mathbf{K}_T + \sigma^2 \mathbf{I})^{-1} \mathbf{y}_T + \sigma^{-2} \Vert \boldsymbol{\epsilon}_T \Vert^2 \nonumber
+\end{eqnarray}\]
+
+<p>Note that \(2 \log p(\mathbf{y}_t) \propto - \mathbf{y}_T^\top (\mathbf{K}_T + \sigma^2 \mathbf{I})^{-1} \mathbf{y}_T\). Since \(\log p(\mathbf{y}_T) = \sum_{t = 1} \log p(y_t \vert \mathbf{y}_{&lt; t}) = \sum_t \log N(y_t \vert \mu_{t - 1}(x_t), \sigma^2_{t - 1}(x_t) + \sigma^2)\), we have</p>
+
+\[\begin{eqnarray}
+&amp;&amp;- \mathbf{y}_T^\top (\mathbf{K}_T + \sigma^2 \mathbf{I})^{-1} \mathbf{y}_T = - \sum_t \frac{(y_t - \mu_{t - 1})^2}{\sigma^2 + \sigma_{t - 1}^2} \nonumber \\
+&amp;&amp; = 2 \sum_t \epsilon_t \frac{\mu_{t - 1} - f(x_t)}{\sigma^2 + \sigma^2_{t - 1}} - \sum_t \frac{\epsilon_t^2 \tilde{\sigma}^2_{t - 1}}{\sigma^2 + \sigma^2_{t - 1}} - R  \nonumber
+\end{eqnarray}\]
+
+<p>with \(R = \sum_t (\mu_{t - 1} - f(x_t))^2 / (\sigma^2 + \sigma^2_{t - 1}) \geq 0\). Dropping \(-R\) and changing to normalized quantities concludes the proof.</p>
+
+<h4 id="concentration-of-martingale">Concentration of Martingale</h4>
+
+<p>We need the following lemma to construct the proof of <strong>Lemma 7.3</strong>.</p>
+
+<p><strong>Lemma 7.1</strong> <em>We have that</em></p>
+
+\[\begin{equation}
+\sum_{t = 1}^T \min(\sigma^{-2} \sigma^2_{t - 1}(x_t), \alpha) \leq \frac{2 \alpha}{\log (1 + \alpha) \gamma_T}, \quad \alpha &gt; 0 \nonumber
+\end{equation}\]
+
+<p><strong>Proof:</strong></p>
+
+<p>We have that \(\min(r, \alpha) \leq (\alpha / \log(1 + \alpha)) \log (1 + r)\). The statement follows from <strong>Lemma 5.3</strong>. (see <a href="https://marshalarijona.github.io/blog/2024/GP-UCB/">Part I</a>)</p>
+
+<p>We also need the concentration inequality for martingale differences:</p>
+
+<p><strong>Theorem 7 (Freedman)</strong> <em>Suppose \(X_1, \dots, X_T\) is a martingale difference sequence, and \(b\) is an uniform upper bound on the steps \(X_i\). Let \(V\) denote the sum of conditional variances,</em></p>
+
+\[\begin{equation}
+V = \sum_{i = 1}^n \mathbb{V}[X_i \vert X_1, \dots, X_{i - 1}] \nonumber
+\end{equation}\]
+
+<p><em>Then, for every \(a, v &gt; 0\),</em></p>
+
+\[\begin{equation}
+\mathbb{P}\left(\sum X_i \leq a \, \text{and} \, V \leq v \right) \leq \exp\left( \frac{- a^2}{2v + 2ab / 3} \right) \nonumber
+\end{equation}\]
+
+<p>We now define a martingale difference sequence. First, we define the “escape-event” \(E_T\) as</p>
+
+\[\begin{equation}
+E_T = I\{ Z_t \leq \beta_{t + 1} \; \text{for all} \; t \leq T \} \nonumber
+\end{equation}\]
+
+<p>Subsequently, we define the random variables \(M_t\) by</p>
+
+\[\begin{equation}
+M_t = 2 \tilde{\epsilon_t} E_{t - 1} \frac{\tilde{\mu}_{t -1 } - \tilde{f}(x_t)}{1 + \tilde{\sigma}^2_{t - 1}} \nonumber
+\end{equation}\]
+
+<p>Remark: Since \(\tilde{\epsilon}_t\) is a martingale difference sequence w.r.t. the histories and \(M_t / \tilde{\epsilon}_t\) is deterministic given the history, \(M_t\) is martingale difference sequence as well.</p>
+
+<p>The following lemma tells with a high probability, the associated martingale \(\sum_{t = 1}^T M_t\) does not grow too large.</p>
+
+<p><strong>Lemma 7.3</strong> <em>Given \(\delta \in (0, 1)\) and \(\beta_t\) as defined in <strong>Theorem 6</strong>, we have that</em></p>
+
+\[\begin{equation}
+\mathbb{P} \left(\forall T, \sum_{t = 1}^T M_t \leq  \beta_{T + 1} / 2 \right) \geq 1 - \delta \nonumber
+\end{equation}\]
+
+<p><strong>Proof:</strong></p>
+
+<p>We first obtain upper bound on the step sizes of the martingale.</p>
+
+\[\begin{eqnarray}
+\vert M_t \vert &amp;&amp;= 2 \vert \tilde{\epsilon}_t \vert E_{t - 1} \frac{\vert \tilde{\mu}_{t - 1} - \tilde{f}(x_t) \vert}{1 + \tilde{\sigma}^2_{t - 1}} \nonumber \\
+&amp;&amp;\leq 2 \vert \tilde{\epsilon}_t \vert E_{t - 1} \frac{\beta_t^{1 / 2} \tilde{\sigma}_{t - 1}}{1 + \tilde{\sigma}^2_{t - 1}} \nonumber \\
+&amp;&amp;\leq 2 \vert \tilde{\epsilon}_t \vert E_{t - 1} \beta_{t}^{1 / 2} \min\{  \tilde{\sigma}_{t - 1}, 1 / 2 \} \nonumber
+\end{eqnarray}\]
+
+<p>The first inequality follows from \eqref{eq:rkhs-inequality} and the definition of \(E_t\). The second inequality follows from the fact that \(r / (1 + r^2) \leq \min\{r, 1/2 \}\) for \(r \geq 0\). Thus, \(\vert M_t\vert \leq \beta_{T}^{1 / 2}\) since \(\vert \tilde{\epsilon} \vert \leq 1\) and \(\beta_t\) is non-decreasing. Next, we bound the sum of the conditional variances of the martingale:</p>
+
+\[\begin{eqnarray}
+V_T &amp;&amp;= \sum_{t = 1}^T \mathbb{V}[M_t \vert M_1, \dots, M_{t - 1}] \nonumber \\
+&amp;&amp;\leq \sum_{t = 1}^T 4 \vert \epsilon_t \vert^2 E_{t - 1} \beta_t \min\{ \tilde{\sigma}^2_{t - 1}, 1/4 \} \nonumber \\
+&amp;&amp;\leq 4 \beta_T \sum_{t = 1}^T E_{t - 1} \min\{\tilde{\sigma}^2_{t - 1}, 1/4 \} &amp; \vert \tilde{\epsilon_t} \vert \leq 1  \nonumber \\
+&amp;&amp;\leq 9 \beta_T \gamma_T \nonumber
+\end{eqnarray}\]
+
+<p>The last inequality follows from <strong>Lemma 7.1</strong>, with \(\alpha=1/4\). We then apply <strong>Theorem 7</strong> with parameters \(a = \beta_{T + 1} / 2, b = \beta_{T + 1}^{1 / 2}\), and \(v = 9 \beta_T \gamma_T\) to obtain</p>
+
+\[\begin{eqnarray}
+&amp;&amp;\mathbb{P}\left( \sum_{t = 1}^T M_t \geq \beta_{T + 1} / 2 \right) \nonumber \\
+&amp;&amp; = \mathbb{P}\left( \sum_{t = 1}^T M_t \geq \beta_{T + 1} / 2 \; \text{and} \; V_T \leq 9 \beta_T \gamma_T \right) \nonumber \\
+&amp;&amp; \leq \exp\left( \frac{- (\beta_{T + 1} / 2)^2 }{2 (9 \beta_T \gamma_T) + 2/3 (\beta_{T + 1} / 2) \beta_{T + 1}^{1 / 2} } \right) \nonumber \\
+&amp;&amp;= \exp\left( \frac{- \beta_{T + 1}}{72 \gamma_T + 4/3 \beta_{T + 1}^{1 / 2}} \right) \nonumber \\
+&amp;&amp; \leq \max\left \{ \exp\left( \frac{- \beta_{T + 1}}{144 \gamma_T} \right), \exp\left( \frac{-3 \beta_{T + 1}^{1 / 2}}{8} \right) \right \} \nonumber
+\end{eqnarray}\]
+
+<p>Note that \(\beta_{T + 1}\) satisfies</p>
+
+\[\begin{equation}
+\max\{ 144 \gamma_T \log (T^2 / \delta), ((8 / 3) \log (T^2 / \delta))^2 \} \leq \beta_{T + 1} \nonumber \\
+\end{equation}\]
+
+<p>Therefore, the previous probability is bounded by \(\delta / T^2\). By applying the union bound we obtain</p>
+
+\[\begin{eqnarray}
+&amp;&amp;\mathbb{P}\left( \sum_{t = 1}^T  M_t \geq \beta_{T + 1} / 2 \quad \text{for some} \, T \right) \nonumber \\
+&amp;&amp;\leq \sum_{T \geq 1} \mathbb{P}(\sum_{t = 1}^T M_t \geq \beta_{T + 1} / 2) \nonumber \\
+&amp;&amp;\leq \sum_{T \geq 2} \delta / T^2 \leq \delta(\pi^2 / 6 - 1) \leq \delta \nonumber
+\end{eqnarray}\]
+
+<p>completing the proof of <strong>Lemma 7.3</strong>.</p>
+
+<p>[Proof of Theorem 6] By <strong>Lemma 7.2</strong> and the definition of \(\beta_1\), we have \(Z_0 \leq \Vert f \Vert_k \leq \beta_1\). Hence, we always have \(E_0 = 1\). Suppose with a high-probability <strong>Lemma 7.3</strong> holds, i.e., \(\sum_t M_t \leq \beta_{T + 1} / 2\). For the inductive hypothesis, assume \(E_T = 1\). By applying <strong>Lemma 7.2</strong> we obtain</p>
+
+\[\begin{eqnarray}
+Z_T &amp;&amp;\leq \Vert f \Vert_k^2 + 2 \sum_{t = 1}^T \frac{\tilde{\epsilon}_t ( \tilde{\mu}_{t - 1} - \tilde{f}(x_t) )}{1 + \tilde{\sigma}^2_{t - 1}} + \sum_{t = 1}^T \frac{\tilde{\epsilon}_t^2 \tilde{\sigma}^2_{t - 1}}{1 + \tilde{\sigma}^2_{t - 1}} \nonumber \\
+&amp;&amp;= \Vert f \Vert_k^2 + \sum_{t = 1}^T M_t + \sum_{t = 1}^T \tilde{\epsilon}_t \frac{\tilde{\sigma}^2_{t - 1}}{1 + \tilde{\sigma}^2_{t - 1}} \nonumber \\
+&amp;&amp; \leq \Vert f \Vert_k^2 + \beta_{T + 1} / 2   + \sum_{t = 1}^T \min\{\tilde{\sigma}^2_{t - 1}, 1 \} \nonumber \\
+&amp;&amp; \leq \Vert f \Vert_k^2 + \beta_{T + 1} / 2 + (2 / \log 2) \gamma_T \leq \beta_{T + 1} \nonumber
+\end{eqnarray}\]
+
+<p>The equality in the second step uses the inductive hypothesis. Thus we have shown \(E_T = 1\), completing the induction.</p>
+
+<p>Following the proof of <strong>Theorem 1</strong> and replacing <strong>Lemma 5.1</strong> with <strong>Theorem 6</strong> leads to the results in <strong>Theorem 3</strong>. Note that <strong>Theorem 3</strong> holds uniformly over all functions \(f\), with \(\Vert f \Vert &lt; \infty\).</p>
+
+<p>In the last part of this blog series, we aim to obtain the bound the quantity \(\gamma_T\) for practical classes of kernels.</p>
+
+<h4 id="reference">Reference</h4>
+
+<ul>
+  <li>Srinivas, N., Krause, A., Kakade, S. M., &amp; Seeger, M. (2009). Gaussian process optimization in the bandit setting: No regret and experimental design. arXiv preprint arXiv:0912.3995.</li>
+</ul>]]></content><author><name></name></author><category term="machine-learning-posts" /><category term="Bayesian-optimization" /><summary type="html"><![CDATA[In the second part of this blog series (see Part I and Part III), we aim to derive the regret bound of GP-UCB optimization in an agnostic setting. We consider an arbitrary function \(f\) belongs to a reproducing kernel Hilbert space (RKHS), associated with the kernel \(k(x, x^\prime), \; \forall x \in D\).]]></summary></entry><entry><title type="html">A Deep Dive into the Regret Bound of GP-UCB Optimization (Part I)</title><link href="https://marshalarijona.github.io/blog/2024/GP-UCB/" rel="alternate" type="text/html" title="A Deep Dive into the Regret Bound of GP-UCB Optimization (Part I)" /><published>2024-05-30T04:00:00+00:00</published><updated>2024-05-30T04:00:00+00:00</updated><id>https://marshalarijona.github.io/blog/2024/GP-UCB</id><content type="html" xml:base="https://marshalarijona.github.io/blog/2024/GP-UCB/"><![CDATA[<p>With summer approaching (what a perfect time for trips and bouldering), I’m teaching myself about the regret bound of GP-UCB optimization. To enhance my understanding of the topic, I’ve decided to write a blog series. There will be three parts in total (see <a href="https://marshalarijona.github.io/blog/2024/GP-UCB-part2/">Part II</a> and <a href="https://marshalarijona.github.io/blog/2024/GP-UCB-part3/">Part III</a>). In this part, we will dive into the regret bound of GP-UCB optimization in the context of finite and compact sets. For more details, you can refer to the <a href="https://arxiv.org/abs/0912.3995">paper</a>.</p>
+
+<h1 id="introduction">Introduction</h1>
+
+<p><strong>Problem statement.</strong> Let us start with the problem statement. The problem is sequentially optimizing a black-box function \(f \rightarrow D \in \mathbb{R}\). In each round \(t\), we query a point \(x_t\) and evaluate the function value, perturbed by the noise \(\epsilon_t\), i.e., \(y = f(x_t) + \epsilon_t\). Typically, \(\epsilon_t\) is drawn from a normal distribution \(\mathcal{N}(0, \sigma^2)\). We are interested in maximizing \(\sum_{t = 1}^T f(x_t)\) as well as obtaining \(x^\ast = \mathrm{argmax}_{x \in D} f(x)\). Here, \(T\) denotes the total number of rounds.</p>
+
+<p><strong>Regret.</strong> Common performance metrics for GP-UCB optimization include instantaneous regret and cumulative regret. For a particular round \(t\), we define the instaneous regret \(r_t = f(x^\ast) - f(x_t)\). The cumulative regret \(R_T\) is the sum of instaneous regrets: \(R_T = \sum_{t = 1}^T r_t\). A desirable asymptotic property is to be no-regret: \(\lim_{t \rightarrow \infty} R_T / T = 0\).</p>
+
+<p><strong>Gaussian process (GP).</strong> We model the function \(f\) as a sample of GP: a collection of dependent random variables, each corresponding to a specific input \(x\), and jointly following a multivariate normal distribution. A GP \(GP(\mu(x), k(x, x^\prime))\) is specified by its mean function \(\mu(x) = \mathbb{E}[f(x)]\) and covariance or kernel function \(k(x, x^\prime) = \mathbb{E}[(f(x) - \mu(x)) (f(x^\prime) - \mu(x^\prime))]\). Typically, we assume \(\mu(x) = 0\) for all \(x \in D\).</p>
+
+<p><strong>Upper Confidence Bound (UCB) acquisition function.</strong> At each round \(t\), we query \(x_t\) by maximizing the acquisition function (AF). Here, we consider maximizing UCB defined as:</p>
+
+\[\begin{equation}
+x_t = \mathrm{argmax}_{x \in D} \; \mu_{t - 1}(x) + \beta_t^{1 / 2} \sigma_{t - 1}(x)
+\end{equation}\]
+
+<p>where \(\beta_t\), \(\mu_{t - 1}\), and \(\sigma_{t - 1}\) denoting exploration-exploitation parameter, posterior mean, and posterior covariance, respectively. UCB prioritizes selecting  \(x\) with high uncertainty (large \(\sigma_{t - 1}(x)\)) and at the same time achieve high value (large \(\mu_{t - 1}(x)\)). The parameter \(\beta_t\) negotiates these two objectives.</p>
+
+<hr />
+<figure>
+<video width="720" height="600" controls="" autoplay="" loop="" muted="">
+  <source src="/assets/videos/GP-UCB.mp4" type="video/mp4" />
+  Your browser does not support the video tag.
+</video>
+<figcaption><em>Illustration of GP-UCB optimization on the sine function, running for 50 rounds with 10 initial points sampled using Sobol initialization. Credit: Anastasiia Makarova.</em></figcaption>
+</figure>
+<hr />
+<p>We now provide the cumulative regret bound for GP-UCB in two different settings:</p>
+<ol>
+  <li>\(f \sim GP(0, k(x, x^\prime))\) for finite decision set \(D\).</li>
+  <li>\(f \sim GP(0, k(x, x^\prime))\) for general compact decision set \(D\).</li>
+</ol>
+
+<h1 id="cumulative-regret-bound-on-finite-decision-set">Cumulative Regret Bound on Finite Decision Set</h1>
+
+<p>This analysis requires a quantity of maximum information gain \(\gamma_T\) after \(T\) rounds defined as:</p>
+
+\[\begin{eqnarray}
+&amp;&amp; \gamma_T = \underset{A \subset D: \vert A \vert = T}{\max} I(\mathbf{y}_A; \mathbf{f}_A) \nonumber \\
+&amp;&amp; I(\mathbf{y}_A; \mathbf{f}_A) = H(\mathbf{y}_A) - H(\mathbf{y}_A \vert \mathbf{f}_A)  \nonumber
+\end{eqnarray}\]
+
+<p>with \(\mathbf{f}_A = [f(x)]_{x \in A}\), \(\mathbf{y}_A = \mathbf{f}_A + \varepsilon_A\), \(\varepsilon_A \sim \mathcal{N}(0, I \sigma^2)\). Here, \(I(. ; .)\) and \(H(.)\) denote the information gain and the entropy, respectively. In our case, we have \(I(\mathbf{y}_A; \mathbf{f}_A) = 1 / 2 \log \vert I + \sigma^{-2} \mathbf{K}_A \vert\), where \(\mathbf{K}_A = [k(x, x^\prime)]_{x, x^\prime \in A}\).</p>
+
+<p><strong>Theorem 1</strong>
+<em>Let \(\delta \in (0, 1)\) and \(\beta_t = 2 \log (\vert D \vert \, t^2 \, \pi^2 / 6 \delta)\). Running GP-UCB with \(\beta_t\) for a sample \(f\) of a GP with mean function zero and covariance function \(k(x, x^\prime)\), we obtain a regret bound of \(\mathcal{O}(\sqrt{T \, \gamma_T \, \log  \vert D \vert})\) with high probability. Precisely</em></p>
+
+<p>\begin{equation}
+\mathbb{P}(R_T \leq \sqrt{C_1 \, T \, \beta_T \, \gamma_T} \quad \forall T \geq 1) \geq 1 - \delta \nonumber
+\end{equation}</p>
+
+<p><em>where \(C_1 = 8 / \log (1 + \sigma^{-2})\).</em></p>
+
+<hr />
+<p><strong>Proof:</strong></p>
+
+<p>The strategy is to show that \(\vert f(x) - \mu_{t - 1}(x) \vert \leq \beta_t^{1/2} \sigma_{t - 1}(x)\) for all \(x \in D\) and \(t \in \mathbb{N}\)</p>
+
+<p><strong>Lemma 5.1</strong>
+<em>Pick \(\delta \in (0, 1)\) and set \(\beta_t = 2 \log (\vert D \vert  \, \pi_t / \delta)\), where \(\sum_{t \geq 1} \pi_t^{-1} = 1, \pi_t &gt; 0\). Then,</em></p>
+
+<p>\begin{equation}
+\vert f(x) - \mu_{t - 1}(x) \vert \leq \beta_t^{1 / 2} \sigma_{t - 1}(x) \quad \forall x \in D \; \forall t \geq 1 \nonumber
+\end{equation}</p>
+
+<p><em>hold with probability \(1 - \delta\).</em></p>
+
+<p><strong>Proof</strong>:</p>
+
+<p>Fix \(t \geq 1\) and \(x \in D\). Conditioned on \(y_{t - 1} = (y_1, \dots, y_{t-1})\), \(\{x_1, \dots, x_{t-1} \}\) are deterministic, and \(f(x) \sim N(\mu_{t-1}(x), \sigma^2_{t-1}(x))\). If \(r \sim N(0, 1)\), then</p>
+
+\[\begin{eqnarray}
+\mathbb{P}(r &gt; c) &amp;=&amp; e^{-c^2 / 2} (2 \pi)^{- 1 / 2} \int_{r}^{- \infty} e^{-(r - c)^2 / 2 - c (r - c)} \, dr \nonumber \\
+&amp;\leq&amp; e^{-c^2 / 2} \mathbb{P}(r &gt; 0) = \frac{1}{2} e^{- c^2 / 2} \nonumber
+\end{eqnarray}\]
+
+<p>for \(c &gt; 0\), since \(e^{-c (r - c)} \leq 1\) for \(r \geq c\). Hence, \(\mathbb{P}(\vert f(x) - \mu_{t - 1}(x) \vert &gt; \beta_t^{1/2} \sigma_{t - 1}(x)) \leq e^{- \beta_t / 2}\), using \(r = (f(x) - \mu_{t - 1}(x)) / \sigma_{t - 1}(x)\) and \(c = \beta_t^{1/2}\). Applying the union bound,</p>
+
+\[\begin{equation}
+\vert f(x) - \mu_{t - 1}(x) \vert \leq \beta_t^{1/2} \sigma_{t - 1}(x)\nonumber
+\end{equation}\]
+
+<p>holds with probability \(\geq 1 - \vert D \vert  e^{- \beta_t / 2}\). Choosing \(\vert D \vert  e^{- \beta_t / 2} = \delta / \pi_t\) and using the union bound for \(t \in \mathbb{N}\), the statement holds. In order to satisfy the theorem, we choose \(\pi_t = \pi^2 t^2 / 6\).</p>
+
+<p><strong>Lemma 5.2</strong>
+<em>Fix \(t \geq 1\). If \(\vert f(x) - \mu_{t - 1}(x) \vert \leq \beta_t^{1 / 2} \sigma_{t - 1}(x)\) for all \(x \in D\), then the regret \(r_t\) is bounded by \(2 \beta_t^{1/2} \sigma_{t - 1}(x_t)\).</em></p>
+
+<p><strong>Proof:</strong></p>
+
+<p>By definition \(x_t : \mu_{t-1}(x_t) + \beta_t^{1/2} \sigma_{t-1}(x_t)\geq \mu_{t-1}(x^\ast) + \beta_t^{1/2} \sigma_{t-1}(x^\ast) \geq f(x^\ast)\). Therefore,</p>
+
+\[\begin{equation}
+r_t = f(x^\ast) - f(x_t) \leq \mu_{t-1}(x_t) + \beta_t^{1/2} \sigma_{t-1}(x_t) - f(x_t) \leq 2 \beta_t^{1/2} \sigma_{t-1}(x^\ast) \nonumber
+\end{equation}\]
+
+<p><strong>Lemma 5.3</strong>
+<em>The information gain for the points selected can be expressed in terms of predictive variances. If \(\mathbf{f}_T = (f(x_t)) \in \mathbb{R}^T\):</em></p>
+
+\[\begin{equation}
+I(\mathbf{y}_T; \mathbf{f}_T) = \frac{1}{2} \sum^T_{t = 1} \log (1 + \sigma^{-2} \, \sigma_{t-1}(x_t)) \nonumber
+\end{equation}\]
+
+<p><strong>Proof:</strong></p>
+
+<p>Recall that \(I(\mathbf{y}_T; \mathbf{f}_T) = H(\mathbf{y}_T) - 1/2 \log \vert 2 \pi e \sigma^2 I \vert\). Now, \(H(\mathbf{y}_T) = H(\mathbf{y}_{T-1}) + H(y_T \vert \mathbf{y}_{T - 1}) = H(\mathbf{y}_{T-1}) + \frac{1}{2} \log (2 \pi e(\sigma^2 + \sigma_{t - 1}^2(x_T)))\). The result follow by induction.</p>
+
+<p><strong>Lemma 5.4</strong>
+<em>Pick \(\delta \in (0, 1)\) and let \(\beta_t\) be defined as in <strong>Lemma 5.1</strong>. Then, the following holds with probability \(\geq 1 - \delta\):</em></p>
+
+\[\begin{equation}
+\sum_{t = 1}^T r_t^2 \leq \beta_T \, C_1 \, I(\mathbf{y}_T; \mathbf{f}_T) \leq C_1 \beta_T \gamma_T \quad \forall T \geq 1, \nonumber
+\end{equation}\]
+
+<p><em>where \(C_1 \triangleq 8 / \log(1 + \sigma^{-2}) \geq 8 \sigma^2\).</em></p>
+
+<p><strong>Proof:</strong></p>
+
+<p>By <strong>Lemma 5.1</strong> and <strong>Lemma 5.2</strong>, we have that \(\{ r_t^2 \leq 4 \beta_t \, \sigma_{t - 1}^2(x_t) \forall t \geq 1 \}\) with probability \(\geq 1 - \delta\). \(\beta_t\) is non-decreasing such that</p>
+
+\[\begin{eqnarray}
+4 \beta_t \, \sigma_{t - 1}^2(x_t) &amp;\leq&amp; 4 \beta_T \, \sigma^2 ( \sigma^{-2} \sigma_{t - 1}^2(x_t) ) \nonumber \\
+&amp;\leq&amp; 4 \beta_T \, \sigma^2 C_2 \log (1 + \sigma^{-2} \sigma_{t - 1}^2(x_t)) \nonumber
+\end{eqnarray}\]
+
+<p>with \(C_2 = \sigma^{-2} / \log (1 + \sigma^{-2}) \geq 1\), since \(s^2 \leq C_2 \log (1 + s^2)\) for \(s \in [0, \sigma^{-2}]\), and \(\sigma^{-2} \sigma_{t - 1}^2(x_t) \leq \sigma^{-2} k(x_t, x_t) \leq \sigma^{-2}\). Noting that \(C_1 = 8 \sigma^2 C_2\), the result follows by plugging in the representation of <strong>Lemma 5.3</strong>.</p>
+
+<p><strong>Theorem 1</strong> is a consequence of <strong>Lemma 5.4</strong>, since \(R_T^2 \leq T \sum_{t = 1}^T r_t^2\) by Cauchy-Schwarz inequality.</p>
+
+<p><strong>The key insight here is that with high probability over samples from the GP, the cumulative regret is bounded in terms of the maximum information gain.</strong></p>
+
+<h1 id="cumulative-regret-bound-on-compact-decision-set">Cumulative Regret Bound on Compact Decision Set</h1>
+
+<p>We can generalize the result to any compact and convex \(D \subset \mathbb{R}^d\) under the assumptions on the kernel \(k\).</p>
+
+<p><strong>Theorem 2</strong> <em>Let \(D \subset [0, r]^d\) be compact and convex, \(d \in \mathbb{N}, r &gt; 0\). Suppose that the kernel \(k(x, x^\prime)\) satisfies the following high probability bound on the derivatives of GP sample paths \(f\): for some constants \(a, b &gt; 0\),</em></p>
+
+\[\begin{equation}
+\mathbb{P}(\underset{x \in D}{\sup} \vert \partial f / \partial x_j \vert &gt; L) \leq a e^{-(L / b)^2}, j = 1, \dots, d \nonumber
+\end{equation}\]
+
+<p><em>Pick \(\delta \in (0, 1)\), and define</em></p>
+
+\[\begin{equation}
+\beta_t = 2 \log (t^2 2 \pi^2 / (3 \delta)) + 2d \log \left(t^2 d b r \sqrt{\log (4 d a / \delta)} \right) \nonumber
+\end{equation}\]
+
+<p><em>Running the GP-UCB with \(\beta_t\) for a sample \(f\) of a GP with mean function zero and covariance function \(k(x, x^\prime)\), we obtain a regret bound of \(\mathcal{O}^\ast(\sqrt{d T \gamma_T})\) with high probability. Precisely, with \(C_1 = 8 / \log ( 1 + \sigma^{-2} )\) we have</em></p>
+
+\[\begin{equation}
+\mathbb{P}(R_T \leq \sqrt{C_1 \, T \, \beta_T \, \gamma_T} + 2 \quad  \forall T \geq 1) \geq 1 - \delta \nonumber
+\end{equation}\]
+
+<hr />
+
+<p><strong>Proof:</strong></p>
+
+<p><strong>Lemma 5.5</strong>
+<em>Pick \(\delta \in (0, 1)\) and set \(\beta_t = 2 \log ( \pi_t / \delta)\), where \(\sum_{t \geq 1} \pi_t^{-1} = 1, \pi_t &gt; 0\). Then,</em></p>
+
+<p>\begin{equation}
+\vert f(x) - \mu_{t - 1}(x) \vert \leq \beta_t^{1 / 2} \sigma_{t - 1}(x) \quad \forall x \in D \; \forall t \geq 1 \nonumber
+\end{equation}</p>
+
+<p><em>hold with probability \(1 - \delta\).</em></p>
+
+<p><strong>Proof</strong>:</p>
+
+<p>Fix \(t \geq 1\) and \(x \in D\). Conditioned on \(y_{t - 1} = (y_1, \dots, y_{t-1})\), \(\{x_1, \dots, x_{t-1} \}\) are deterministic, and \(f(x) \sim N(\mu_{t-1}(x), \sigma^2_{t-1}(x))\). As before, \(\mathbb{P}(\vert f(x) - \mu_{t - 1}(x) \vert &gt; \beta_t^{1/2} \sigma_{t - 1}(x)) \leq e^{- \beta_t / 2}\). Since \(e^{- \beta_t / 2} = \delta / \pi_t\) and using the union bound for \(t \in \mathbb{N}\), the statements hold.</p>
+
+<p>For the purpose of the analysis, we discretize \(D_t \subset D\), where \(D_t\) will be used at round \(t\) in the analysis. We need \(D_t\) to obtain the confidence interval on \(x^\ast\).</p>
+
+<p><strong>Lemma 5.6</strong>
+<em>Pick \(\delta \in (0, 1)\) and set \(\beta_t = 2 \log ( \vert D_t \vert \pi_t / \delta)\), where \(\sum_{t \geq 1} \pi_t^{-1} = 1, \pi_t &gt; 0\). Then,</em></p>
+
+<p>\begin{equation}
+\vert f(x) - \mu_{t - 1}(x) \vert \leq \beta_t^{1 / 2} \sigma_{t - 1}(x) \quad \forall x \in D \; \forall t \geq 1 \nonumber
+\end{equation}</p>
+
+<p><em>hold with probability \(1 - \delta\).</em></p>
+
+<p><strong>Proof:</strong></p>
+
+<p>The proof is identical to that in <strong>Lemma 5.1</strong>, except now we use \(D_t\) at each timestep.</p>
+
+<p>By assumption and union bound, we have</p>
+
+\[\begin{equation}
+\mathbb{P}(\forall j, \forall x \in D,  \vert \partial f / \partial x_j \vert &lt; L) \geq 1 - d a e^{-(L / b)^2}  \nonumber
+\end{equation}\]
+
+<p>which implies that with probability \(\geq 1 - d a e^{-(L / b)^2}\), we have</p>
+
+\[\begin{equation}\label{eq:lipschitz}
+\forall x \in D, \vert f(x) - f(x^\prime) \vert \leq L \Vert x - x^\prime  \Vert_1 
+\end{equation}\]
+
+<p>Let us choose a discretization \(D_t\) of size \((\tau_t)^d\) so that for all \(x \in D_t\)</p>
+
+\[\begin{equation}
+\Vert x - [x]_t \Vert_1 \leq r d / \tau_t \nonumber
+\end{equation}\]
+
+<p>where \([x]_t\) denotes the closest point in \(D_t\) to \(x\). A sufficient discretization has each coordinate with \(\tau_t\) uniformly spaced points.</p>
+
+<p><strong>Lemma 5.7</strong> 
+<em>Pick \(\delta \in (0, 1)\) and set \(\beta_t = 2 \log (2 \pi_t / \delta) + 4 d \log(d t b r \sqrt{\log(2 d a / \delta)})\), where \(\sum_{t \geq 1} \pi_t^{-1} = 1, \pi_t &gt; 0\). Let \(\tau_t = d t^2 b r \sqrt{\log(2 d a / \delta)}\). Let \([x^\ast]_t\) denotes the closest point in \(D_t\) to \(x^\ast\). Then,</em></p>
+
+\[\begin{equation}
+\vert f(x^\ast) - \mu_{t - 1}([x^\ast]_t) \vert \leq \beta_t^{1 / 2} \sigma_{t - 1}([x^\ast]_t) + \frac{1}{t^2} \forall t \geq 1 \nonumber
+\end{equation}\]
+
+<p><em>holds with probability \(\geq 1 - \delta\)</em></p>
+
+<p><strong>Proof:</strong>
+Using \eqref{eq:lipschitz}, we have with the probability \(\geq 1 - \delta / 2\),</p>
+
+\[\begin{equation}
+\forall x \in D, \vert f(x) - f(x^\prime) \vert \leq b \sqrt{\log(2 d a / \delta)} \Vert x - x^\prime \Vert_1 \nonumber
+\end{equation}\]
+
+<p>Hence,</p>
+
+\[\begin{equation}
+\forall x \in D_t, \vert f(x) - f([x]_t) \vert \leq r d b \sqrt{\log(2 d a / \delta)} / \tau_t \nonumber
+\end{equation}\]
+
+<p>By choosing \(\tau_t = d t^2 b r \sqrt{\log(2 d a / \delta)}\), we have that</p>
+
+\[\begin{equation}
+\forall x \in D_t, \vert f(x) - f([x]_t) \vert \leq \frac{1}{t^2} \nonumber
+\end{equation}\]
+
+<p>This implies that \(\vert D_t \vert = (d t^2 b r \sqrt{\log(2 d a / \delta)})^d\). Using \(\delta / 2\) in <strong>Lemma 5.6</strong>, we can apply the confidence bound to \([x^\ast]_t\) (as this lives in \(D_t\)) to obtain the result.</p>
+
+<p><strong>Lemma 5.8</strong>
+<em>Pick \(\delta \in (0, 1)\), and set \(\beta_t = 2 \log(4 \pi_t / \delta) + 4 d \log (dtbr \sqrt{\log (4 da / \delta)})\), where \(\sum_{t \geq 1} \pi_t^{-1} = 1, \pi_t &gt; 0\). Then, with probability greater than \(1 - \delta\), for all \(t \in \mathbb{N}\), the regret is bounded as follows:</em></p>
+
+\[\begin{equation}
+r_t \leq 2 \beta_t^{1 / 2} \sigma_{t  - 1}(x_t) + \frac{1}{t^2} \nonumber
+\end{equation}\]
+
+<p><strong>Proof:</strong></p>
+
+<p>Use \(\delta / 2\) in both <strong>Lemma 5.5</strong> and <strong>Lemma 5.7</strong>, so that these events hold with probability greater than \(1 - \delta\). By definition of \(x_t : \mu_{t - 1}(x_t) + \beta_t^{1 / 2} \sigma_{t - 1}(x_t) \geq \mu_{t - 1}([x^\ast]_t) + \beta_t^{1 / 2} \sigma_{t - 1}([x^\ast]_t)\). By <strong>Lemma 5.7</strong>, we have that \(\mu_{t - 1}([x^\ast]_t) + \beta_t^{1 / 2} \sigma_{t - 1}([x^\ast]_t) + 1/t^2 \geq f(x^\ast)\), which implies \(\mu_{t - 1}([x^\ast]_t) + \beta_t^{1 / 2} \sigma_{t - 1}([x^\ast]_t)  \geq f(x^\ast) - 1/t^2\). Therefore,</p>
+
+\[\begin{eqnarray}
+r_t &amp;=&amp; f(x^\ast) - f(x_t)  \nonumber \\
+&amp;\leq&amp;   \mu_{t - 1}([x^\ast]_t) + \beta_t^{1 / 2} \sigma_{t - 1}([x^\ast]_t) + 1/t^2 - f(x_t) \nonumber \\
+&amp;\leq&amp; 2\beta_t^{1 / 2} \sigma_{t - 1}([x^\ast]_t) + 1/t^2 \nonumber
+\end{eqnarray}\]
+
+<p>As shown in the proof of <strong>Lemma 5.4</strong>, with the probability \(\geq 1 - \delta\),</p>
+
+\[\begin{equation}
+\sum_{t = 1}^T 4 \beta_t \sigma^2_{t - 1}(x_t) \leq C_1 \beta_T \gamma_T \quad \forall T \geq 1, \nonumber
+\end{equation}\]
+
+<p>By Cauchy-Schwartz,</p>
+
+\[\begin{equation}
+\sum_{t = 1}^T 2 \beta_t^{1 / 2} \sigma_{t - 1}(x_t) \leq \sqrt{C_1 \beta_T T \gamma_T} \quad \forall T \geq 1, \nonumber
+\end{equation}\]
+
+<p>Hence,</p>
+
+\[\begin{equation}
+\sum_{t = 1}^T r_t \leq \sqrt{C_1 \beta_T T \gamma_T} + \pi^2/6 \quad \forall T \geq 1, \nonumber
+\end{equation}\]
+
+<p>since \(\sum 1 / t^2 = \pi^2 / 6\). Theorem 2 now follows.</p>
+
+<p>Some kernels that satisfy the condition in the above theorem including Matérn and squared exponential kernel.</p>
+
+<p>In the next part, we will generalize the function \(f\) to be an arbitrary function from the reproducing kernel Hilbert space (RKHS) corresponding to the kernel \(k(x, x^\prime)\).</p>
+
+<h4 id="reference">Reference</h4>
+
+<ul>
+  <li>Srinivas, N., Krause, A., Kakade, S. M., &amp; Seeger, M. (2009). Gaussian process optimization in the bandit setting: No regret and experimental design. arXiv preprint arXiv:0912.3995.</li>
+</ul>]]></content><author><name></name></author><category term="machine-learning-posts" /><category term="Bayesian-optimization" /><summary type="html"><![CDATA[With summer approaching (what a perfect time for trips and bouldering), I’m teaching myself about the regret bound of GP-UCB optimization. To enhance my understanding of the topic, I’ve decided to write a blog series. There will be three parts in total (see Part II and Part III). In this part, we will dive into the regret bound of GP-UCB optimization in the context of finite and compact sets. For more details, you can refer to the paper.]]></summary></entry><entry><title type="html">Probability Improvement and Expected Improvement Acquisition Function</title><link href="https://marshalarijona.github.io/blog/2023/expected-improvement/" rel="alternate" type="text/html" title="Probability Improvement and Expected Improvement Acquisition Function" /><published>2023-10-05T04:00:00+00:00</published><updated>2023-10-05T04:00:00+00:00</updated><id>https://marshalarijona.github.io/blog/2023/expected-improvement</id><content type="html" xml:base="https://marshalarijona.github.io/blog/2023/expected-improvement/"><![CDATA[<p>This post assumes the reader has a prequisite knowledge about Bayesian optimization. Recall that Bayesian optimization is a zero-th order optimization method which aims to find the optimum \(x^\ast\) of a black-box function \(f: \mathcal{X} \rightarrow \mathbb{R}\). Bayesian optimization requires two important components, that is the surrogate model and the acquisition function. Due to black-box nature of \(f\), we introduce a surrogate function and instead perform the optimization w.r.t. this new function. In common settings, we utilize a Gaussian process (GP) as our surrogate model. The motivation comes from the Bayesian philosophy where we start with a belief and iteratively update it as we encounter data which explains the true distribution called the posterior distribution.</p>
+
+<p>This post is focused on the second component, that is the acquisition function. This function governs the next input \(x_t\) to be evaluated, with \(t\) denotes the particular time step of the acquisition. The acquired data has the optimum statistical properties w.r.t. our surrogate model, i.e. the expectation, entropy, etc. Now, let us narrowing our scope again into two specific acquisition functions, that is the probability improvement and the expected improvement.</p>
+
+<h3 id="probability-improvement">Probability Improvement</h3>
+
+<p>We first give the definition of improvement. Given the incummbent best value \(x^\ast \in \mathcal{X}\) and an arbitrary input \(x \in \mathcal{X}\), we define the improvement \(I(x)\) as</p>
+
+\[\begin{eqnarray}
+I(x) = \max(f(x) - f(x^\ast), 0)
+\end{eqnarray}\]
+
+<p>Note that we abuse the notation \(x^\ast\) for a while as previously \(x^\ast\) denotes the global optimum of the function \(f\). It is obvious that \(I(x) \in [0, +\infty] \quad \forall x \in \mathcal{X}\) and \(x = x^\ast \rightarrow I(x) = 0\). Recall that we employ GP as the proxy of \(f\). For a particular data \(x\), the function value \(f(x)\) follows a Gaussian distribution</p>
+
+\[f(x) \sim \mathcal{N}(\mu(x), \sigma^2(x))\]
+
+<p>Commonly we perform reparameterization-trick to draw samples from \(f(x)\). First, we introduce a random variable \(z\) drawn from a standard normal distribution \(\mathcal{N}(0, 1)\). It is known that drawing samples from such distribution is relatively easy. Leveraging this random variable, we obtain a new sample \(f(x) = \mu(x) + \sigma(x) z\). Substituting the new definition will give us</p>
+
+\[I(x) = \max(f(x) - f(x^\ast)) = \max(\mu(x) + \sigma(x)z - f(x^\ast), 0) \quad z \sim \mathcal{N}(0, 1)\]
+
+<p>The probability improvement evaluates how likely the candidate \(x\) gives us a positive improvement. Recall that we evaluate the probability w.r.t. \(\mathcal{N}(\mu(x), \sigma^2(x))\). Mathematically, we can write \(\mathrm{PI}(x)\) as</p>
+
+\[\mathrm{PI}(x) = p(I(x) &gt; 0) \iff p(f(x) &gt; f(x^\ast))\]
+
+<p>By applying the additive and constant scaling properties of normal distribution, we obtain the following analytical form</p>
+
+\[\mathrm{PI}(x) = 1 - \Phi(z_0) = \Phi(- z_0) = \Phi\left( \frac{\mu(x) - f(x^\ast)}{\sigma(x)} \right)\]
+
+<p>with \(\Phi(z) \triangleq \mathrm{CDF}(z)\) and \(z_0 = \frac{f(x^\ast) - \mu(x)}{\sigma(x)}\)</p>
+
+<h3 id="expected-improvement">Expected Improvement</h3>
+<p>Unlike the probability improvement, the expected improvement (EI) (as the name suggests) aims to evaluate the expected value of \(I(x)\) over \(f\). Intuitively, this criterion evaluates the average magnitude of the improvement.</p>
+
+\[\begin{eqnarray}
+\mathrm{EI}(x) \triangleq \mathbb{E}[I(x)] = \int_{- \infty}^\infty I(x) \phi(z)
+\end{eqnarray}\]
+
+<p>Substituting the definition of probability improvement, we then obtain</p>
+
+\[\mathrm{EI} = \int_{- \infty}^\infty I(x) \phi(z) = \int_{- \infty}^\infty \max(f(x) - f(x^\ast), 0) \phi(z) dz\]
+
+<p>In order to compute the integral, we need to get rid of the \(\max\) operator. First, we decompose the integral into two parts. The first part is where \(I(x) \leq 0\) and the later part is where \(I(x) &gt; 0\). To set the bound for each integral, recall that we can perform the reparameterization trick to rewerite \(f(x)\), that is \(f(x) = f(x^\ast) \rightarrow \mu + \sigma z = f(x^\ast) \rightarrow z_0 = \frac{f(x^\ast) - \mu}{\sigma}\). Thus, we can write \(\mathrm{EI}(x)\) as</p>
+
+\[\mathrm{EI}(x) = \int_{- \infty}^{z_0} I(x) \phi(z) \, dz + \int_{z_0}^\infty I(x) \phi(z) \, dz\]
+
+<p>Observe that the first term vanishes to \(0\) since \(\forall z \leq z_0\) we have \(I(x) = 0\). Therefore, we only need to evaluate the second part of the integral.</p>
+
+\[\begin{aligned}
+\mathrm{EI}(x) &amp;= \int_{z_0}^\infty \max(f(x) - f(x^\ast), 0) \phi(z) \, dz = \int_{z_0}^\infty \mu(x) + \sigma(x) z - f(x^\ast) \phi(z) \, dz \\
+&amp;= \int_{z_0}^\infty (\mu - f(x^\ast)) \phi(z) dz + \int_{z_0}^\infty \sigma z \frac{1}{\sqrt{2 \pi}} \exp \left( \frac{-1}{2} z^2 \right ) dz \\
+&amp;= (\mu - f(x^\ast)) \int_{z_0}^\infty \phi(z) dz + \frac{\sigma}{\sqrt{2 \pi}} \int_{z_0}^\infty z \exp \left( \frac{-1}{2} z^2 \right) dz \\
+&amp;= (\mu - f(x^\ast)) (1 - \Phi(z_0)) - \int_{z_0}^\infty \left( \exp \left( \frac{-1}{2} z^2 \right) \right)^\prime dz \\
+&amp;= (\mu - f(x^\ast)) (1 - \Phi(z_0)) - \frac{\sigma}{\sqrt{2 \pi}} \left[ \exp\left(\frac{-1}{2} z^2\right) \right]_{z_0}^\infty \\
+&amp;= (\mu - f(x^\ast)) (1 - \Phi(z_0)) + \sigma \phi(z_0) \\
+&amp;= (\mu - f(x^\ast)) \Phi\left( \frac{\mu - f(x^\ast)}{\sigma} \right) + \sigma \phi\left( \frac{\mu - f(x^\ast)}{\sigma} \right) 
+\end{aligned}\]
+
+<p>The last row comes from the fact that the normal density is symmetric, i.e., \(\phi(z_0) = \phi(- z_0)\). \(\mathrm{EI}(x)\) takes high value when \(\mu &gt; f(x^\ast)\) As a side note, \(\mathrm{EI}\) requires the uncertainty \(\sigma &gt; 0\) since \(\sigma = 0 \rightarrow \mathrm{EI}(x) = 0\). Finally, we intoroduce a hyperparameter \(\xi\) which control the degree of exploration</p>
+
+\[\begin{eqnarray}
+\mathrm{EI}(x; \xi) = (\mu - f(x^\ast) - \xi) \Phi\left( \frac{\mu - f(x^\ast) - \xi}{\sigma} \right) + \sigma \phi\left( \frac{\mu - f(x^\ast) - \xi}{\sigma} \right) 
+\end{eqnarray}\]
+
+<p>Note that \(\xi = 0 \rightarrow \mathrm{EI}(x; \xi) = \mathrm{EI}(x)\)</p>
+
+<h6 id="references"><strong>References</strong></h6>
+
+<ul>
+  <li>Kamperis, S. (2021) Acquisition functions in Bayesian Optimization, https://ekamperi.github.io/machine%20learning/2021/06/11/acquisition-functions.html.</li>
+</ul>]]></content><author><name></name></author><category term="machine-learning-posts" /><category term="acquisition-function" /><category term="Bayesian-optimization" /><summary type="html"><![CDATA[This post assumes the reader has a prequisite knowledge about Bayesian optimization. Recall that Bayesian optimization is a zero-th order optimization method which aims to find the optimum \(x^\ast\) of a black-box function \(f: \mathcal{X} \rightarrow \mathbb{R}\). Bayesian optimization requires two important components, that is the surrogate model and the acquisition function. Due to black-box nature of \(f\), we introduce a surrogate function and instead perform the optimization w.r.t. this new function. In common settings, we utilize a Gaussian process (GP) as our surrogate model. The motivation comes from the Bayesian philosophy where we start with a belief and iteratively update it as we encounter data which explains the true distribution called the posterior distribution.]]></summary></entry><entry><title type="html">A Review of Periodic Activation Function Induce Stationarity (Under Construction)</title><link href="https://marshalarijona.github.io/blog/2022/BNN-periodic-activation-function/" rel="alternate" type="text/html" title="A Review of Periodic Activation Function Induce Stationarity (Under Construction)" /><published>2022-07-19T15:12:00+00:00</published><updated>2022-07-19T15:12:00+00:00</updated><id>https://marshalarijona.github.io/blog/2022/BNN-periodic-activation-function</id><content type="html" xml:base="https://marshalarijona.github.io/blog/2022/BNN-periodic-activation-function/"><![CDATA[<p>The main idea of this paper is to show that a BNN equipped with a periodic activation function will behave like a stationary kernel of Gaussian process, e.g. Matern Kernel, RBF kernel, etc. The stationarity term here means that our NN is translation-invariant, pushing the BNN to put the uncertainty only based on the distance of data. Please check the <a href="https://arxiv.org/pdf/2110.13572.pdf">paper</a> for further details.</p>
+
+<h4 id="sin-activation-function">Sin Activation Function</h4>
+<p>\(\begin{eqnarray}
+\sigma(x) = \sqrt{2} \sin(x) \\
+p(b) = \text{Uniform}[-\pi, \pi] 
+\end{eqnarray}\)</p>
+
+<p>The covariance function then can be written as follows:</p>
+
+<p>\begin{equation} \label{eq:sinactivationfunction}
+k(x, x^\prime) = \int p(w) \frac {1}{\pi} \int_{-\pi}^\pi \sin(wx + b) \sin(wx^\prime + b) \, db \, dw
+\end{equation}</p>
+
+<p>Note that 2 is canceled out due to coefficient of \(\sigma\). Now, let us solve the inner integral:</p>
+
+\[\begin{eqnarray}
+&amp;&amp; \int_{-\pi}^\pi \sin(wx + b) \sin(wx^\prime + b) \, db \\
+&amp;=&amp;	 \int_{-\pi}^\pi \frac{1}{2} (\cos(wx + b - wx^\prime - b) - \cos(wx + b + wx^\prime + b)) \, db \\
+&amp;=&amp; \frac{1}{2} \int_{-\pi}^\pi \cos(w(x -x^\prime)) - \cos(w(x + x^\prime) + 2b) \, db \\
+&amp;=&amp; \frac{1}{2} [\cos(w(x -x^\prime)) b]_{- \pi}^{\pi} = \pi \cos(w(x -x^\prime))
+\end{eqnarray}\]
+
+<p>We obtained the second row by applying the property \(\sin(x) \sin(y) = 1/2 (\cos(x - y) - \cos(x + y))\). At the last row, we ignore the second term due to its periodicity variable \(2b\) (symmetric). Now, we plug the last row back to Equation \eqref{eq:sinactivationfunction} to get the following:</p>
+
+<p>\begin{equation}
+k(x, x^\prime) = \int p(w) \cos(w(x - x^\prime)) dw
+\end{equation}</p>
+
+<p>Observe that we can write \(\cos(x)\) in terms of natural exponentiation via Euler’s formula, that is \(\cos(x) = 1/2 (\exp(ix) + \exp(-ix))\), where \(i\) denotes imaginary number \(\sqrt{- 1}\). Thus, we obtain</p>
+
+\[\begin{equation}
+k(x, x^\prime) = \frac{1}{2} \int p(w) (\exp(iw(x - x^\prime)) + \exp(-iw(x - x^\prime))) \, dw
+\end{equation}\]
+
+<p>Assume that the prior is symmetric on \(w\), we can perform change of variables \(w = -w\) to obtain</p>
+
+\[\begin{eqnarray}
+k(x, x^\prime) &amp;=&amp;\frac{1}{2} \int p(w) \exp(iw(x - x^\prime)) \, dw + \frac{1}{2} \int p(-w) \exp(iw(x - x^\prime)) \, dw \\
+&amp;&amp; = \int p(w) \exp(iwr) \, dw 
+\end{eqnarray}\]
+
+<p>Where \(r = x - x^\prime\). Observe that \(p(w) = \frac{1}{2\pi} S(w)\), which is want to be shown.</p>
+
+<h4 id="sin-cos-activation-function">Sin Cos Activation Function</h4>
+
+<p>\begin{equation}
+\sigma(x) = \sin(x) + \cos(x)
+\end{equation}</p>
+
+<p>Let us assume that our single neural network is bias free. Given the activation function above, we can write the covariance function \(k(x, x^\prime)\) as follows:</p>
+
+\[\begin{eqnarray}
+k(x, x^\prime) &amp;=&amp; \int p(w) (\sin(wx) + \cos(wx)) (\sin(wx^\prime) + \cos(wx^\prime)) \, dw \\
+&amp;=&amp; \int p(w) (\sin(wx) \sin(wx^\prime) + \sin(wx) \cos(wx^\prime) \nonumber \\ 
+&amp;\quad&amp; + \cos(wx) \sin(wx^\prime) + \cos(wx) \cos(wx^\prime)) \, dw \\
+&amp;=&amp; \int p(w) (\cos(wx - wx^\prime) + \sin(wx + wx^\prime)) \, dw \\
+\end{eqnarray}\]
+
+<p>We apply distributed rule on the first row to obtain the second row. Subsequently, applying indentitites \(\sin(x \pm y) = \sin(x) \cos(y) \pm \cos(x) \sin(y)\) and \(\cos(x \pm y) = \cos(x) \cos(y) \mp \sin(x) \sin(y)\) on the second row gives us the third row. Rewriting \(\sin\) and \(\cos\) in Euler’s form gives us</p>
+
+\[\begin{eqnarray}
+k(x, x^\prime) &amp;= \frac{1}{2} \int p(w) \exp(iw(x - x^\prime)) \, dw + \frac{1}{2} \int p(w) \exp(-iw(x - x^\prime)) \, dw \\
+&amp;+ \frac{1}{2} \int p(w) i\exp(-iw(x + x^\prime)) \, dw - \frac{1}{2} \int p(w) i\exp(iw(x + x^\prime)) \, dw
+\end{eqnarray}\]
+
+<p>Since the support of \(p(w)\) is on the entire real line and with the assumption that \(p(w)\) is symmetric, we obtain</p>
+
+\[\begin{eqnarray}
+k(x, x^\prime) &amp;= \frac{1}{2} \int p(w) \exp(iw(x - x^\prime)) \, dw  + \frac{1}{2} \int p(w) \exp(-iw(x - x^\prime)) \, dw = \int p(w) \exp(iwr) \, dw \\
+\end{eqnarray}\]
+
+<p>Again with \(r = x - x^\prime\)</p>
+
+<h4 id="triangle-wave-activation">Triangle Wave Activation</h4>
+
+<p>We can write triangle wave activation as a parametric function</p>
+
+<p>\begin{equation}
+	\psi(x) = \frac{4}{p} \left( x - \frac{p}{2} \lfloor	\frac{2x}{p} + \frac{1}{2} \rfloor \right) (-1)^{\lfloor\frac{2x}{p} + \frac{1}{2}\rfloor}
+\end{equation}</p>
+
+<p>\(p\) is responsible to control the period of the function. The authors of the paper chose \(p=2\pi\). Now to make the analysis becomes feasible, we need to perform Fourier series approximation on \(\psi(x)\).</p>
+
+<p>\begin{equation}
+\psi(x) = \underset{n \rightarrow \infty}{\lim} \frac{8}{\pi^2} \sum_{k=0}^{n - 1} (-1)^k (2k + 1)^{-2} \sin((2k + 1)x)
+\end{equation}</p>
+
+<p>Let us assume that \(\lambda_k := 2k + 1\) and the bias is sampled from an uniform distribution. Thus, we can write our activation function as follows</p>
+
+\[\begin{eqnarray}
+&amp;&amp;\sigma(z) = \sqrt{2} \sum_{k=0}^{n - 1} (-1)^k \lambda_k^{-2} \sin(\lambda_k z) \\
+&amp;&amp;p(b) = \text{Uniform}(-\pi, \pi)
+\end{eqnarray}\]
+
+<p>Note that \(\sigma\) will converge to \(\psi\) as we \(n\) goes to infinity. Subsequently, the corresponding covariance function \(k(x, x^\prime)\) will be as follows</p>
+
+\[\begin{eqnarray}
+ k(x, x^\prime) &amp;&amp;= \int p(w) \int 2p(b) [\sum_{k=0}^{n - 1} (-1)^k \lambda_k^{-2} \sin(\lambda_k (wx + b))]   \nonumber \\
+ &amp;&amp; \quad [\sum_{j=0}^{n - 1} (-1)^j \lambda_j^{-2} \sin(\lambda_j (wx^\prime + b))] \, dw \, db
+ \end{eqnarray}\]
+
+<p>For now, let us solve the inner integral for the case \(k \neq j\):</p>
+
+\[\begin{eqnarray}
+ &amp;&amp;\int \frac{1}{\pi} \frac{(-1)^{k + j}}{\lambda_k^2 \lambda_j^2} [\sin(\lambda_k (wx + b))]  [\sin(\lambda_j (wx^\prime + b))] \, db  \nonumber \\
+ &amp;&amp;= \frac{1}{2\pi} \frac{(-1)^{k + j}}{\lambda_k^2 \lambda_j^2} \int \cos(w(\lambda_k x - \lambda_j x^\prime) + b(\lambda_k - \lambda_j)) - \cos(w(\lambda_k x + \lambda_j x^\prime) + b(\lambda_k + \lambda_j)) \, db \nonumber \\
+ &amp;&amp;= \frac{1}{2\pi} \frac{(-1)^{k + j}}{\lambda_k^2 \lambda_j^2} [\frac{\sin(w(\lambda_k x - \lambda_j x^\prime) + b(\lambda_k - \lambda_j))}{\lambda_k - \lambda_j} - \frac{\sin(w(\lambda_k x + \lambda_j x^\prime) + b(\lambda_k + \lambda_j))}{\lambda_k + \lambda_j}]_{-\pi}^{\pi} \\
+ &amp;&amp;= 0 \nonumber
+ \end{eqnarray}\]
+
+<p>Note that the above integral resulted in \(0\) since both \(\lambda_k, \lambda_j\) are odd and the magnitude of the lower bound and the upper bound of integral is equal. Therefore, the remaining terms are the case where \(k = j\). We then rewrite the covariance function as follows:</p>
+
+\[\begin{eqnarray}
+ k(x, x^\prime) &amp;&amp;= \int p(w) \int 2p(b) \sum_{k=0}^{n - 1} \frac{(-1)^{2k}}{\lambda_k^4} \sin(\lambda_k (wx + b)) \sin(\lambda_k (wx^\prime + b)) \, dw \, db
+ \end{eqnarray}\]
+
+<p>Again, let us solve the inner integral for each summand. For now, we take the constant out of the inner integral and will involve them in the outer integral.</p>
+
+\[\begin{eqnarray}
+ &amp;&amp;\int_{-\pi}^{\pi} 2 p(b) \sin(\lambda_k (wx + b)) \sin(\lambda_k (wx^\prime + b)) db \nonumber \\
+ &amp;&amp;= \int_{-\pi}^{\pi} \frac{1}{2 \pi} [\cos(w\lambda_k (x -  x^\prime)) - \cos(w\lambda_k (x + x^\prime) + 2b\lambda_k)] \, db \nonumber \\
+ &amp;&amp;=\cos(w\lambda_k (x -  x^\prime)) 
+ \end{eqnarray}\]
+
+<p>Note that the second term in the second row is canceled out due to its even shifting coefficient and equal magnitude of lower and upper bound. Let us plug the result back to the covariance function.</p>
+
+<p>\begin{equation}
+ 	k(x, x^\prime) = \int p(w) \sum_{k=0}^{n - 1} \frac{(-1)^{2k}}{\lambda_k^4} \cos(w\lambda_k (x -  x^\prime)) dw
+\end{equation}</p>
+
+<p>In order to get the exact solution, we take the limit \(n \rightarrow \infty\).</p>
+
+<p>\begin{equation}
+ 	k(x, x^\prime) = \int p(w) \underset{n \rightarrow \infty}{\lim} \sum_{k=0}^{n - 1} \frac{1}{\lambda_k^4} \cos(w\lambda_k (x -  x^\prime)) dw
+\end{equation}</p>
+
+<p>The equation above is based on the fact that \((-1)^{2k} = 1\) for \(k \in \mathbb{N} \geq 0\). Next, we need the dominated convergence theorem to take the limit outside of the integral. Let \(f(n) = p(w) \sum_{k=0}^{n - 1} \frac{1}{\lambda_k^4} \cos(w\lambda_k (x -  x^\prime))\). Then, it requires another function \(g(n)\) s.t. \(\vert f_n(w) \vert \geq g(w), \forall n\) and \(\int g(w) dw &lt; \infty\)</p>
+
+\[\begin{eqnarray}
+\vert f_n(w) \vert &amp;&amp;= \sum_{k=0}^{n - 1} \frac{1}{(2k + 1)^4} \cos(w \lambda_k (x -  x^\prime)) \\
+&amp;&amp; \leq p(w) \sum_{k=0}^{n - 1} \frac{1}{(2k + 1)^4} \\
+&amp;&amp; \leq p(w) \sum_{k=0}^{n - 1} \frac{1}{k^4} = \frac{\pi ^ 4}{90} p(w)
+\end{eqnarray}\]
+
+<p>Furthermore, we have \(\int \pi^4/90 p(w) dw = \pi^4 / 90 &lt; \infty\). Since \(g(w)\) satisfies all constraints, we can rewrite \(k(x, x^\prime)\) as follows:</p>
+
+<p>\begin{equation}
+k(x, x^\prime) = \underset{n \rightarrow \infty}{\lim} \int p(w) \sum_{k=0}^{n - 1} \frac{1}{\lambda_k^4} \cos(w \lambda_k (x -  x^\prime)) dw
+\end{equation}</p>
+
+<p>We also can rewrite the above equation in the form of mixture density(assuming the density \(p\) is a member of location-scale family, which is the case in this paper). By applying the Euler’s form we can write the covariance function as follows:</p>
+
+\[\begin{eqnarray}
+k(x, x^\prime) &amp;&amp;= \underset{n \rightarrow \infty}{\lim} \int \sum_{k=0}^{n - 1} p(w) \frac{1}{\lambda_k^4} \exp(i \lambda_k w (x -  x^\prime)) \, dw \\
+&amp;&amp; = \underset{n \rightarrow \infty}{\lim} \int \sum_{k=0}^{n - 1} p(w) \pi_k \exp(i \lambda_k w (x -  x^\prime)) \, dw \\
+&amp;&amp; = \underset{n \rightarrow \infty}{\lim} \int \sum_{k=0}^{n - 1} p(w \vert \lambda_k) \pi_k \exp(iw (x -  x^\prime)) \, dw \\
+\end{eqnarray}\]
+
+<p>Let \(\hat{p}(w) = \underset{n \rightarrow \infty}{\lim} \sum_{k=0}^{n - 1} p(w \vert \lambda_k) \pi_k\) and \(r = x - x^\prime\), we recover the Wiener-Kinchin theorem</p>
+
+<p>\begin{equation}
+k(x, x^\prime) = \int \hat{p}(w) \exp(iwr) \, dw
+\end{equation}</p>
+
+<h4 id="periodic-relu-activation">Periodic ReLU Activation</h4>
+
+<p>We can write the periodic ReLU function as a sum of triangle wave activation function with the second term is shifted by half a period from the first term.</p>
+
+<p>\begin{equation}
+\psi(x) = \frac{2}{\pi} (((x + \frac{\pi}{2}) - \pi \lfloor \frac{(x + \frac{\pi}{2})}{\pi} + \frac{1}{2} \rfloor) (-1)^{\lfloor \frac{(x + \frac{\pi}{2})}{\pi} + \frac{1}{2} \rfloor} + (x - \pi \lfloor \frac{x}{\pi}  + \frac{1}{2} \rfloor) (-1)^{\lfloor \frac{x}{\pi}  + \frac{1}{2} \rfloor})
+\end{equation}</p>
+
+<p>Again, we approximate \(\psi(x)\) through Fourier transformation to obtain</p>
+
+<p>\begin{equation}
+\sigma(x) = \underset{n \rightarrow \infty}{lim} \sum_{k=0}^{n - 1} (-1)^k \lambda_k^{-2} (\sin(\lambda_k (x + \frac{\pi}{2}))  + \sin(\lambda_k x))
+\end{equation}</p>
+
+<p>With \(p(b) = \text{Uniform}[-\pi, \pi]\). Given the above activation function, we can define the covariance function as follows</p>
+
+\[\begin{eqnarray}
+k(x, x^\prime) &amp;&amp;= \int p(w) \int p(b) [\underset{n \rightarrow \infty}{\lim} \sum_{k=0}^{n-1} (-1)^k \lambda_k^{-2} (\sin(\lambda_k (wx + b + \frac{\pi}{2})) + \sin(\lambda_k(wx + b)))] \nonumber \\
+&amp;&amp; \quad  [\underset{n \rightarrow \infty}{\lim} \sum_{j=0}^{n-1} (-1)^j \lambda_j^{-2} (\sin(\lambda_j (wx^\prime + b + \frac{\pi}{2})) + \sin(\lambda_j(wx^\prime + b)))] \, db \, dw
+\end{eqnarray}\]
+
+<p>Let us solve all the integrals with the case \(k \neq j\)</p>
+
+\[\begin{eqnarray} \label{eq:prelucovariance} 
+\int_{-\pi}^{\pi} &amp;&amp;p(b) \frac{(-1)^{j + k}}{\lambda_k^2 \lambda_j^2} (\sin(\lambda_k (wx + b + \frac{\pi}{2})) + \sin(\lambda_k(wx + b))) (\sin(\lambda_j (wx^\prime + b + \frac{\pi}{2})) + \sin(\lambda_j(wx^\prime + b))) \, db
+\end{eqnarray}\]
+
+<p>Now, let us use the following trigonometry identity</p>
+
+<p>\(\sin(\lambda_k(wx + b + \frac{\pi}{2})) = (-1)^{k} \cos(\lambda_k(wx + b))\).</p>
+
+<p>Plugging the above identity back to Equation \eqref{eq:prelucovariance}, we obtain</p>
+
+\[\begin{eqnarray}
+\frac{1}{2\pi} \frac{(-1)^{j + k}}{\lambda_k^2 \lambda_j^2} \int_{-\pi}^{\pi}  ((-1)^{k} \cos(\lambda_k(wx + b)) + \sin(\lambda_k(wx + b))) ((-1)^{j}\cos(\lambda_j(wx^\prime + b)) + \sin(\lambda_j(wx^\prime + b))) \, db  \nonumber \\
+\end{eqnarray}\]
+
+<p>Observe that we can extend the form above into 4 terms. For now, let us solve the integral for each term of the extended form above.</p>
+
+<p><strong>Integral 1</strong></p>
+
+\[\begin{eqnarray}
+&amp;&amp; \int_{- \pi}^{\pi} (-1)^{j + k} \cos(\lambda_k(wx + b)) \cos(\lambda_j(wx^\prime + b)) \, db \nonumber \\
+&amp;&amp;= \frac{1}{2} \int \cos(w(\lambda_k x + \lambda_j x^\prime) + b(\lambda_k + \lambda_j)) + \cos(w(\lambda_k x - \lambda_j x^\prime) + b(\lambda_k - \lambda_j)) db \nonumber \\
+&amp;&amp;= \frac{1}{2} [\frac{\sin(w(\lambda_kx + \lambda_j x^\prime) + b(\lambda_k + \lambda_j))}{\lambda_k + \lambda_j} + \frac{\sin(w(\lambda_k x - \lambda_j x^\prime) + b(\lambda_k - \lambda_j))}{\lambda_k - \lambda_j}]_{-\pi}^{\pi} \nonumber \\
+&amp;&amp;= 0 \nonumber
+\end{eqnarray}\]
+
+<p>We applied the identity \(\cos(x) \cos(y) = \frac{1}{2} (\cos(x + y) + \cos(x - y))\) to obtain the second row. Note that \(\lambda_k, \lambda_j\) are even, thus we have even shifting coefficient for each term. Since the lower bound and the upper bound are symmetric, we obtain \(0\).</p>
+
+<p><strong>Integral 2</strong></p>
+
+\[\begin{eqnarray}
+&amp;&amp; \int_{- \pi}^{\pi} \sin(\lambda_k(wx + b)) \sin(\lambda_j(wx^\prime + b)) \, db \nonumber \\
+&amp;&amp;= \frac{1}{2} \int_{- \pi}^{\pi} \cos(w(\lambda_k x - \lambda_j x^\prime) + b(\lambda_k - \lambda_j)) - \cos(w(\lambda_k x + \lambda_j x^\prime) + b(\lambda_k + \lambda_j)) \, db \nonumber \\
+&amp;&amp;= \frac{1}{2} [\frac{\sin(w(\lambda_k x - \lambda_j x^\prime) + b(\lambda_k - \lambda_j))}{\lambda_k - \lambda_j} - \frac{\sin(w(\lambda_k x + \lambda_j x^\prime) + b(\lambda_k + \lambda_j))}{\lambda_k + \lambda_j}] \nonumber \\
+&amp;&amp;= 0 \nonumber
+\end{eqnarray}\]
+
+<p>We applied the identity \(\sin(x) \sin(y) = \frac{1}{2} (\cos(x - y) - \cos(x + y))\) to obtain the second row. Due to the even shifting coefficient and symmetricity, we end up with \(0\).</p>
+
+<p><strong>Integral 3</strong></p>
+
+\[\begin{eqnarray}
+&amp;&amp; \int_{- \pi}^{\pi} (-1)^k \cos(\lambda_k(wx + b)) \sin(\lambda_j(wx^\prime + b)) \, db  \nonumber \\
+&amp;&amp;= \frac{(-1)^k}{2} \int_{- \pi}^{\pi}  \sin(w(\lambda_kx + \lambda_jx^\prime) + b(\lambda_k + \lambda_j)) + \sin(w(\lambda_jx^\prime - \lambda_kx) + b(\lambda_j - \lambda_k)) \nonumber \\
+&amp;&amp;= \frac{(-1)^k}{2} [\frac{- \cos(w(\lambda_k x + \lambda_j x^\prime) + b(\lambda_k + \lambda_j))}{\lambda_k + \lambda_j} - \frac{\cos(w(\lambda_j x^\prime - \lambda_k x) + b(\lambda_j - \lambda_k))}{\lambda_j - \lambda_k}] \nonumber \\
+&amp;&amp;= 0 \nonumber
+\end{eqnarray}\]
+
+<p>We applied the identity \(\sin(x) \cos(y) = \frac{1}{2} (\sin(x + y) + \sin(x - y))\) to obtain the second row. Due to the even shifting coefficient and symmetricity, we end up with \(0\).</p>
+
+<p><strong>Integral 4</strong></p>
+
+\[\begin{eqnarray}
+&amp;&amp; \int_{- \pi}^{\pi} (-1)^j \cos(\lambda_j(wx^\prime + b)) \sin(\lambda_k(wx + b)) = 0 \, db  \nonumber \\
+\end{eqnarray}\]
+
+<p>Following the exact steps in Integral 3, we obtain the same result for Integral 4. Now our integral only involves the term where \(j = k\). Thus we can rewrite the covariance function as follows</p>
+
+\[\begin{eqnarray}
+k(x, x^\prime) &amp;&amp;= \int p(w) \int p(b) [\underset{n \rightarrow \infty}{\lim} \sum_{k=0}^{n-1} (-1)^k \lambda_k^{-2} (\sin(\lambda_k (wx + b + \frac{\pi}{2})) + \sin(\lambda_k(wx + b))) \nonumber \\
+&amp;&amp; \quad (-1)^k \lambda_k^{-2} (\sin(\lambda_k (wx^\prime + b + \frac{\pi}{2})) + \sin(\lambda_k(wx^\prime + b)))] \, db \, dw
+\end{eqnarray}\]
+
+<p>By the dominant convergence theorem, we could plug the limit out of the integral and obtain</p>
+
+\[\begin{eqnarray}
+k(x, x^\prime) &amp;&amp;= \underset{n \rightarrow \infty}{\lim} \int p(w)  \sum_{k=0}^{n-1} (-1)^{2k} \lambda_k^{-4} \int p(b) (\sin(\lambda_k (wx + b + \frac{\pi}{2})) + \sin(\lambda_k(wx + b))) \nonumber \\
+&amp;&amp; \quad (\sin(\lambda_k (wx^\prime + b + \frac{\pi}{2})) + \sin(\lambda_k(wx^\prime + b))) \, db \, dw \label{eq:almostcovarianceprelu}
+\end{eqnarray}\]
+
+<p>Let us solve the inner integral</p>
+
+\[\begin{eqnarray}
+&amp;&amp;\int_{- \pi}^{\pi} p(b) ((-1)^{k} \cos(\lambda_k (wx + b)) + \sin(\lambda_k(wx + b))) ((-1)^k \cos(\lambda_k (wx^\prime + b)) + \sin(\lambda_k(wx^\prime + b))) \, db \nonumber \\
+&amp;&amp;= \int_{- \pi}^{\pi} p(b) ((-1)^{2k} \cos(\lambda_k (wx + b)) \cos(\lambda_k (wx^\prime + b)) + (-1)^k \cos(\lambda_k (wx + b)) \sin(\lambda_k(wx^\prime + b)) \nonumber \\
+&amp;&amp; \quad + (-1)^{k} \sin(\lambda_k(wx + b)) \cos(\lambda_k (wx^\prime + b)) + \sin(\lambda_k(wx + b)) \sin(\lambda_k(wx^\prime + b)))  \, db \nonumber \\
+&amp;&amp;= \int_{- \pi}^{\pi} p(b) ((-1)^{2k} \cos(w\lambda_k(x - x^\prime)) + (-1)^k \sin(w\lambda_k(x + x^\prime) + 2b\lambda_k)) \, db \nonumber \\
+&amp;&amp;= \frac{1}{2 \pi} [(-1)^{2k} \cos(w\lambda_k(x - x^\prime)) b - (-1)^k \cos(w\lambda_k(x + x^\prime) + 2b\lambda_k) / 2 \lambda_k]_{- \pi}^\pi  \nonumber \\
+&amp;&amp;= (-1)^{2k} \cos(w \lambda_k(x - x^\prime)) \nonumber \\
+&amp;&amp;= \cos(w \lambda_k(x - x^\prime))
+\end{eqnarray}\]
+
+<p>we obtained the third row by applying the identitites \(\sin(x \pm y) = \sin(x) \cos(y) \pm \cos(x) \sin(y)\) and \(\cos(x \pm y) = \cos(x) \cos(y) \mp \sin(x) \sin(y)\). Since \(2k\) is guaranted to be even, we have \((-1)^{2k} = 1\). Now we insert the obtained equation to Equation \eqref{eq:almostcovarianceprelu}</p>
+
+<p>\begin{equation}
+k(x, x^\prime) = \underset{n \rightarrow \infty}{\lim} \int p(w) \sum_{k=0}^{n-1} (-1)^{2k} \lambda_k^{-4} \cos(w \lambda_k(x - x^\prime)) \, dw
+\end{equation}</p>
+
+<p>We can approximate the equation above by choosing only the first term. Furthermore, applying Euler’s formula on the first term will give us</p>
+
+<p>\begin{equation}
+k(x, x^\prime) = \int p(w) \exp(iwr)  \, dw
+\end{equation}</p>
+
+<p>Where \(r = x - x^\prime\)</p>]]></content><author><name></name></author><category term="machine-learning-posts" /><category term="periodic-activation-function" /><category term="Bayesian-neural-network" /><category term="uncertainty-quantification" /><summary type="html"><![CDATA[The main idea of this paper is to show that a BNN equipped with a periodic activation function will behave like a stationary kernel of Gaussian process, e.g. Matern Kernel, RBF kernel, etc. The stationarity term here means that our NN is translation-invariant, pushing the BNN to put the uncertainty only based on the distance of data. Please check the paper for further details.]]></summary></entry><entry><title type="html">Laplace’s Method Exercise Solution (Mackay, 2003)</title><link href="https://marshalarijona.github.io/blog/2022/laplace-exercise-solution/" rel="alternate" type="text/html" title="Laplace’s Method Exercise Solution (Mackay, 2003)" /><published>2022-03-04T15:12:00+00:00</published><updated>2022-03-04T15:12:00+00:00</updated><id>https://marshalarijona.github.io/blog/2022/laplace-exercise-solution</id><content type="html" xml:base="https://marshalarijona.github.io/blog/2022/laplace-exercise-solution/"><![CDATA[<p>In this blog, I share my solutions on Mackay 2003 exercises chapter 27 page 342. <strong>Disclaimer: I don’t guarantee the validity of each answer. All of the answers are based on my own.</strong> However, I am also open for corrections. If you spot any flaws, feel free to contact me via email: <strong>arijonamarshal@gmail.com</strong> or <strong>marshal.arijona01@ui.ac.id</strong>. All of the notations follow the text book. For further details, please refer to <strong><a href="https://www.inference.org.uk/itprnn/book.pdf">https://www.inference.org.uk/itprnn/book.pdf</a></strong>.</p>
+
+<h1 id="problem-1">Problem 1</h1>
+<p>A photon counter is pointed
+at a remote star for one minute, in order to infer the rate of photons arriving at the counter per minute, \(\lambda\). Assuming the number of photons collected r has a Poisson distribution with mean \(\lambda\)</p>
+
+<p>\begin{equation}
+p(r \vert \lambda) = \exp(\lambda)\frac{\lambda^r}{r!} \nonumber
+\end{equation}</p>
+
+<p>and assuming the improper prior P(λ) = 1/λ, make Laplace approximations to the posterior distribution</p>
+
+<p>(a) over \(\lambda\)</p>
+
+<p>(b) over \(\log \lambda\). [Note the improper prior transforms to \(p(\log \lambda)\) is
+constant.</p>
+
+<h2 id="problem-1a">Problem 1a</h2>
+
+<p>First, let us compute the unnormalized posterior distribution \(p^*(\lambda \vert r)\) and its log respectively:</p>
+
+\[\begin{eqnarray}
+p^*(\lambda \vert r) &amp;=&amp; p(r \vert \lambda) p(\lambda) \nonumber \\
+ &amp;=&amp;  \exp(- \lambda) \frac{\lambda^{r - 1}}{r!} \nonumber
+\end{eqnarray}\]
+
+<p>\begin{equation}
+- \log p^*(\lambda \vert r) = \lambda - (r -1) \log \lambda + \log r! \nonumber
+\end{equation}</p>
+
+<p>Recall that we need the mode of distribution in order to perform Laplace approximation. We can compute the mode of \(p^*(\lambda \vert r)\) via maximum a posteriori (MAP). MAP requires us to find \(\lambda^{\text{MAP}}\) such that:</p>
+
+<p>\begin{equation}
+\lambda^{\text{MAP}} = \underset{\lambda}{\text{min}} - \log p(\lambda \vert r) \nonumber
+\end{equation}</p>
+
+<p>we can find MAP by deriving \(- \log p^*(\lambda \vert r)\), setting it to zero, and finally solving the equation for \(\lambda\):</p>
+
+\[\begin{eqnarray}		
+\frac{d - \log p^*(\lambda \vert r)}{d\lambda} &amp;=&amp;  1 - \frac{r - 1}{\lambda}= 0 \nonumber \\
+\lambda^{\text{MAP}} &amp;=&amp; r - 1 \nonumber 
+\end{eqnarray}\]
+
+<p>Now we can obtain the second order derivative \(c\) on \(\lambda = \lambda^{\text{MAP}}\):</p>
+
+\[\begin{eqnarray}
+c &amp;=&amp; \left \vert - \frac{d^2\log p^*(\lambda \vert r)}{d\lambda^2} \right \vert_{\lambda=\lambda^{\text{MAP}}} \nonumber \\ 
+&amp;=&amp; -1 \left (\frac{-(r - 1)}{\lambda^2} \right) \nonumber \\
+&amp;=&amp; \frac{1}{r - 1} \nonumber
+\end{eqnarray}\]
+
+<p>We are ready to construct our approximate distribution. First, let’s construct the unnnormalized approximation \(q^*(\lambda)\):</p>
+
+\[\begin{eqnarray}
+q^*(\lambda) &amp;\equiv&amp; p^*(\lambda = \lambda^{\text{MAP}} \vert r) \exp \left(- \frac{c}{2} (\lambda - \lambda^{\text{MAP}})^2 \right) \nonumber \\
+&amp;=&amp; p^*(\lambda = \lambda^{\text{MAP}} \vert r) \exp \left(- \frac{1}{2(r - 1)} (\lambda - (r - 1))^2 \right) \nonumber
+\end{eqnarray}\]
+
+<p>Our normalization factor \(Z_q\) can be written as:</p>
+
+\[\begin{eqnarray}
+Z_q &amp;=&amp; p^*(\lambda = \lambda^{\text{MAP}} \vert r) \sqrt{\frac{2\pi}{c}} \nonumber \\
+&amp;=&amp; p^*(\lambda = \lambda^{\text{MAP}} \vert r) \sqrt{2\pi (r - 1)} \nonumber
+\end{eqnarray}\]
+
+<p>Therefore, we obtain \(q(\lambda) = \frac{1}{\sqrt{2\pi (r - 1)}} \exp \left(- \frac{1}{2(r - 1)} (\lambda - (r - 1))^2 \right) = \mathcal{N}(r - 1, r - 1)\).</p>
+
+<h2 id="problem-1b">Problem 1b</h2>
+
+<p>From the description, \(\lambda\) is transformed through the function \(u(\lambda) = \log \lambda\). Subsequently, the density of \(\lambda\) is transformed to \(p(u) = p(x) \left \vert \frac{d\lambda}{du}  \right \vert = p(x) \lambda\). Using this rule, we obtain our unnormalized posterior \(p^*(u(\lambda) \vert r)\) as follows:</p>
+
+\[\begin{eqnarray}
+p^*(u(\lambda) \vert r) &amp;=&amp; p(u(\lambda)) p(r \vert u(\lambda)) \nonumber \\
+&amp;=&amp; \exp(-\lambda)\frac{\lambda^{r}}{r!} \lambda = \exp(-\lambda)\frac{\lambda^{r + 1}}{r!}
+\end{eqnarray}\]
+
+<p>Observe that our unnormalized transformed posterior is just the transforming likelihood since our transformed prior is just a constant. Now, taking the log of \(p^*(u(\lambda) \vert r)\) gives us:</p>
+
+<p>\begin{equation}
+- \log p^*(u(\lambda) \vert r) = \lambda - (r+1) \log \lambda + \log r!
+\end{equation}</p>
+
+<p>Now, let’s derive \(u(\lambda)^{\text{MAP}}\):</p>
+
+\[\begin{eqnarray}		
+\frac{d - \log p^*(u(\lambda) \vert r)}{du(\lambda)} &amp;=&amp;  \exp(\log \lambda) - (r + 1) = 0 \nonumber \\
+u(\lambda)^{\text{MAP}} &amp;=&amp; \log (r + 1) \nonumber 
+\end{eqnarray}\]
+
+<p>We then derive our second derivative \(c\) on \(u(\lambda) = u(\lambda)^{\text{MAP}}\):</p>
+
+\[\begin{eqnarray}
+c &amp;=&amp; \left \vert - \frac{d^2\log p^*(u(\lambda) \vert r)}{du(\lambda)^2} \right \vert_{u(\lambda)=u(\lambda)^{\text{MAP}}} \nonumber \\ 
+&amp;=&amp; \exp(\log (r+1))\nonumber \\
+\end{eqnarray}\]
+
+<p>We are ready to construct our approximate distribution. First, let’s construct the unnnormalized approximation \(q^*(u(\lambda))\):</p>
+
+\[\begin{eqnarray}
+q^*(u(\lambda))  &amp;\equiv&amp; p^*\left(u(\lambda) = u(\lambda)^{\text{MAP}} \vert r \right) \exp \left(- \frac{c}{2} (u(\lambda) - u(\lambda)^{\text{MAP}})^2 \right) \nonumber \\
+&amp;=&amp; p^*\left (u(\lambda) = u(\lambda)^{\text{MAP}} \vert r \right) \exp \left(- \frac{(r + 1)}{2} (u(\lambda) - \log (r + 1))^2 \right) \nonumber
+\end{eqnarray}\]
+
+<p>Our normalization factor \(Z_q\) can be written as:</p>
+
+\[\begin{eqnarray}
+Z_q &amp;=&amp; p^*\left(u(\lambda) = u(\lambda)^{\text{MAP}} \vert r \right) \sqrt{\frac{2\pi}{c}} \nonumber \\
+&amp;=&amp; p^*\left(u(\lambda) = u(\lambda)^{\text{MAP}} \vert r \right) \sqrt{\frac{2\pi} {r + 1}} \nonumber
+\end{eqnarray}\]
+
+<p>Therefore, we obtain \(q(u(\lambda)) = \frac{1}{\sqrt{\frac{2\pi} {(r + 1)}}} \exp \left(- \frac{(r + 1)}{2} (u(\lambda) - \log (r + 1))^2 \right) = \mathcal{N}(\log (r + 1), \frac{1}{r + 1})\).</p>
+
+<h1 id="problem-2">Problem 2</h1>
+<p>Use Laplace’s method to approximate the integral</p>
+
+<p>\begin{equation}
+Z(u_1, u_2) = \int_{- \infty}^{\infty} f(a)^{u_1} (1 - f(a))^{u_2} da \nonumber
+\end{equation}</p>
+
+<p>where \(f(a) = 1/(1 + e−a)\) and \(u1\), \(u2\) are positive. Check the accuracy of the approximation against the exact answer (23.29, p.316) for \((u1, u2) = (1/2, 1/2)\) and \((u1, u2) = (1, 1)\). Measure the error \((log Z_p − log Z_q)\) in bits</p>
+
+<p><strong>Answer:</strong></p>
+
+<p>Let us define \(p^*(a) = f(a)^{u_1} (1 - f(a))^{u_2}\). Therefore, we have \(\log p^*(a) = u_1 \log f(a) + u_2 \log (1 - f(a))\). Next task is to determine the mode \(a^0\) of \(p^*(a)\). Setting the derivative of \(- \log p^*(a)\) to 0 and solving for \(a\), we obtain:</p>
+
+\[\begin{eqnarray}
+\frac{d-\log p^*(a)}{da} &amp;=&amp; - \left(\frac{u_1}{f(a)} f'(a) - \frac{u_2}{1 - f(a)} f'(a) = 0 \right) \nonumber \\
+&amp;=&amp; - (u_1(1 - f(a)) - u_2 f(a)) \nonumber \\
+a^0 &amp;=&amp; - \log \frac{u_2}{u_1} \nonumber
+\end{eqnarray}\]
+
+<p>\(f'(a)\) refers to \(\frac{df(a)}{da}\). The second row comes from the fact that \(f'(a) = f(a)(1 - f(a))\). Next, let us determine the second derivation.</p>
+
+\[\begin{eqnarray}
+\frac{d^2 - \log p^*(a)}{da^2} &amp;=&amp; (u_1 + u_2) f'(a) \nonumber \\
+&amp;=&amp; (u_1 + u_2) f(a) (1 - f(a)) \nonumber
+\end{eqnarray}\]
+
+<p>Now, we aim to evaluate \(\frac{d^2 - \log p^*(a)}{da^2}\) at \(a = a^0\). Note that we have \(f(a^0) = \frac{u_1}{u_1 + u_2}\) and \(1 - f(a) = \frac{u_2}{u_1 + u_2}\). Therefore</p>
+
+\[\begin{eqnarray}
+c = \left \vert \frac{d^2 - \log p^*(a)}{da^2} \right \vert_{a=a^0} = (u_1 + u_2) \frac{u_1}{u_1 + u_2} \frac{u_2}{u_1 + u_2} = \frac{u_1 u_2}{u_1 + u_2} \nonumber \\  
+\end{eqnarray}\]
+
+<p>The normalizing constant can be approximated by:</p>
+
+\[\begin{eqnarray}
+Z_p \simeq Z_q &amp;=&amp; p^*(a^0) \sqrt{\frac{2\pi}{c}} \nonumber \\
+&amp;=&amp; \left ( \frac{u_1}{u_1 + u_2} \right )^{u_1} \left(\frac{u_2}{u_1 + u_2} \right )^{u_2}  \sqrt{\frac{2\pi (u_1 + u_2)}{u_1 u_2}} \nonumber \\
+\end{eqnarray}\]
+
+<p>It’s time for evaluation !! for \((u_1, u_2) = (1, 1)\), we have:</p>
+
+<p>\begin{equation}
+Z_q(u_1 = 1, u_2 = 1) = \frac{1}{2} \times \frac{1}{2} \times 2 \sqrt{\pi} = \frac{\sqrt{\pi}}{2} \nonumber 
+\end{equation}</p>
+
+<p>\begin{equation}
+Z_p(u_1 = 1, u_2 = 1)= \frac{\Gamma(1) \Gamma(1)}{\Gamma(1 + 1)} = 1 \nonumber
+\end{equation}</p>
+
+<p>with the error:</p>
+
+<p>\begin{equation}
+\log \frac{Z_p}{Z_q} = \log \frac{2}{\sqrt{\pi}} = 0.15 \; \text{bit} \nonumber
+\end{equation}</p>
+
+<p><strong>For the error measurement, we use base 2 logarithm. In other cases we use natural number.</strong></p>
+
+<p>while for \((u_1, u_2) = (\frac{1}{2}, \frac{1}{2})\), we have:</p>
+
+<p>\begin{equation}
+Z_q(u_1 = 1/2, u_2 = 1/2) = \frac{1}{2}^{1/2} \times \frac{1}{2}^{1/2} \times \sqrt{8\pi} = \sqrt{2\pi} \nonumber 
+\end{equation}</p>
+
+<p>\begin{equation}
+Z_p(u_1 = 1/2, u_2 = 1/2)= \frac{\Gamma(1/2) \Gamma(1/2)}{\Gamma(1)} = 1.77^2 = 3.313 \nonumber
+\end{equation}</p>
+
+<p>with the error:
+\begin{equation}
+\log \frac{Z_p}{Z_q} = \log \frac{3.313}{2.5} = 0.12 \; \text{bit} \nonumber
+\end{equation}</p>
+
+<!--We also need the second derivative of $$\log p^*(a)$$ on $$a = a^0$$. We can use the chain rule to obtain it. The fact that $$f'(a) = f(a)(1 - f(a))$$ and $$f''(a) = f(a)(1 - f(a))(1 - 2f(a))$$ will make our job easier.
+
+$$
+\begin{eqnarray}
+\frac{d^2 \log p^*(a)}{da^2} &=& u_1 \left [ \frac{f''(a)}{f(a)} - \frac{f'(a)^2}{f(a)^2} \right] - u_2 \left[ \frac{f''(a)}{1 - f(a)} + \frac{f'(a)^2}{(1 - f(a))^2}\right] \nonumber \\
+&=& u_1 \left [ \frac{f(a)f''(a) - f'(a)^2}{f(a)^2} \right] - u_2 \left[ \frac{f''(a) (1 - f(a)) - f'(a)^2}{(1 - f(a))^2} \right] \nonumber \\
+&=& -u_1 \left[ (1 - f(a)) f(a)\right] -u_2 \left[ (f(a)(1 - 2f(a))) -  f(a)^2 \right ] \nonumber \\
+\end{eqnarray} 
+$$
+
+Since we have $$a^0 = - \log \frac{u_2}{u_1}$$, we obtain $$f(a^0) = \frac{u_1}{u_1 + u_2}$$. Now let's substitute $$f(a^0)$$ to the second derivative above:
+
+$$
+\begin{eqnarray}
+c = \left \vert \frac{d^2 \log p^*(a)}{da^2} \right \vert_{a = a^0} = -u_1 \left[ \frac{u_1 \, u_2}{(u_1 + u_2)^2} \right] -u_2 \left[ \frac{u_1 (u_2 - 2u_1)}{(u_1 + u_2)^2} \right] \nonumber \\
+\end{eqnarray}
+$$  
+
+Then, the normalizing constant can be approximated by:
+
+$$
+\begin{eqnarray}
+Z_p \simeq Z_q &=& p^*(a^0) \sqrt{\frac{2\pi}{c}} \nonumber \\
+&=& \left ( \frac{u_1}{u_1 + u_2} \right )^{u_1} \left(\frac{u_2}{u_1 + u_2} \right )^{u_2}  \sqrt{\frac{2\pi}{c}} \nonumber \\
+\end{eqnarray}
+$$
+
+It's time for evaluation !! for $$(u_1, u_2) = (1, 1)$$, we have:
+
+\begin{equation}
+Z_q(u_1 = 1, u_2 = 1) = \frac{1}{2} \frac{1}{2} 
+\end{equation}
+
+while for $$(u_1, u_2) = (\frac{1}{2}, \frac{1}{2})$$ -->
+
+<h1 id="problem-3">Problem 3</h1>
+
+<p>Linear regression. \(N\) datapoints \(\{x^n,t^n\}_{n=1}^{N}\) are generated by the experimenter choosing each \(x^n\), then the world delivering a noisy version of the linear function</p>
+
+\[\begin{eqnarray}
+y(x) &amp;=&amp; w0 + w1x \nonumber \\
+t^n &amp;\sim&amp; \mathcal{N}(y(x^n), \sigma_\nu^2) \nonumber \\
+\end{eqnarray}\]
+
+<p>Assuming Gaussian priors on \(w_0\) and \(w_1\), make the Laplace approximation to the posterior distribution of \(w_0\) and \(w_1\) (which is exact, in fact) and obtain the predictive distribution for the next datapoint \(t^{N+1}\), given \(x^{N+1}\)</p>
+
+<p><strong>Answer :</strong></p>
+
+<p>Suppose that \(w = (w_0, w_1)\), then our prior will be as follows:</p>
+
+\[\begin{eqnarray}
+p(w) &amp;=&amp; \mathcal{N}(w; 0, \mathbf{I}) \nonumber \\
+&amp;\propto&amp; \exp\left(- \frac{1}{2} w^{T}w\right) \nonumber \\
+\log p(w) &amp;\propto&amp; - \frac{1}{2} w^{T} w \nonumber \\
+\end{eqnarray}\]
+
+<!--Let's just assume both $$p(w_0)$$ and $$p(w_1)$$ are following the standard normal distribution that is $$\mathcal{N}(0, 1)$$ to keep the proble simple.
+
+$$
+\begin{eqnarray}
+p(w_0) &\propto& \exp\left( \frac{1}{2} w_0^2 \right) \nonumber \\
+\log p(w_0) &\propto& \frac{1}{2} w_0^2 \nonumber
+\end{eqnarray}
+$$
+
+$$
+\begin{eqnarray}
+p(w_1) &\propto& \exp\left( \frac{1}{2} w_1^2 \right) \nonumber \\
+\log p(w_1) &\propto& \frac{1}{2} w_1^2 \nonumber
+\end{eqnarray}
+$$ -->
+
+<p>Suppose that we have \((x, t) = \{x^{n}, t^{n}\}_{n=1}^{N}\) training-data. Since our likelihood is a Gaussian which depends on \(x, w_0,\) and \(w_1\), we obtain the likelihood as follows:</p>
+
+\[\begin{eqnarray}
+p(t \vert x, w_0, w_1) &amp;\propto&amp; \prod_{n=1}^{N} \exp \left(-\frac{1}{2\sigma_{\nu}^2} (t^{n} - y(x^{n}))^2 \right) \nonumber \\
+&amp;=&amp; \exp\left( -\frac{1}{2\sigma_{\nu}^2} \sum_{n=1}^{N} (t^{n} - y(x^{n}))^2 \right) \nonumber \\
+\log p(t \vert x, w_0, w_1) &amp;\propto&amp; - \frac{1}{2\sigma_\nu^2} \sum_{n=1}^{N} (t^{n} - y(x^{n}))^2 \nonumber \\
+\end{eqnarray}\]
+
+<p>Having prior and likelihood. We are ready to compute the log of unnormalized posterior. We only need to apply the Bayes theorem to do so.</p>
+
+\[\begin{eqnarray}
+\log p(w \vert x, t) &amp;\propto&amp; \log p(t \vert x, w) + \log p(w) \nonumber \\
+&amp;=&amp;  - \frac{1}{2\sigma_\nu^2} \sum_{n=1}^{N} (t^{n} - y(x^{n}))^2 - \frac{1}{2} w^{T} w \nonumber \\
+\end{eqnarray}\]
+
+<p>Let’s define the unnormalized posterior as \(p^*(w \vert x, t)\). The rest of the solution is solving the Laplace approximation. The first step is to obtain \(w^{\text{MAP}}\) via first derivation of \(- \log p^*(w \vert x, t)\)</p>
+
+\[\begin{eqnarray}
+\frac{d-\log p^*(w \vert x, t)}{dw} &amp;=&amp; 
+\begin{bmatrix} 
+\frac{d-\log p^*(w \vert x, t)}{dw_0} \\
+\frac{d-\log p^*(w \vert x, t)}{dw_1} \\
+\end{bmatrix}
+\nonumber \\
+&amp;=&amp;
+\begin{bmatrix}
+\frac{-1}{\sigma_\nu^2} \sum_{n=1}^{N} \left[ t^n - (w_0 + w_1 x^n) \right] + w_0\\
+\frac{-1}{\sigma_\nu^2} \sum_{n=1}^{N} \left [ t^n - (w_0 + w_1 x^n) \right]x^n + w_1\\
+\end{bmatrix}
+\nonumber \\
+\end{eqnarray}\]
+
+\[\begin{eqnarray}
+w^{\text{MAP}} &amp;=&amp; 
+\begin{bmatrix}
+w_0^{\text{MAP}}\\
+w_1^{\text{MAP}}\\
+\end{bmatrix} 
+\nonumber \\
+&amp;=&amp; \frac{1}{(n + \sigma_\nu^2)(\sum_{n=1}^N x^n + \sigma_\nu^2) - (\sum_{n=1}^N x^n)^2}
+\begin{bmatrix}
+(\sum_{n=1}^N (x^n)^2 + \sigma_\nu^2) \sum_{n=1}^N t^n - \sum_{n=1}^N x^n \sum_{n=1}^N x^n t^n \\
+\sum_{n=1}^N x^n \sum_{n=1}^N t^n + (n + \sigma_\nu^2) \sum_{n=1}^N x^n t^n\\
+\end{bmatrix}
+\nonumber \\
+\end{eqnarray}\]
+
+<p>Next step is to obtain the Hessian matrix \(H\) of \(- \log p^*(w \vert x, t)\):</p>
+
+\[\begin{eqnarray}
+H &amp;=&amp; 
+\begin{bmatrix}
+\frac{d^2 - \log p^*(w \vert x, t)}{dw_0^2} &amp; \frac{d^2 - \log p^*(w \vert x, t)}{dw_0 dw_1} \\
+\frac{d^2 - \log p^*(w \vert x, t)}{dw_1 dw_0} &amp; \frac{d^2 - \log p^*(w \vert x, t)}{dw_1^2}
+\end{bmatrix}
+\nonumber \\
+&amp;=&amp;
+\begin{bmatrix}
+\frac{n}{\sigma_\nu^2} + 1 &amp; \frac{\sum_{n=1}^{N} x^n}{\sigma_\nu^2}\\
+\frac{\sum_{n=1}^{N}x^n}{\sigma_\nu^2} &amp; \frac{\sum_{n=1}^{N} (x^n)^2}{\sigma_\nu^2} + 1 \\
+\end{bmatrix}
+\nonumber \\
+\end{eqnarray}\]
+
+<p>Now, we can approximate \(p^*(w \vert x, t)\) with a distribution \(q^*(w)\):
+\(\begin{eqnarray}
+q^*(w) = p^*(w^{\text{MAP}}) \exp \left[\frac{-1}{2} (w - w^{\text{MAP}})^T H (w - w^{\text{MAP}}) \right] \nonumber \\
+\end{eqnarray}\)</p>
+
+<p>Subsequently, we obtain the normalization factor \(Z_q\)</p>
+
+\[\begin{eqnarray}
+Z_q = p^*(w^{\text{MAP}}) \sqrt{\frac{(2\pi)^K}{\text{det} H}} \nonumber \\
+\end{eqnarray}\]
+
+<p>with \(K\) denotes the dimensionality of \(w\). Finally our approximate distribution follows a normal distribution</p>
+
+\[\begin{eqnarray}
+q(w) &amp;=&amp; \frac{q^*(w)}{Z_q} \nonumber \\
+&amp;=&amp; \frac{1}{\sqrt{\frac{(2\pi)^2}{\text{det H}}}} \exp \left[\frac{-1}{2} (w - w^{\text{MAP}})^T H (w - w^{\text{MAP}}) \right] \nonumber \\
+ &amp;=&amp; \mathcal{N}(w; w^{\text{MAP}}, H) \nonumber \\
+\end{eqnarray}\]
+
+<p>Given a new data point \((x^{N+1})\), we compute the approximate predictive distribution:</p>
+
+\[\begin{eqnarray}
+p(t^{N+1} \vert x^{N+1}) =  \int p(t^{N+1} \vert x^{N + 1}, w) q(w) dw \nonumber \\
+\end{eqnarray}\]
+
+<p>However, compute this integral is often intractable. We can utilize Monte Carlo estimation to simplify the computation.</p>
+
+\[\begin{eqnarray}
+p(t^{N+1} \vert x^{N+1}) \approx \sum_{i=1}^{M} p(t^{N+1} \vert x^{N + 1}, w^{i}), \qquad w^{i} \sim q(w) \nonumber \\  
+\end{eqnarray}\]
+
+<p>with M is the number of samples \(w\). The more samples we use the more accurate is the prediction.</p>]]></content><author><name></name></author><category term="machine-learning-posts" /><summary type="html"><![CDATA[In this blog, I share my solutions on Mackay 2003 exercises chapter 27 page 342. Disclaimer: I don’t guarantee the validity of each answer. All of the answers are based on my own. However, I am also open for corrections. If you spot any flaws, feel free to contact me via email: arijonamarshal@gmail.com or marshal.arijona01@ui.ac.id. All of the notations follow the text book. For further details, please refer to https://www.inference.org.uk/itprnn/book.pdf.]]></summary></entry><entry><title type="html">Some Notes on Deriving Evidence Lower Bound (ELBO)</title><link href="https://marshalarijona.github.io/blog/2022/how-to-derive-elbo/" rel="alternate" type="text/html" title="Some Notes on Deriving Evidence Lower Bound (ELBO)" /><published>2022-02-08T15:12:00+00:00</published><updated>2022-02-08T15:12:00+00:00</updated><id>https://marshalarijona.github.io/blog/2022/how-to-derive-elbo</id><content type="html" xml:base="https://marshalarijona.github.io/blog/2022/how-to-derive-elbo/"><![CDATA[<p>Bayesian inference approximation commonly relies on variational inference. This technique requires us to maximize evidence lower bound (ELBO). This article discusses three ways to derive ELBO. The outline is arranged as follows. First, we briefly highlight the motivation of variational inference. Subsequently, we provide three ways to derive ELBO. Finally, we end this article by a conclusion.</p>
+
+<h2 id="background">Background</h2>
+<p>Performing Bayesian inference requires us to compute posterior distribution. Inference can be thought as a process to quantify unknown variables given the observed variables. Let \(\mathcal{D} = \{x_i\}_{i=1}^{N}\) be a dataset contains \(N\) data points. We can view \(\mathcal{D}\) as the observed variables. Subsequently, we assume there is unobserved parameters \(\theta \in \Theta\) that provide explanations for \(\forall x \in \mathcal{X}\) in general. Inference aims to estimate \(\theta\) given the observations \(\mathcal{D}\). Performing inference under Bayesian theorem provides us a tool to quantify the uncertainty about \(\theta\). Therefore, Bayesian inference is treated as a probabilistic model. The core of Bayesian inference is to evaluate the posterior distribution \(p(\theta \vert \mathcal{D})\). This evaluation requires the likelihood \(p(\mathcal{D} \vert \theta)\), prior distribution \(p(\theta)\), and marginal distribution \(p(\mathcal{D})\). The likelihood tells the probability of \(\mathcal{D}\) given a certain \(\theta\). Meanwhile, prior \(p(\theta)\) provides our belief about \(\theta\) before we perform the inference. The third one is marginal distribution \(p(\mathcal{D})\) which represents the probability \(\mathcal{D}\) without the conditioning constraint. By applying Bayes’s theorem, we can write \(p(\theta \vert \mathcal{D})\) as:</p>
+
+<p>\begin{equation}
+\label{eq:posterior-distribution}
+p(\theta \vert \mathcal{D}) = \frac{p(\mathcal{D}, \theta)}{p(\mathcal{D})} = \frac{p(\mathcal{D} \vert \theta) p(\theta)}{p(\mathcal{D})}
+\end{equation}</p>
+
+<p>Under the assumption that each data point \(x_i\) is i.i.d., we have \(p(\mathcal{D} \vert \theta) = \prod_{i=1}^{N} \, p(x_i \vert \theta)\). It seems like we are done with the problem. However, computing posterior distribution directly is not feasible.
+<!--In practice, we compute $$\log p(\theta \vert \mathcal{D})$$ instead of $$p(\theta \vert \mathcal{D})$$ because the logarithm operation is numerically more stable. Aside from that, some properties of logarithm including monotonicity and product rule offers conveniences for the computation. --></p>
+
+<p>Posterior distribution has a problem with computation intractability and we need variational inference to solve the issue. We obtain the marginal distribution \(p(\mathcal{D})\) by integrating \(p(\mathcal{D}, \theta)\) over all possible \(\theta\). Formally, we can write \(= \int p(\mathcal{D}, \theta) d\theta = \int p(\mathcal{D} | \theta) p(
+\theta) d\theta\). Evaluating the distribution is often intractable. Intractablity can have two meanings:</p>
+<ul>
+  <li>The marginal distribution \(p(\mathcal{D})\) has no closed-form solution.</li>
+  <li>The marginal distribution is computationally intractable (especially when \(x\) is high-dimensional). Look at <a href="https://arxiv.org/pdf/1601.00670.pdf">[Blei, 2016]</a> for more details</li>
+</ul>
+
+<p>We mitigate the intractability with the help of variational inference. Variational inference approximate the posterior \(p(\theta \vert \mathcal{D})\) by using a variational distribution \(q_{\phi} \in \mathcal{Q}\) parameterized by \(\phi\). Commonly, the variational distribution has a simpler form and relatively easy to compute. The goal is to find \(q^* \in \mathcal{Q}\) that is closest to \(p(\theta \vert \mathcal{D})\). For now, let’s just assume there is a function \(D[. \| .]\) that is able to measure the closeness between \(q_{\phi}(\theta)\) and \(p(\theta \vert \mathcal{D})\). The idea is to choose the parameters \(\phi\) from the parameter space \(\Phi\) that minimizes \(D[q_{\phi}(\theta) \| p(\theta \vert \mathcal{D})]\). Mathematically, we can write the objective of variational inference as follows:</p>
+
+<p>\begin{equation}
+\label{eq:variational-inference}
+q^* = \underset{\phi \in \Phi}{\text{min}} \, D[q_{\phi}(\theta) | p(\theta \vert \mathcal{D})]
+\end{equation}</p>
+
+<p>Now our inference problem turns into an optimization problem. Figure below gives an illustration of variational inference. We start with an initialized distribution \(q\). Eventually, we obtain \(q^*\) through optimization process. By doing approximation, we trade some accuracy with a more efficient computation. But, how do we define \(D[. \| .]\) ?</p>
+
+<div class="row mt-3">
+    <div class="col-sm mt-3 mt-md-0">
+        <figure>
+
+  <picture>
+    <source media="(max-width: 480px)" srcset="/assets/img/variational-inference-480.webp" />
+    <source media="(max-width: 800px)" srcset="/assets/img/variational-inference-800.webp" />
+    <source media="(max-width: 1400px)" srcset="/assets/img/variational-inference-1400.webp" />
+    <!-- Fallback to the original file -->
+    <img class="img-fluid rounded z-depth-1" src="/assets/img/variational-inference.png" />
+
+  </picture>
+
+</figure>
+
+    </div>
+</div>
+<div class="caption">
+    An illustration of variational inference.
+</div>
+
+<h2 id="deriving-elbo-by-minimizing-kl-divergence">Deriving ELBO by Minimizing KL-Divergence</h2>
+<p>In this section, we introduce KL-divergence as a way to define \(D[. \| .]\). Based on KL-divergence, we derive ELBO, a more practical objective function of variational inference. Given two distributions \(p\) and \(q\), KL function \(KL[. \| .] : \mathcal{P} \times \mathcal{P} \rightarrow \mathbb{R}\) has the following form:
+\begin{equation}
+\label{eq:kl-divergence}
+KL[p | q] = \mathbb{E}_{p(\theta)}\left[ \log \frac{p(\theta)}{q(\theta)} \right] = \int p(\theta) \log \frac{p(\theta)}{q(\theta)} d\theta
+\end{equation}
+Some properties of KL-divergence including:</p>
+<ul>
+  <li>KL-divergence is zero iff \(p=q\)</li>
+  <li>KL-divergence is not symmetric, that is \(KL[p \| q] \neq KL[q \| p]\)</li>
+  <li>KL-divergence satisfies \(KL[. \| .] \geq 0\)</li>
+</ul>
+
+<p>Having a minimum KL-divergence means that we can obtain a tight approximation of \(p(\theta \vert \mathcal{D})\). By applying the conditional probability theory and log properties on \(KL[q_{\phi}(\theta) \| p(\theta \vert \mathcal{D})]\), we obtain:</p>
+
+\[\begin{eqnarray}
+KL[q_{\phi}(\theta) \| p(\theta \vert \mathcal{D})] &amp;=&amp; \mathbb{E}_{q_{\phi}(\theta)}\left[\log \frac{q_{\phi}(\theta)}{p(\theta \vert \mathcal{D})} \right] \nonumber \\
+&amp;=&amp; \mathbb{E}_{q_{\phi}(\theta)}\left[ \log \frac{q_{\phi}(\theta)p(\mathcal{D})}{p(\mathcal{D}, \theta)} \right] \nonumber \\
+&amp;=&amp; \mathbb{E}_{q_{\phi}(\theta)}[\log p(\mathcal{D})] + \mathbb{E}_{q_{\phi}(\theta)}\left[\log \frac{q_{\phi}(\theta)}{p(\mathcal{D}, \theta)}\right] \nonumber \\
+&amp;=&amp;  \log p(\mathcal{D}) - \mathbb{E}_{q_{\phi}(\theta)} \left[ \log \frac{p(\mathcal{D}, \theta)}{q_{\phi}(\theta)} \right] \label{eq:elbo-kl}
+\end{eqnarray}\]
+
+<p>From Equation \eqref{eq:elbo-kl}, we can minimize \(KL[q_{\phi}(\theta) \| p(\theta \vert \mathcal{D})]\) by maximizing \(\mathcal{L} = \mathbb{E}_{q(\theta)} \left[ \log \frac{p(\mathcal{D}, \theta)}{q(\theta)} \right]\). The later term is called evidence lower bound (ELBO). \(KL[q_{\phi} \| p(\theta \vert \mathcal{D})]\) tells us the gap between \(\log p(\mathcal{D})\) and \(\mathcal{L}\). When \(KL[q_{\phi}(\theta) \| p(\theta \vert \mathcal{D})] = 0\) then \(\log p(\mathcal{D}) = \mathcal{L}\). Discarding the KL-term from \eqref{eq:elbo-kl} gives us an inequality:</p>
+
+<p>\begin{equation}
+\log p(\mathcal{D}) \geq \mathbb{E}_{q(\theta)} \left[ \log \frac{p(\mathcal{D}, \theta)}{q(\theta)} \right]
+\end{equation}</p>
+
+<p>Eventually, our optimization problem turns into ELBO maximization:</p>
+
+<p>\begin{equation}
+q^* = \underset{\phi \in \Phi}{\text{max}} \, \mathbb{E}_{q(\theta)} \left[ \log \frac{p(\mathcal{D}, \theta)}{q(\theta)} \right]
+\end{equation}</p>
+
+<p>It turns out that deriving ELBO from KL-divergence is not the only way. In the next two sections, we elaborate different approaches to derive ELBO.</p>
+
+<h2 id="deriving-elbo-by-using-jensens-inequality">Deriving ELBO by Using Jensen’s Inequality</h2>
+<p>In this section, we show how to derive ELBO by using the definition of \(\log p(\mathcal{D})\) and Jensen’s inequality. Recall that we can obtain marginal distribution \(p(\mathcal{D})\) by marginalizing the joint distribution \(p(\theta, \mathcal{D})\) over \(\theta\). Now, let us define \(\log p(\mathcal{D})\) by involving the variational distribution \(q_{\phi}(\theta)\).</p>
+
+\[\begin{eqnarray}
+\log p(\mathcal{D}) &amp;=&amp; \log \int p(\mathcal{D}, \theta) d\theta \nonumber \\
+&amp;=&amp; \log \int \frac{p(\mathcal{D}, \theta) q(\theta)}{q(\theta)} d\theta \nonumber \\
+&amp;=&amp; \log \mathbb{E}_{q(\theta)} \left[ \frac{p(\mathcal{D}, \theta)}{q(\theta)} \right] \label{eq:convex-elbo} \\
+\end{eqnarray}\]
+
+<p>In order to derive ELBO, we rely on Jensen’s inequality. In the context of probability theory, Jensen inequality states that:</p>
+
+<p><em>If \(X\) is a random variable and \(f:X \rightarrow \mathbb{R}\) is a convex function, then it satisfies \(\mathbb{E}[f(X)] \leq f(\mathbb{E}[X])\).</em></p>
+
+<p>Now, convince yourself that Equation \eqref{eq:convex-elbo} is a convex function. Therefore, it satisfies:</p>
+
+<p>\begin{equation}
+\label{eq:elbo-jensen} 
+\log p(\mathcal{D}) \geq \mathbb{E}_{q(\theta)}\left[ \frac{p(\mathcal{D}, \theta)}{q(\theta)} \right] \nonumber
+\end{equation}</p>
+
+<h2 id="alternative-derivation">Alternative Derivation</h2>
+<p>In this section, we derive the last approach to obtain ELBO. This approach is based on the Bayes’s theorem. Observe that we can rearrange Equation \eqref{eq:posterior-distribution} as follows:</p>
+
+<p>\begin{equation}
+p(\mathcal{D}) = \frac {p(\theta \vert \mathcal{D}) p(\theta)}{p(\theta \vert \mathcal{D})} \nonumber
+\end{equation}</p>
+
+<p>This equation holds for any \(\theta\). Subsequently, let us take the log for both sides:</p>
+
+<p>\begin{equation}
+\log p(\mathcal{D}) = \log p(\mathcal{D}, \theta) - \log p(\theta \vert \mathcal{D}) \nonumber
+\end{equation}</p>
+
+<p>Now, let us include the variational distribution \(q_{\phi}\) without affect the equation above:</p>
+
+\[\begin{eqnarray}
+\log p(\mathcal{D}) &amp;=&amp; \log p(\mathcal{D}, \theta) - \log p(\theta \vert \mathcal{D}) + \log q_{\phi}(\theta) - \log q(\phi)(\theta) \nonumber \\
+&amp;=&amp; \log p(\mathcal{D}, \theta) - \log \frac{p(\theta \vert \mathcal{D})}{q_{\phi}(\theta)} - \log q_{\phi}(\theta) \nonumber
+\end{eqnarray}\]
+
+<p>Recall that \(\log a \leq a - 1 \leftrightarrow - \log a \geq 1 - a\) for \(a \in \mathbb{R}^{+}\). Using this inequality, we have:</p>
+
+\[\begin{eqnarray}
+	\log p(\mathcal{D}) &amp;=&amp; \log p(\mathcal{D}, \theta) - \log \frac{p(\theta \vert \mathcal{D})}{q_{\phi}(\theta)} - \log q_{\phi}(\theta) \nonumber \\
+	&amp;\geq&amp; \log p(\mathcal{D}, \theta) - \log q_{\phi}(\theta) + 1 - \frac{p(\theta \vert \mathcal{D})}{q_{\phi}(\theta)} \nonumber
+\end{eqnarray}\]
+
+<p>Since it is true for all \(\theta\), then it is also true under expectation. Therefore:</p>
+
+\[\begin{eqnarray}
+\log p(\mathcal{D)} &amp;\geq&amp; \int q_{\phi}(\theta) (\log p(\mathcal{D}, \theta) - \log q_{\phi}(\theta) + 1 - \frac{p(\theta \vert \mathcal{D})}{q_{\phi}(\theta)}) d\theta \nonumber \\
+&amp;=&amp; \int q_{\phi}(\theta) \log \frac{p(\mathcal{D}, \theta)}{q_{\phi}(\theta)} d\theta + 1 - \int q_{\phi}(\theta) \frac{p(\theta \vert \mathcal{D})}{q_{\phi}(\theta)} d\theta \nonumber \\
+ &amp;=&amp; \int q_{\phi}(\theta) \log \frac{p(\mathcal{D}, \theta)}{q_{\phi}(\theta)} d\theta + 1 - p(\theta \vert \mathcal{D}) d\theta \nonumber \\
+ &amp;=&amp; \int q_{\phi}(\theta) \log \frac{p(\mathcal{D}, \theta)}{q_{\phi}(\theta)} d\theta + 1 - 1 \nonumber \\
+ &amp;=&amp; \mathcal{L}
+\end{eqnarray}\]
+
+<p>Finally, we obtain ELBO without using KL-divergence.</p>
+
+<h2 id="conclusion">Conclusion</h2>
+<p>In conclusion, variational inference is introduced to overcome the intractability of computation posterior. In this article we elaborate 3 different ways to derive ELBO. The first approach is based on KL divergence between variational distribution \(q_{\phi}(\theta)\) and posterior \(p(\mathcal{D} \vert \theta)\). The second approach relies on marginalization of joint distribution and Jensen inequality. Finally, we show that ELBO can be derived based on the original Bayes theorem.</p>
+
+<h6 id="references"><strong>References</strong></h6>
+
+<ul>
+  <li>Bishop, C. M., &amp; Nasrabadi, N. M. (2006). Pattern recognition and machine learning (Vol. 4, No. 4, p. 738). New York: springer.</li>
+  <li>Blei, D. M., Kucukelbir, A., &amp; McAuliffe, J. D. (2017). Variational inference: A review for statisticians. Journal of the American statistical Association, 112(518), 859-877.</li>
+  <li>Adams, R. (2020) The ELBO without Jensen, Kullback, or Leibler. Laboratory for Intelligent Probabilistic Systems, Princeton University, Department of Computer Science, https://lips.cs.princeton.edu/the-elbo-without-jensen-or-kl/.</li>
+</ul>
+
+<!-- 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 -->]]></content><author><name></name></author><category term="machine-learning-posts" /><category term="variational-inference" /><category term="Kullback-Leibler-divergence" /><summary type="html"><![CDATA[Bayesian inference approximation commonly relies on variational inference. This technique requires us to maximize evidence lower bound (ELBO). This article discusses three ways to derive ELBO. The outline is arranged as follows. First, we briefly highlight the motivation of variational inference. Subsequently, we provide three ways to derive ELBO. Finally, we end this article by a conclusion.]]></summary></entry></feed>

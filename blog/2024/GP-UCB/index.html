@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <!-- Head -->
+  <head>        
+    <!-- Metadata, OpenGraph and Schema.org -->
+    
+
+    <!-- Standard metadata -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Marshal Sinaga | A Deep Dive into the Regret Bound of GP-UCB Optimization (Part I)</title>
+    <meta name="author" content="Marshal Arijona Sinaga" />
+    <meta name="description" content="A simple, whitespace theme for academics. Based on [*folio](https://github.com/bogoli/-folio) design.
+" />
+    <meta name="keywords" content="jekyll, jekyll-theme, academic-website, portfolio-website" />
+
+
+    <!-- Bootstrap & MDB -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha256-DF7Zhf293AJxJNTmh5zhoYYIMs2oXitRfBjY+9L//AY=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/mdbootstrap@4.20.0/css/mdb.min.css" integrity="sha256-jpjYvU3G3N6nrrBwXJoVEYI/0zw8htfFnhT9ljN3JJw=" crossorigin="anonymous" />
+
+    <!-- Fonts & Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/all.min.css" integrity="sha256-mUZM63G8m73Mcidfrv5E+Y61y7a12O5mW4ezU3bxqW4=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/academicons@1.9.1/css/academicons.min.css" integrity="sha256-i1+4qU2G2860dGGIOJscdC30s9beBXjFfzjWLjBRsBg=" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:100,300,400,500,700|Material+Icons">
+
+    <!-- Code Syntax Highlighting -->
+    <link rel="stylesheet" href="https://gitcdn.xyz/repo/jwarby/jekyll-pygments-themes/master/github.css" />
+
+    <!-- Styles -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22></text></svg>">
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <link rel="canonical" href="https://marshalarijona.github.io/blog/2024/GP-UCB/">
+
+    <!-- Dark Mode -->
+    <script src="/assets/js/theme.js"></script>
+    <script src="/assets/js/dark_mode.js"></script>
+  </head>
+
+  <!-- Body -->
+  <body class="fixed-top-nav">
+
+    <!-- Header -->
+    <header>
+
+      <!-- Nav Bar -->
+      <nav id="navbar" class="navbar navbar-light navbar-expand-sm fixed-top">
+        <div class="container">
+          <a class="navbar-brand title font-weight-lighter" href="https://marshalarijona.github.io/">Marshal Sinaga</a>
+          <!-- Navbar Toggle -->
+          <button class="navbar-toggler collapsed ml-auto" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar top-bar"></span>
+            <span class="icon-bar middle-bar"></span>
+            <span class="icon-bar bottom-bar"></span>
+          </button>
+
+          <div class="collapse navbar-collapse text-right" id="navbarNav">
+            <ul class="navbar-nav ml-auto flex-nowrap">
+
+              <!-- About -->
+              <li class="nav-item ">
+                <a class="nav-link" href="/">About</a>
+              </li>
+              
+              <!-- Blog -->
+              <li class="nav-item active">
+                <a class="nav-link" href="/blog/">Blog</a>
+              </li>
+
+              <!-- Other pages-->
+              <li class="nav-item ">
+                <a class="nav-link" href="/notes/">Notes</a>
+              </li>
+              <li class="nav-item ">
+                <a class="nav-link" href="/publications/">Publications</a>
+              </li>
+              <!--
+              <li class="nav-item dropdown ">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">submenus</a>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                  <a class="dropdown-item" href="/publications/">publications</a>
+                  <div class="dropdown-divider"></div>
+                  <a class="dropdown-item" href="/projects/">projects</a>
+                </div>
+              </li>
+            -->
+
+              <!-- Toogle theme mode -->
+              <div class="toggle-container">
+                <a id="light-toggle">
+                  <i class="fas fa-moon"></i>
+                  <i class="fas fa-sun"></i>
+                </a>
+              </div>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <!-- Content -->
+    <div class="container mt-5">
+      <!-- _layouts/post.html -->
+
+<div class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">A Deep Dive into the Regret Bound of GP-UCB Optimization (Part I)</h1>
+    <p class="post-meta">May 30, 2024</p>
+    <p class="post-tags">
+      <a href="/blog/2024"> <i class="fas fa-calendar fa-sm"></i> 2024 </a>
+        ·  
+        <a href="/blog/tag/Bayesian-optimization">
+          <i class="fas fa-hashtag fa-sm"></i> Bayesian-optimization</a>  
+          
+        ·  
+        <a href="/blog/category/machine-learning-posts">
+          <i class="fas fa-tag fa-sm"></i> machine-learning-posts</a>  
+          
+
+    </p>
+  </header>
+
+  <article class="post-content">
+    <p>With summer approaching (what a perfect time for trips and bouldering), I’m teaching myself about the regret bound of GP-UCB optimization. To enhance my understanding of the topic, I’ve decided to write a blog series. There will be three parts in total (see <a href="https://marshalarijona.github.io/blog/2024/GP-UCB-part2/">Part II</a> and <a href="https://marshalarijona.github.io/blog/2024/GP-UCB-part3/">Part III</a>). In this part, we will dive into the regret bound of GP-UCB optimization in the context of finite and compact sets. For more details, you can refer to the <a href="https://arxiv.org/abs/0912.3995" target="_blank" rel="noopener noreferrer">paper</a>.</p>
+
+<h1 id="introduction">Introduction</h1>
+
+<p><strong>Problem statement.</strong> Let us start with the problem statement. The problem is sequentially optimizing a black-box function \(f \rightarrow D \in \mathbb{R}\). In each round \(t\), we query a point \(x_t\) and evaluate the function value, perturbed by the noise \(\epsilon_t\), i.e., \(y = f(x_t) + \epsilon_t\). Typically, \(\epsilon_t\) is drawn from a normal distribution \(\mathcal{N}(0, \sigma^2)\). We are interested in maximizing \(\sum_{t = 1}^T f(x_t)\) as well as obtaining \(x^\ast = \mathrm{argmax}_{x \in D} f(x)\). Here, \(T\) denotes the total number of rounds.</p>
+
+<p><strong>Regret.</strong> Common performance metrics for GP-UCB optimization include instantaneous regret and cumulative regret. For a particular round \(t\), we define the instaneous regret \(r_t = f(x^\ast) - f(x_t)\). The cumulative regret \(R_T\) is the sum of instaneous regrets: \(R_T = \sum_{t = 1}^T r_t\). A desirable asymptotic property is to be no-regret: \(\lim_{t \rightarrow \infty} R_T / T = 0\).</p>
+
+<p><strong>Gaussian process (GP).</strong> We model the function \(f\) as a sample of GP: a collection of dependent random variables, each corresponding to a specific input \(x\), and jointly following a multivariate normal distribution. A GP \(GP(\mu(x), k(x, x^\prime))\) is specified by its mean function \(\mu(x) = \mathbb{E}[f(x)]\) and covariance or kernel function \(k(x, x^\prime) = \mathbb{E}[(f(x) - \mu(x)) (f(x^\prime) - \mu(x^\prime))]\). Typically, we assume \(\mu(x) = 0\) for all \(x \in D\).</p>
+
+<p><strong>Upper Confidence Bound (UCB) acquisition function.</strong> At each round \(t\), we query \(x_t\) by maximizing the acquisition function (AF). Here, we consider maximizing UCB defined as:</p>
+
+\[\begin{equation}
+x_t = \mathrm{argmax}_{x \in D} \; \mu_{t - 1}(x) + \beta_t^{1 / 2} \sigma_{t - 1}(x)
+\end{equation}\]
+
+<p>where \(\beta_t\), \(\mu_{t - 1}\), and \(\sigma_{t - 1}\) denoting exploration-exploitation parameter, posterior mean, and posterior covariance, respectively. UCB prioritizes selecting  \(x\) with high uncertainty (large \(\sigma_{t - 1}(x)\)) and at the same time achieve high value (large \(\mu_{t - 1}(x)\)). The parameter \(\beta_t\) negotiates these two objectives.</p>
+
+<hr>
+<figure>
+<video width="720" height="600" controls="" autoplay="" loop="" muted="">
+  <source src="/assets/videos/GP-UCB.mp4" type="video/mp4"></source>
+  Your browser does not support the video tag.
+</video>
+<figcaption><em>Illustration of GP-UCB optimization on the sine function, running for 50 rounds with 10 initial points sampled using Sobol initialization. Credit: Anastasiia Makarova.</em></figcaption>
+</figure>
+<hr>
+<p>We now provide the cumulative regret bound for GP-UCB in two different settings:</p>
+<ol>
+  <li>\(f \sim GP(0, k(x, x^\prime))\) for finite decision set \(D\).</li>
+  <li>\(f \sim GP(0, k(x, x^\prime))\) for general compact decision set \(D\).</li>
+</ol>
+
+<h1 id="cumulative-regret-bound-on-finite-decision-set">Cumulative Regret Bound on Finite Decision Set</h1>
+
+<p>This analysis requires a quantity of maximum information gain \(\gamma_T\) after \(T\) rounds defined as:</p>
+
+\[\begin{eqnarray}
+&amp;&amp; \gamma_T = \underset{A \subset D: \vert A \vert = T}{\max} I(\mathbf{y}_A; \mathbf{f}_A) \nonumber \\
+&amp;&amp; I(\mathbf{y}_A; \mathbf{f}_A) = H(\mathbf{y}_A) - H(\mathbf{y}_A \vert \mathbf{f}_A)  \nonumber
+\end{eqnarray}\]
+
+<p>with \(\mathbf{f}_A = [f(x)]_{x \in A}\), \(\mathbf{y}_A = \mathbf{f}_A + \varepsilon_A\), \(\varepsilon_A \sim \mathcal{N}(0, I \sigma^2)\). Here, \(I(. ; .)\) and \(H(.)\) denote the information gain and the entropy, respectively. In our case, we have \(I(\mathbf{y}_A; \mathbf{f}_A) = 1 / 2 \log \vert I + \sigma^{-2} \mathbf{K}_A \vert\), where \(\mathbf{K}_A = [k(x, x^\prime)]_{x, x^\prime \in A}\).</p>
+
+<p><strong>Theorem 1</strong>
+<em>Let \(\delta \in (0, 1)\) and \(\beta_t = 2 \log (\vert D \vert \, t^2 \, \pi^2 / 6 \delta)\). Running GP-UCB with \(\beta_t\) for a sample \(f\) of a GP with mean function zero and covariance function \(k(x, x^\prime)\), we obtain a regret bound of \(\mathcal{O}(\sqrt{T \, \gamma_T \, \log  \vert D \vert})\) with high probability. Precisely</em></p>
+
+<p>\begin{equation}
+\mathbb{P}(R_T \leq \sqrt{C_1 \, T \, \beta_T \, \gamma_T} \quad \forall T \geq 1) \geq 1 - \delta \nonumber
+\end{equation}</p>
+
+<p><em>where \(C_1 = 8 / \log (1 + \sigma^{-2})\).</em></p>
+
+<hr>
+<p><strong>Proof:</strong></p>
+
+<p>The strategy is to show that \(\vert f(x) - \mu_{t - 1}(x) \vert \leq \beta_t^{1/2} \sigma_{t - 1}(x)\) for all \(x \in D\) and \(t \in \mathbb{N}\)</p>
+
+<p><strong>Lemma 5.1</strong>
+<em>Pick \(\delta \in (0, 1)\) and set \(\beta_t = 2 \log (\vert D \vert  \, \pi_t / \delta)\), where \(\sum_{t \geq 1} \pi_t^{-1} = 1, \pi_t &gt; 0\). Then,</em></p>
+
+<p>\begin{equation}
+\vert f(x) - \mu_{t - 1}(x) \vert \leq \beta_t^{1 / 2} \sigma_{t - 1}(x) \quad \forall x \in D \; \forall t \geq 1 \nonumber
+\end{equation}</p>
+
+<p><em>hold with probability \(1 - \delta\).</em></p>
+
+<p><strong>Proof</strong>:</p>
+
+<p>Fix \(t \geq 1\) and \(x \in D\). Conditioned on \(y_{t - 1} = (y_1, \dots, y_{t-1})\), \(\{x_1, \dots, x_{t-1} \}\) are deterministic, and \(f(x) \sim N(\mu_{t-1}(x), \sigma^2_{t-1}(x))\). If \(r \sim N(0, 1)\), then</p>
+
+\[\begin{eqnarray}
+\mathbb{P}(r &gt; c) &amp;=&amp; e^{-c^2 / 2} (2 \pi)^{- 1 / 2} \int_{r}^{- \infty} e^{-(r - c)^2 / 2 - c (r - c)} \, dr \nonumber \\
+&amp;\leq&amp; e^{-c^2 / 2} \mathbb{P}(r &gt; 0) = \frac{1}{2} e^{- c^2 / 2} \nonumber
+\end{eqnarray}\]
+
+<p>for \(c &gt; 0\), since \(e^{-c (r - c)} \leq 1\) for \(r \geq c\). Hence, \(\mathbb{P}(\vert f(x) - \mu_{t - 1}(x) \vert &gt; \beta_t^{1/2} \sigma_{t - 1}(x)) \leq e^{- \beta_t / 2}\), using \(r = (f(x) - \mu_{t - 1}(x)) / \sigma_{t - 1}(x)\) and \(c = \beta_t^{1/2}\). Applying the union bound,</p>
+
+\[\begin{equation}
+\vert f(x) - \mu_{t - 1}(x) \vert \leq \beta_t^{1/2} \sigma_{t - 1}(x)\nonumber
+\end{equation}\]
+
+<p>holds with probability \(\geq 1 - \vert D \vert  e^{- \beta_t / 2}\). Choosing \(\vert D \vert  e^{- \beta_t / 2} = \delta / \pi_t\) and using the union bound for \(t \in \mathbb{N}\), the statement holds. In order to satisfy the theorem, we choose \(\pi_t = \pi^2 t^2 / 6\).</p>
+
+<p><strong>Lemma 5.2</strong>
+<em>Fix \(t \geq 1\). If \(\vert f(x) - \mu_{t - 1}(x) \vert \leq \beta_t^{1 / 2} \sigma_{t - 1}(x)\) for all \(x \in D\), then the regret \(r_t\) is bounded by \(2 \beta_t^{1/2} \sigma_{t - 1}(x_t)\).</em></p>
+
+<p><strong>Proof:</strong></p>
+
+<p>By definition \(x_t : \mu_{t-1}(x_t) + \beta_t^{1/2} \sigma_{t-1}(x_t)\geq \mu_{t-1}(x^\ast) + \beta_t^{1/2} \sigma_{t-1}(x^\ast) \geq f(x^\ast)\). Therefore,</p>
+
+\[\begin{equation}
+r_t = f(x^\ast) - f(x_t) \leq \mu_{t-1}(x_t) + \beta_t^{1/2} \sigma_{t-1}(x_t) - f(x_t) \leq 2 \beta_t^{1/2} \sigma_{t-1}(x^\ast) \nonumber
+\end{equation}\]
+
+<p><strong>Lemma 5.3</strong>
+<em>The information gain for the points selected can be expressed in terms of predictive variances. If \(\mathbf{f}_T = (f(x_t)) \in \mathbb{R}^T\):</em></p>
+
+\[\begin{equation}
+I(\mathbf{y}_T; \mathbf{f}_T) = \frac{1}{2} \sum^T_{t = 1} \log (1 + \sigma^{-2} \, \sigma_{t-1}(x_t)) \nonumber
+\end{equation}\]
+
+<p><strong>Proof:</strong></p>
+
+<p>Recall that \(I(\mathbf{y}_T; \mathbf{f}_T) = H(\mathbf{y}_T) - 1/2 \log \vert 2 \pi e \sigma^2 I \vert\). Now, \(H(\mathbf{y}_T) = H(\mathbf{y}_{T-1}) + H(y_T \vert \mathbf{y}_{T - 1}) = H(\mathbf{y}_{T-1}) + \frac{1}{2} \log (2 \pi e(\sigma^2 + \sigma_{t - 1}^2(x_T)))\). The result follow by induction.</p>
+
+<p><strong>Lemma 5.4</strong>
+<em>Pick \(\delta \in (0, 1)\) and let \(\beta_t\) be defined as in <strong>Lemma 5.1</strong>. Then, the following holds with probability \(\geq 1 - \delta\):</em></p>
+
+\[\begin{equation}
+\sum_{t = 1}^T r_t^2 \leq \beta_T \, C_1 \, I(\mathbf{y}_T; \mathbf{f}_T) \leq C_1 \beta_T \gamma_T \quad \forall T \geq 1, \nonumber
+\end{equation}\]
+
+<p><em>where \(C_1 \triangleq 8 / \log(1 + \sigma^{-2}) \geq 8 \sigma^2\).</em></p>
+
+<p><strong>Proof:</strong></p>
+
+<p>By <strong>Lemma 5.1</strong> and <strong>Lemma 5.2</strong>, we have that \(\{ r_t^2 \leq 4 \beta_t \, \sigma_{t - 1}^2(x_t) \forall t \geq 1 \}\) with probability \(\geq 1 - \delta\). \(\beta_t\) is non-decreasing such that</p>
+
+\[\begin{eqnarray}
+4 \beta_t \, \sigma_{t - 1}^2(x_t) &amp;\leq&amp; 4 \beta_T \, \sigma^2 ( \sigma^{-2} \sigma_{t - 1}^2(x_t) ) \nonumber \\
+&amp;\leq&amp; 4 \beta_T \, \sigma^2 C_2 \log (1 + \sigma^{-2} \sigma_{t - 1}^2(x_t)) \nonumber
+\end{eqnarray}\]
+
+<p>with \(C_2 = \sigma^{-2} / \log (1 + \sigma^{-2}) \geq 1\), since \(s^2 \leq C_2 \log (1 + s^2)\) for \(s \in [0, \sigma^{-2}]\), and \(\sigma^{-2} \sigma_{t - 1}^2(x_t) \leq \sigma^{-2} k(x_t, x_t) \leq \sigma^{-2}\). Noting that \(C_1 = 8 \sigma^2 C_2\), the result follows by plugging in the representation of <strong>Lemma 5.3</strong>.</p>
+
+<p><strong>Theorem 1</strong> is a consequence of <strong>Lemma 5.4</strong>, since \(R_T^2 \leq T \sum_{t = 1}^T r_t^2\) by Cauchy-Schwarz inequality.</p>
+
+<p><strong>The key insight here is that with high probability over samples from the GP, the cumulative regret is bounded in terms of the maximum information gain.</strong></p>
+
+<h1 id="cumulative-regret-bound-on-compact-decision-set">Cumulative Regret Bound on Compact Decision Set</h1>
+
+<p>We can generalize the result to any compact and convex \(D \subset \mathbb{R}^d\) under the assumptions on the kernel \(k\).</p>
+
+<p><strong>Theorem 2</strong> <em>Let \(D \subset [0, r]^d\) be compact and convex, \(d \in \mathbb{N}, r &gt; 0\). Suppose that the kernel \(k(x, x^\prime)\) satisfies the following high probability bound on the derivatives of GP sample paths \(f\): for some constants \(a, b &gt; 0\),</em></p>
+
+\[\begin{equation}
+\mathbb{P}(\underset{x \in D}{\sup} \vert \partial f / \partial x_j \vert &gt; L) \leq a e^{-(L / b)^2}, j = 1, \dots, d \nonumber
+\end{equation}\]
+
+<p><em>Pick \(\delta \in (0, 1)\), and define</em></p>
+
+\[\begin{equation}
+\beta_t = 2 \log (t^2 2 \pi^2 / (3 \delta)) + 2d \log \left(t^2 d b r \sqrt{\log (4 d a / \delta)} \right) \nonumber
+\end{equation}\]
+
+<p><em>Running the GP-UCB with \(\beta_t\) for a sample \(f\) of a GP with mean function zero and covariance function \(k(x, x^\prime)\), we obtain a regret bound of \(\mathcal{O}^\ast(\sqrt{d T \gamma_T})\) with high probability. Precisely, with \(C_1 = 8 / \log ( 1 + \sigma^{-2} )\) we have</em></p>
+
+\[\begin{equation}
+\mathbb{P}(R_T \leq \sqrt{C_1 \, T \, \beta_T \, \gamma_T} + 2 \quad  \forall T \geq 1) \geq 1 - \delta \nonumber
+\end{equation}\]
+
+<hr>
+
+<p><strong>Proof:</strong></p>
+
+<p><strong>Lemma 5.5</strong>
+<em>Pick \(\delta \in (0, 1)\) and set \(\beta_t = 2 \log ( \pi_t / \delta)\), where \(\sum_{t \geq 1} \pi_t^{-1} = 1, \pi_t &gt; 0\). Then,</em></p>
+
+<p>\begin{equation}
+\vert f(x) - \mu_{t - 1}(x) \vert \leq \beta_t^{1 / 2} \sigma_{t - 1}(x) \quad \forall x \in D \; \forall t \geq 1 \nonumber
+\end{equation}</p>
+
+<p><em>hold with probability \(1 - \delta\).</em></p>
+
+<p><strong>Proof</strong>:</p>
+
+<p>Fix \(t \geq 1\) and \(x \in D\). Conditioned on \(y_{t - 1} = (y_1, \dots, y_{t-1})\), \(\{x_1, \dots, x_{t-1} \}\) are deterministic, and \(f(x) \sim N(\mu_{t-1}(x), \sigma^2_{t-1}(x))\). As before, \(\mathbb{P}(\vert f(x) - \mu_{t - 1}(x) \vert &gt; \beta_t^{1/2} \sigma_{t - 1}(x)) \leq e^{- \beta_t / 2}\). Since \(e^{- \beta_t / 2} = \delta / \pi_t\) and using the union bound for \(t \in \mathbb{N}\), the statements hold.</p>
+
+<p>For the purpose of the analysis, we discretize \(D_t \subset D\), where \(D_t\) will be used at round \(t\) in the analysis. We need \(D_t\) to obtain the confidence interval on \(x^\ast\).</p>
+
+<p><strong>Lemma 5.6</strong>
+<em>Pick \(\delta \in (0, 1)\) and set \(\beta_t = 2 \log ( \vert D_t \vert \pi_t / \delta)\), where \(\sum_{t \geq 1} \pi_t^{-1} = 1, \pi_t &gt; 0\). Then,</em></p>
+
+<p>\begin{equation}
+\vert f(x) - \mu_{t - 1}(x) \vert \leq \beta_t^{1 / 2} \sigma_{t - 1}(x) \quad \forall x \in D \; \forall t \geq 1 \nonumber
+\end{equation}</p>
+
+<p><em>hold with probability \(1 - \delta\).</em></p>
+
+<p><strong>Proof:</strong></p>
+
+<p>The proof is identical to that in <strong>Lemma 5.1</strong>, except now we use \(D_t\) at each timestep.</p>
+
+<p>By assumption and union bound, we have</p>
+
+\[\begin{equation}
+\mathbb{P}(\forall j, \forall x \in D,  \vert \partial f / \partial x_j \vert &lt; L) \geq 1 - d a e^{-(L / b)^2}  \nonumber
+\end{equation}\]
+
+<p>which implies that with probability \(\geq 1 - d a e^{-(L / b)^2}\), we have</p>
+
+\[\begin{equation}\label{eq:lipschitz}
+\forall x \in D, \vert f(x) - f(x^\prime) \vert \leq L \Vert x - x^\prime  \Vert_1 
+\end{equation}\]
+
+<p>Let us choose a discretization \(D_t\) of size \((\tau_t)^d\) so that for all \(x \in D_t\)</p>
+
+\[\begin{equation}
+\Vert x - [x]_t \Vert_1 \leq r d / \tau_t \nonumber
+\end{equation}\]
+
+<p>where \([x]_t\) denotes the closest point in \(D_t\) to \(x\). A sufficient discretization has each coordinate with \(\tau_t\) uniformly spaced points.</p>
+
+<p><strong>Lemma 5.7</strong> 
+<em>Pick \(\delta \in (0, 1)\) and set \(\beta_t = 2 \log (2 \pi_t / \delta) + 4 d \log(d t b r \sqrt{\log(2 d a / \delta)})\), where \(\sum_{t \geq 1} \pi_t^{-1} = 1, \pi_t &gt; 0\). Let \(\tau_t = d t^2 b r \sqrt{\log(2 d a / \delta)}\). Let \([x^\ast]_t\) denotes the closest point in \(D_t\) to \(x^\ast\). Then,</em></p>
+
+\[\begin{equation}
+\vert f(x^\ast) - \mu_{t - 1}([x^\ast]_t) \vert \leq \beta_t^{1 / 2} \sigma_{t - 1}([x^\ast]_t) + \frac{1}{t^2} \forall t \geq 1 \nonumber
+\end{equation}\]
+
+<p><em>holds with probability \(\geq 1 - \delta\)</em></p>
+
+<p><strong>Proof:</strong>
+Using \eqref{eq:lipschitz}, we have with the probability \(\geq 1 - \delta / 2\),</p>
+
+\[\begin{equation}
+\forall x \in D, \vert f(x) - f(x^\prime) \vert \leq b \sqrt{\log(2 d a / \delta)} \Vert x - x^\prime \Vert_1 \nonumber
+\end{equation}\]
+
+<p>Hence,</p>
+
+\[\begin{equation}
+\forall x \in D_t, \vert f(x) - f([x]_t) \vert \leq r d b \sqrt{\log(2 d a / \delta)} / \tau_t \nonumber
+\end{equation}\]
+
+<p>By choosing \(\tau_t = d t^2 b r \sqrt{\log(2 d a / \delta)}\), we have that</p>
+
+\[\begin{equation}
+\forall x \in D_t, \vert f(x) - f([x]_t) \vert \leq \frac{1}{t^2} \nonumber
+\end{equation}\]
+
+<p>This implies that \(\vert D_t \vert = (d t^2 b r \sqrt{\log(2 d a / \delta)})^d\). Using \(\delta / 2\) in <strong>Lemma 5.6</strong>, we can apply the confidence bound to \([x^\ast]_t\) (as this lives in \(D_t\)) to obtain the result.</p>
+
+<p><strong>Lemma 5.8</strong>
+<em>Pick \(\delta \in (0, 1)\), and set \(\beta_t = 2 \log(4 \pi_t / \delta) + 4 d \log (dtbr \sqrt{\log (4 da / \delta)})\), where \(\sum_{t \geq 1} \pi_t^{-1} = 1, \pi_t &gt; 0\). Then, with probability greater than \(1 - \delta\), for all \(t \in \mathbb{N}\), the regret is bounded as follows:</em></p>
+
+\[\begin{equation}
+r_t \leq 2 \beta_t^{1 / 2} \sigma_{t  - 1}(x_t) + \frac{1}{t^2} \nonumber
+\end{equation}\]
+
+<p><strong>Proof:</strong></p>
+
+<p>Use \(\delta / 2\) in both <strong>Lemma 5.5</strong> and <strong>Lemma 5.7</strong>, so that these events hold with probability greater than \(1 - \delta\). By definition of \(x_t : \mu_{t - 1}(x_t) + \beta_t^{1 / 2} \sigma_{t - 1}(x_t) \geq \mu_{t - 1}([x^\ast]_t) + \beta_t^{1 / 2} \sigma_{t - 1}([x^\ast]_t)\). By <strong>Lemma 5.7</strong>, we have that \(\mu_{t - 1}([x^\ast]_t) + \beta_t^{1 / 2} \sigma_{t - 1}([x^\ast]_t) + 1/t^2 \geq f(x^\ast)\), which implies \(\mu_{t - 1}([x^\ast]_t) + \beta_t^{1 / 2} \sigma_{t - 1}([x^\ast]_t)  \geq f(x^\ast) - 1/t^2\). Therefore,</p>
+
+\[\begin{eqnarray}
+r_t &amp;=&amp; f(x^\ast) - f(x_t)  \nonumber \\
+&amp;\leq&amp;   \mu_{t - 1}([x^\ast]_t) + \beta_t^{1 / 2} \sigma_{t - 1}([x^\ast]_t) + 1/t^2 - f(x_t) \nonumber \\
+&amp;\leq&amp; 2\beta_t^{1 / 2} \sigma_{t - 1}([x^\ast]_t) + 1/t^2 \nonumber
+\end{eqnarray}\]
+
+<p>As shown in the proof of <strong>Lemma 5.4</strong>, with the probability \(\geq 1 - \delta\),</p>
+
+\[\begin{equation}
+\sum_{t = 1}^T 4 \beta_t \sigma^2_{t - 1}(x_t) \leq C_1 \beta_T \gamma_T \quad \forall T \geq 1, \nonumber
+\end{equation}\]
+
+<p>By Cauchy-Schwartz,</p>
+
+\[\begin{equation}
+\sum_{t = 1}^T 2 \beta_t^{1 / 2} \sigma_{t - 1}(x_t) \leq \sqrt{C_1 \beta_T T \gamma_T} \quad \forall T \geq 1, \nonumber
+\end{equation}\]
+
+<p>Hence,</p>
+
+\[\begin{equation}
+\sum_{t = 1}^T r_t \leq \sqrt{C_1 \beta_T T \gamma_T} + \pi^2/6 \quad \forall T \geq 1, \nonumber
+\end{equation}\]
+
+<p>since \(\sum 1 / t^2 = \pi^2 / 6\). Theorem 2 now follows.</p>
+
+<p>Some kernels that satisfy the condition in the above theorem including Matérn and squared exponential kernel.</p>
+
+<p>In the next part, we will generalize the function \(f\) to be an arbitrary function from the reproducing kernel Hilbert space (RKHS) corresponding to the kernel \(k(x, x^\prime)\).</p>
+
+<h4 id="reference">Reference</h4>
+
+<ul>
+  <li>Srinivas, N., Krause, A., Kakade, S. M., &amp; Seeger, M. (2009). Gaussian process optimization in the bandit setting: No regret and experimental design. arXiv preprint arXiv:0912.3995.</li>
+</ul>
+
+  </article>
+
+</div>
+
+    </div>
+
+    <!-- Footer -->    
+    <footer class="fixed-bottom">
+      <div class="container mt-0">
+        © Copyright 2024 Marshal Arijona Sinaga. Powered by <a href="http://jekyllrb.com/" target="_blank" rel="noopener noreferrer">Jekyll</a> with <a href="https://github.com/alshedivat/al-folio" target="_blank" rel="noopener noreferrer">al-folio</a> theme. Hosted by <a href="https://pages.github.com/" target="_blank" rel="noopener noreferrer">GitHub Pages</a>. Photos from <a href="https://unsplash.com" target="_blank" rel="noopener noreferrer">Unsplash</a>.
+
+      </div>
+    </footer>
+
+    <!-- JavaScripts -->
+    <!-- jQuery -->
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
+    <!-- Bootsrap & MDB scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.2/dist/umd/popper.min.js" integrity="sha256-l/1pMF/+J4TThfgARS6KwWrk/egwuVvhRzfLAMQ6Ds4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.min.js" integrity="sha256-SyTu6CwrfOhaznYZPoolVw2rxoY7lKYKQvqbtqN93HI=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mdbootstrap@4.20.0/js/mdb.min.js" integrity="sha256-NdbiivsvWt7VYCt6hYNT3h/th9vSTL4EDWeGs5SN3DA=" crossorigin="anonymous"></script>
+
+    <!-- Mansory & imagesLoaded -->
+  <script defer src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js" integrity="sha256-Nn1q/fx0H7SNLZMQ5Hw5JLaTRZp0yILA/FRexe19VdI=" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/imagesloaded@4/imagesloaded.pkgd.min.js"></script>
+  <script defer src="/assets/js/mansory.js" type="text/javascript"></script>
+    
+  <!-- Medium Zoom JS -->
+  <script src="https://cdn.jsdelivr.net/npm/medium-zoom@1.0.6/dist/medium-zoom.min.js" integrity="sha256-EdPgYcPk/IIrw7FYeuJQexva49pVRZNmt3LculEr7zM=" crossorigin="anonymous"></script>
+  <script src="/assets/js/zoom.js"></script><!-- Load Common JS -->
+  <script src="/assets/js/common.js"></script>
+
+    <!-- MathJax -->
+  <script type="text/javascript">
+    window.MathJax = {
+      tex: {
+        tags: 'ams'
+      }
+    };
+  </script>
+  <script defer type="text/javascript" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js"></script>
+  <script defer src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+
+    
+  </body>
+</html>
+
